@@ -1,0 +1,3346 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Bubu - Restaurant Management System</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        /* Login Screen Styles */
+        #login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #343a40;
+        }
+        .login-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        /* Updated Sidebar Styles for Scrollability and Logout Button Visibility */
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .sidebar .nav-link {
+            color: #c2c7d0;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: #495057;
+            color: white;
+        }
+        .content-area {
+            padding: 20px;
+        }
+        .card-custom {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .page-section {
+            display: none; /* Hide all pages by default */
+        }
+        .page-section.active-page {
+            display: block; /* Show only the active page */
+        }
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            margin: 2px;
+        }
+        .category-badge .btn-close {
+            font-size: 0.65em;
+            margin-left: 5px;
+        }
+        /* Timeline style for updates section */
+        .timeline-item {
+            border-left: 3px solid #6c757d;
+            padding-left: 20px;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background-color: #6c757d;
+            border-radius: 50%;
+            position: absolute;
+            left: -8px;
+            top: 5px;
+        }
+        /* POS Product Cards */
+        .pos-product-card {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #dee2e6;
+        }
+        .pos-product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Thermal Receipt Printing Styles */
+        #receipt-print-area, #zreport-print-area {
+            display: none;
+        }
+
+        /* Mobile responsive adjustments for sidebar */
+        @media (max-width: 767.98px) {
+            .sidebar {
+                height: auto;
+                min-height: auto;
+                position: relative;
+            }
+        }
+        
+        /* HIGH-COMPATIBILITY PRINT MEDIA QUERY (NO BLANK PAGES ON MOBILE CHROME) */
+        @media print {
+            /* Hide everything that is NOT meant for printing */
+            #main-app-container, #login-screen, .no-print {
+                display: none !important;
+            }
+            
+            /* Hide print templates by default during printing */
+            #receipt-print-area, #zreport-print-area {
+                display: none !important;
+            }
+            
+            /* If printing Receipt */
+            body.print-receipt #receipt-print-area {
+                display: block !important;
+                position: relative;
+                width: 80mm;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 12px;
+                color: #000;
+                margin: 0;
+                padding: 10px;
+            }
+
+            /* If printing Z-Report */
+            body.print-zreport #zreport-print-area {
+                display: block !important;
+                position: relative;
+                width: 80mm;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 12px;
+                color: #000;
+                margin: 0;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hidden Print Template for Thermal Printer -->
+<div id="receipt-print-area">
+    <div style="text-align: center;">
+        <h3 style="margin: 0; padding: 0; font-size: 16px; font-weight: bold;">HELLO BUBU</h3>
+        <p style="margin: 2px 0; font-size: 11px;">123, Galle Road, Colombo</p>
+        <p style="margin: 2px 0; font-size: 11px;">Tel: 011-2345678</p>
+        <p style="margin: 5px 0;">--------------------------------</p>
+        <h4 style="margin: 5px 0;"><strong>INVOICE</strong></h4>
+        <p style="margin: 2px 0; text-align: left; white-space: pre-line;" id="print-bill-details">Date: - | Bill No: -</p>
+        <p style="margin: 5px 0;">--------------------------------</p>
+    </div>
+    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+        <thead>
+            <tr style="border-bottom: 1px dashed #000;">
+                <th style="text-align: left;">Item</th>
+                <th style="text-align: center;">Qty</th>
+                <th style="text-align: right;">Price</th>
+            </tr>
+        </thead>
+        <tbody id="print-receipt-body"></tbody>
+    </table>
+    <div style="margin-top: 5px;">
+        <p style="margin: 2px 0;">--------------------------------</p>
+        <div style="display: flex; justify-content: space-between;">
+            <span>Subtotal:</span>
+            <span id="print-subtotal">Rs. 0.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <span>Discount:</span>
+            <span id="print-discount">Rs. 0.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+            <span>TOTAL:</span>
+            <span id="print-total">Rs. 0.00</span>
+        </div>
+        <p style="margin: 2px 0;">--------------------------------</p>
+        <div style="display: flex; justify-content: space-between;">
+            <span>Paid via <span id="print-pay-method">Cash</span>:</span>
+            <span id="print-paid">Rs. 0.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <span>Balance:</span>
+            <span id="print-balance">Rs. 0.00</span>
+        </div>
+        <p style="margin: 2px 0;">--------------------------------</p>
+    </div>
+    <div style="text-align: center; margin-top: 15px;">
+        <p style="margin: 0;">Thank You! Come Again.</p>
+        <small style="font-size: 9px; color: #555;">Software by Hello Bubu RMS</small>
+    </div>
+</div>
+
+<!-- Thermal Print Template for Day End (Z-Report) -->
+<div id="zreport-print-area">
+    <div style="text-align: center;">
+        <h3 style="margin: 0; padding: 0; font-size: 15px; font-weight: bold;">HELLO BUBU</h3>
+        <h4 style="margin: 2px 0; font-size: 12px; font-weight: bold;">POS DAY END REPORT (Z-REPORT)</h4>
+        <p style="margin: 2px 0; font-size: 11px;" id="print-z-meta">Date: - | User: -</p>
+        <p style="margin: 5px 0;">--------------------------------</p>
+    </div>
+    <div style="font-size: 11px;">
+        <div style="display: flex; justify-content: space-between;">
+            <span>Opening Float:</span>
+            <strong id="print-z-float">Rs. 0.00</strong>
+        </div>
+        <p style="margin: 2px 0;">--------------------------------</p>
+        <div style="display: flex; justify-content: space-between;">
+            <span>Expected Cash Sales:</span>
+            <span id="print-z-exp-cash">Rs. 0.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <span>Actual Cash Submitted:</span>
+            <span id="print-z-act-cash">Rs. 0.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+            <span>Cash Variance:</span>
+            <span id="print-z-var-cash">Rs. 0.00</span>
+        </div>
+        <p style="margin: 2px 0;">--------------------------------</p>
+        <div style="display: flex; justify-content: space-between;">
+            <span>Expected Card Sales:</span>
+            <span id="print-z-exp-card">Rs. 0.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <span>Actual Card Submitted:</span>
+            <span id="print-z-act-card">Rs. 0.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+            <span>Card Variance:</span>
+            <span id="print-z-var-card">Rs. 0.00</span>
+        </div>
+        <p style="margin: 2px 0;">--------------------------------</p>
+        <div style="display: flex; justify-content: space-between;">
+            <span>Expected Online Sales:</span>
+            <span id="print-z-exp-online">Rs. 0.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <span>Actual Online Submitted:</span>
+            <span id="print-z-act-online">Rs. 0.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+            <span>Online Variance:</span>
+            <span id="print-z-var-online">Rs. 0.00</span>
+        </div>
+        <p style="margin: 2px 0;">--------------------------------</p>
+        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+            <span>TOTAL SYSTEM SALES:</span>
+            <span id="print-z-sales-total">Rs. 0.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+            <span>TOTAL ACTUAL COLLECTED:</span>
+            <span id="print-z-collected-total">Rs. 0.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-weight: bold;" id="print-z-final-variance-row">
+            <span>OVERALL VARIANCE:</span>
+            <span id="print-z-variance-total">Rs. 0.00</span>
+        </div>
+        <p style="margin: 2px 0;">--------------------------------</p>
+        <p style="margin: 2px 0; font-size: 10px;"><strong>Notes:</strong> <span id="print-z-notes">-</span></p>
+    </div>
+    <div style="text-align: center; margin-top: 25px;">
+        <p style="margin: 0; font-size: 10px;">................................</p>
+        <p style="margin: 0; font-size: 10px;">Cashier Signature</p>
+        <p style="margin: 15px 0 0 0; font-size: 8px; color: #555;">Printed via Hello Bubu RMS</p>
+    </div>
+</div>
+
+<!-- LOGIN SCREEN (Shown by default, hidden when authenticated) -->
+<div id="login-screen">
+    <div class="card login-card p-4">
+        <div class="text-center mb-4">
+            <h4 class="fw-bold text-dark">Hello Bubu</h4>
+            <span class="text-muted small">Restaurant Management System</span>
+        </div>
+        <form id="login-form" onsubmit="handleLogin(event)">
+            <div class="mb-3">
+                <label class="form-label text-dark small">Username or Email</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input type="text" class="form-control" id="login-username" required placeholder="e.g. admin">
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="form-label text-dark small">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" class="form-control" id="login-password" required placeholder="••••••••">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" id="btn-login">
+                <span id="login-spinner" class="spinner-border spinner-border-sm d-none me-2" role="status"></span>
+                Sign In
+            </button>
+            <div class="text-danger small text-center mt-3 d-none" id="login-error-msg"></div>
+        </form>
+    </div>
+</div>
+
+<!-- MAIN SYSTEM CONTAINER (Hidden until authenticated) -->
+<div class="container-fluid no-print d-none" id="main-app-container">
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse p-3">
+            <div class="d-flex flex-column justify-content-between h-100">
+                <div>
+                    <div class="text-center py-3 border-bottom border-secondary mb-4">
+                        <img src="logo.png" alt="Hello Bubu" class="img-fluid rounded-circle mb-2" onerror="this.style.display='none'" style="max-height: 80px; width: auto; object-fit: cover; border: 2px solid #fff;">
+                        <h5 class="text-white mb-0" style="font-weight: bold; letter-spacing: 1px;">Hello Bubu</h5>
+                        <span class="badge bg-light text-dark mt-2 small" id="user-role-badge">Role: -</span>
+                    </div>
+                    
+                    <ul class="nav flex-column">
+                        <li class="nav-item" id="nav-btn-dashboard">
+                            <a class="nav-link active" onclick="switchPage('dashboard', 'Dashboard')">
+                                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item" id="nav-btn-billing">
+                            <a class="nav-link" onclick="switchPage('billing', 'Billing (POS)')">
+                                <i class="bi bi-receipt me-2"></i> Billing (POS)
+                            </a>
+                        </li>
+                        <li class="nav-item" id="nav-btn-products">
+                            <a class="nav-link" onclick="switchPage('products', 'Products Management')">
+                                <i class="bi bi-box-seam me-2"></i> Products
+                            </a>
+                        </li>
+                        <li class="nav-item" id="nav-btn-expenses">
+                            <a class="nav-link" onclick="switchPage('expenses', 'Expenses')">
+                                <i class="bi bi-wallet2 me-2"></i> Expenses
+                            </a>
+                        </li>
+                        <li class="nav-item" id="nav-btn-wastage">
+                            <a class="nav-link" onclick="switchPage('wastage', 'Wastage')">
+                                <i class="bi bi-trash me-2"></i> Wastage
+                            </a>
+                        </li>
+                        <li class="nav-item" id="nav-btn-reports">
+                            <a class="nav-link" onclick="switchPage('reports', 'Reports')">
+                                <i class="bi bi-graph-up me-2"></i> Reports
+                            </a>
+                        </li>
+                        <li class="nav-item" id="nav-btn-dayend">
+                            <a class="nav-link" onclick="switchPage('dayend', 'Day End (Z-Report)')">
+                                <i class="bi bi-calendar-check me-2"></i> Day End (Reconcile)
+                            </a>
+                        </li>
+                        <li class="nav-item" id="nav-btn-updates">
+                            <a class="nav-link" onclick="switchPage('updates', 'System Updates')">
+                                <i class="bi bi-arrow-up-circle me-2"></i> Updates
+                            </a>
+                        </li>
+                        <li class="nav-item" id="nav-btn-users">
+                            <a class="nav-link" onclick="switchPage('users', 'User Management')">
+                                <i class="bi bi-people me-2"></i> Users
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Sign Out Section -->
+                <div class="pt-3 border-top border-secondary mt-auto mb-3">
+                    <button class="btn btn-outline-danger w-100" onclick="handleLogout()">
+                        <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content-area">
+            <!-- Header -->
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" id="page-title">Dashboard</h1>
+                <span class="badge bg-primary p-2" id="current-date">Date</span>
+            </div>
+
+            <!-- 1. DASHBOARD PAGE -->
+            <div id="page-dashboard" class="page-section active-page">
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card card-custom bg-white p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="p-3 bg-success-subtle text-success rounded-circle me-3">
+                                    <i class="bi bi-currency-dollar fs-3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Today's Sales</h6>
+                                    <h4 class="mb-0" id="dash-today-sales">Rs. 0.00</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card card-custom bg-white p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="p-3 bg-danger-subtle text-danger rounded-circle me-3">
+                                    <i class="bi bi-wallet2 fs-3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Today's Expenses</h6>
+                                    <h4 class="mb-0" id="dash-today-expenses">Rs. 0.00</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card card-custom bg-white p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="p-3 bg-warning-subtle text-warning rounded-circle me-3">
+                                    <i class="bi bi-trash fs-3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Today's Wastage</h6>
+                                    <h4 class="mb-0" id="dash-today-wastage">Rs. 0.00</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card card-custom bg-white p-3">
+                            <div class="d-flex align-items-center">
+                                <div class="p-3 bg-info-subtle text-info rounded-circle me-3">
+                                    <i class="bi bi-cart-check fs-3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Total Orders</h6>
+                                    <h4 class="mb-0" id="dash-today-orders">0</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. BILLING (POS) PAGE -->
+            <div id="page-billing" class="page-section">
+                <!-- Tab Switching Navigation inside Billing POS -->
+                <ul class="nav nav-pills mb-4 border-bottom pb-2" id="billingTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="new-sale-tab" data-bs-toggle="tab" data-bs-target="#new-sale-pane" type="button" role="tab"><i class="bi bi-cart-plus me-1"></i> New Sale</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="invoice-lookup-tab" data-bs-toggle="tab" data-bs-target="#invoice-lookup-pane" type="button" role="tab" onclick="loadRecentSales()"><i class="bi bi-search me-1"></i> Invoice History & Lookup</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="billingTabContents">
+                    <!-- A. NEW SALE TAB -->
+                    <div class="tab-pane fade show active" id="new-sale-pane" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-7 mb-4">
+                                <div class="card card-custom bg-white p-4">
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                                                <input type="text" class="form-control border-start-0" id="pos-search" placeholder="Search product name..." oninput="displayPOSProducts()">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select class="form-select" id="pos-category-filter" onchange="displayPOSProducts()">
+                                                <option value="All">All Categories</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row row-cols-2 row-cols-md-3 g-3" style="max-height: 500px; overflow-y: auto;" id="pos-products-grid"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="card card-custom bg-white p-4 d-flex flex-column" style="min-height: 580px;">
+                                    <h5 class="border-bottom pb-2 mb-3"><i class="bi bi-cart3"></i> Customer Cart</h5>
+                                    <div class="flex-grow-1" style="max-height: 250px; overflow-y: auto;">
+                                        <table class="table table-sm align-middle table-borderless">
+                                            <thead>
+                                                <tr class="table-light">
+                                                    <th>Item</th>
+                                                    <th class="text-center" style="width: 80px;">Qty</th>
+                                                    <th class="text-end">Price</th>
+                                                    <th class="text-center"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="cart-table-body"></tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="border-top pt-3 bg-light p-3 rounded mt-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="text-muted">Subtotal</span>
+                                            <span id="pos-subtotal">Rs. 0.00</span>
+                                        </div>
+                                        <div class="row mb-2 g-2">
+                                            <div class="col-md-6">
+                                                <label class="small text-muted">Discount Value</label>
+                                                <input type="number" class="form-control form-control-sm" id="pos-discount" value="0" min="0" oninput="calculatePOSCart()">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="small text-muted">Discount Type</label>
+                                                <select class="form-select form-select-sm" id="pos-discount-type" onchange="calculatePOSCart()">
+                                                    <option value="percentage">Percentage (%)</option>
+                                                    <option value="flat">Flat Cash (Rs.)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2 fw-bold fs-5">
+                                            <span>GRAND TOTAL</span>
+                                            <span class="text-success" id="pos-total">Rs. 0.00</span>
+                                        </div>
+                                        <div class="row g-2 mb-3">
+                                            <div class="col-md-6">
+                                                <label class="small text-muted">Pay Method</label>
+                                                <select class="form-select form-select-sm" id="pos-pay-method" onchange="toggleCashInput()">
+                                                    <option value="Cash">Cash</option>
+                                                    <option value="Card">Card</option>
+                                                    <option value="Online Transfer">Online Transfer</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6" id="cash-received-container">
+                                                <label class="small text-muted">Cash Received (Rs.)</label>
+                                                <input type="number" class="form-control form-control-sm" id="pos-cash-received" oninput="calculatePOSCart()">
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-3 fw-bold" id="balance-due-container">
+                                            <span class="text-muted">Balance Return</span>
+                                            <span class="text-danger" id="pos-balance">Rs. 0.00</span>
+                                        </div>
+                                        <button class="btn btn-success btn-lg w-100" onclick="checkoutAndPrintReceipt()">
+                                            <i class="bi bi-printer me-2"></i> Print & Checkout
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- B. INVOICE LOOKUP & HISTORY TAB -->
+                    <div class="tab-pane fade" id="invoice-lookup-pane" role="tabpanel">
+                        <div class="card card-custom bg-white p-4">
+                            <h5 class="mb-3 border-bottom pb-2">Search Invoice / Transaction History</h5>
+                            <div class="row g-2 mb-4 align-items-end">
+                                <div class="col-md-6">
+                                    <label class="small text-muted fw-bold">Search by Invoice ID</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                                        <input type="text" class="form-control" id="invoice-search-field" placeholder="e.g. 567890">
+                                        <button class="btn btn-primary" onclick="searchInvoiceByID()">Search</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-md-end">
+                                    <button class="btn btn-outline-secondary" onclick="loadRecentSales()"><i class="bi bi-arrow-clockwise me-1"></i> Refresh History</button>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Invoice No</th>
+                                            <th>Date & Time</th>
+                                            <th>Payment Method</th>
+                                            <th class="text-end">Grand Total</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="pos-history-table-body">
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">Click Refresh to load list...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <nav aria-label="Invoice history pagination">
+                                <ul class="pagination pagination-sm justify-content-end" id="pos-history-pagination"></ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. PRODUCTS MANAGEMENT PAGE -->
+            <div id="page-products" class="page-section">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card card-custom bg-white p-4 mb-4">
+                            <h5 class="mb-3" id="form-product-title">Add New Product</h5>
+                            <form id="product-form" onsubmit="saveProduct(event)">
+                                <input type="hidden" id="product-id">
+                                <div class="mb-3">
+                                    <label class="form-label">Product Name</label>
+                                    <input type="text" class="form-control" id="product-name" required placeholder="e.g. Chicken Fried Rice">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Selling Price (Rs.)</label>
+                                    <input type="number" step="0.01" class="form-control" id="product-price" required placeholder="e.g. 1200.00">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select" id="product-category" required>
+                                        <option value="">Select Category</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100" id="btn-product-submit">Save Product</button>
+                                <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btn-product-cancel" onclick="clearProductForm()">Cancel Edit</button>
+                            </form>
+                        </div>
+
+                        <div class="card card-custom bg-white p-4">
+                            <h5 class="mb-3">Manage Categories</h5>
+                            <form id="category-form" onsubmit="saveCategory(event)">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="new-category-name" placeholder="Category Name" required>
+                                    <button class="btn btn-outline-success" type="submit">Add</button>
+                                </div>
+                            </form>
+                            <h6>Existing Categories:</h6>
+                            <div id="category-badges-container" class="mt-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="card card-custom bg-white p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">Product List</h5>
+                                <button class="btn btn-sm btn-primary" id="btn-load-products" onclick="loadProductsClicked()">
+                                    <i class="bi bi-arrow-clockwise me-1"></i> Load Products
+                                </button>
+                            </div>
+                            <div id="products-list-wrapper" class="d-none">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Category</th>
+                                                <th class="text-end">Price</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="product-table-body"></tbody>
+                                    </table>
+                                </div>
+                                <nav aria-label="Product pagination">
+                                    <ul class="pagination pagination-sm justify-content-end" id="product-pagination"></ul>
+                                </nav>
+                            </div>
+                            <div id="products-load-placeholder" class="text-center py-5 text-muted">
+                                <i class="bi bi-box-seam fs-1 d-block mb-2"></i>
+                                Click "Load Products" to display current products.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. EXPENSES PAGE -->
+            <div id="page-expenses" class="page-section">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card card-custom bg-white p-4 mb-4">
+                            <h5 class="mb-3" id="form-expense-title">Add New Expense</h5>
+                            <form id="expense-form" onsubmit="saveExpense(event)">
+                                <input type="hidden" id="expense-id">
+                                <div class="mb-3">
+                                    <label class="form-label">Expense Description</label>
+                                    <input type="text" class="form-control" id="expense-desc" required placeholder="e.g. Vegetables purchase">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Amount (Rs.)</label>
+                                    <input type="number" step="0.01" class="form-control" id="expense-amount" required placeholder="e.g. 5000.00">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select" id="expense-category" required>
+                                        <option value="">Select Category</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="expense-date" required>
+                                </div>
+                                <button type="submit" class="btn btn-danger w-100" id="btn-expense-submit">Save Expense</button>
+                                <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btn-expense-cancel" onclick="clearExpenseForm()">Cancel Edit</button>
+                            </form>
+                        </div>
+
+                        <div class="card card-custom bg-white p-4">
+                            <h5 class="mb-3">Manage Expense Categories</h5>
+                            <form id="expense-category-form" onsubmit="saveExpenseCategory(event)">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="new-expense-category-name" placeholder="Category Name" required>
+                                    <button class="btn btn-outline-danger" type="submit">Add</button>
+                                </div>
+                            </form>
+                            <h6>Existing Categories:</h6>
+                            <div id="expense-category-badges-container" class="mt-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="card card-custom bg-white p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">Expense List</h5>
+                            </div>
+                            
+                            <!-- Search & Dynamic Date Filter with Firebase Indexing (Extremely Fast) -->
+                            <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded">
+                                <div class="col-md-4 col-6">
+                                    <label class="small text-muted fw-bold">From Date</label>
+                                    <input type="date" class="form-control form-control-sm" id="expense-filter-start">
+                                </div>
+                                <div class="col-md-4 col-6">
+                                    <label class="small text-muted fw-bold">To Date</label>
+                                    <input type="date" class="form-control form-control-sm" id="expense-filter-end">
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-sm btn-danger w-100 fw-bold" onclick="loadExpensesClicked(true)">
+                                        <i class="bi bi-funnel"></i> Filter & Load Records
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="expenses-list-wrapper" class="d-none">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Description</th>
+                                                <th>Category</th>
+                                                <th>Date</th>
+                                                <th class="text-end">Amount</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="expense-table-body"></tbody>
+                                    </table>
+                                </div>
+                                <nav aria-label="Expense pagination">
+                                    <ul class="pagination pagination-sm justify-content-end" id="expense-pagination"></ul>
+                                </nav>
+                            </div>
+                            <div id="expenses-load-placeholder" class="text-center py-5 text-muted">
+                                <i class="bi bi-wallet2 fs-1 d-block mb-2"></i>
+                                Select date range and click "Filter & Load Records" to safely fetch expenses.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. WASTAGE PAGE -->
+            <div id="page-wastage" class="page-section">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card card-custom bg-white p-4 mb-4">
+                            <h5 class="mb-3" id="form-wastage-title">Add Wastage Record</h5>
+                            <form id="wastage-form" onsubmit="saveWastage(event)">
+                                <input type="hidden" id="wastage-id">
+                                <div class="mb-3">
+                                    <label class="form-label">Item / Ingredient Name</label>
+                                    <input type="text" class="form-control" id="wastage-item" required placeholder="e.g. Expired Chicken">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Loss Value (Rs.)</label>
+                                    <input type="number" step="0.01" class="form-control" id="wastage-amount" required placeholder="e.g. 1500.00">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="wastage-date" required>
+                                </div>
+                                <button type="submit" class="btn btn-warning w-100" id="btn-wastage-submit">Save Wastage</button>
+                                <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btn-wastage-cancel" onclick="clearWastageForm()">Cancel Edit</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="card card-custom bg-white p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">Wastage List</h5>
+                            </div>
+
+                            <!-- Fast Dynamic Indexed Date Filter -->
+                            <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded">
+                                <div class="col-md-4 col-6">
+                                    <label class="small text-muted fw-bold">From Date</label>
+                                    <input type="date" class="form-control form-control-sm" id="wastage-filter-start">
+                                </div>
+                                <div class="col-md-4 col-6">
+                                    <label class="small text-muted fw-bold">To Date</label>
+                                    <input type="date" class="form-control form-control-sm" id="wastage-filter-end">
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-sm btn-warning" onclick="loadWastageClicked(true)">
+                                        <i class="bi bi-funnel"></i> Filter & Load Records
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="wastage-list-wrapper" class="d-none">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Item / Ingredient</th>
+                                                <th>Date</th>
+                                                <th class="text-end">Loss Value</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="wastage-table-body"></tbody>
+                                    </table>
+                                </div>
+                                <nav aria-label="Wastage pagination">
+                                    <ul class="pagination pagination-sm justify-content-end" id="wastage-pagination"></ul>
+                                </nav>
+                            </div>
+                            <div id="wastage-load-placeholder" class="text-center py-5 text-muted">
+                                <i class="bi bi-trash fs-1 d-block mb-2"></i>
+                                Select date range and click "Filter & Load Records" to safely fetch wastage records.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. REPORTS PAGE -->
+            <div id="page-reports" class="page-section">
+                <ul class="nav nav-tabs mb-4" id="reportTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="sales-report-tab" data-bs-toggle="tab" data-bs-target="#sales-report-panel" type="button" role="tab">Sales Report</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="expenses-report-tab" data-bs-toggle="tab" data-bs-target="#expenses-report-panel" type="button" role="tab">Expenses Report</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="reportTabsContent">
+                    <div class="tab-pane fade show active" id="sales-report-panel" role="tabpanel">
+                        <div class="card card-custom bg-white p-4">
+                            <h5 class="mb-3">Item-Wise Sales Report</h5>
+                            <div class="row g-3 align-items-end mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="sales-start-date">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">End Date</label>
+                                    <input type="date" class="form-control" id="sales-end-date">
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-success w-100" onclick="generateSalesReport()">
+                                        <i class="bi bi-funnel-fill me-1"></i> Generate Sales Report
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-2">
+                                    <div class="p-3 bg-success-subtle text-success rounded">
+                                        <h6 class="mb-1">Total Period Sales</h6>
+                                        <h3 class="mb-0" id="report-sales-total">Rs. 0.00</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <div class="p-3 bg-info-subtle text-info rounded">
+                                        <h6 class="mb-1">Total Period Orders</h6>
+                                        <h3 class="mb-0" id="report-sales-count">0</h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Product Name</th>
+                                            <th>Category</th>
+                                            <th class="text-center">Quantity Sold</th>
+                                            <th class="text-end">Total Revenue</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sales-report-table-body">
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted">Select a date range and click generate.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="expenses-report-panel" role="tabpanel">
+                        <div class="card card-custom bg-white p-4">
+                            <h5 class="mb-3">Expenses Summary Report</h5>
+                            <div class="row g-3 align-items-end mb-4">
+                                <div class="col-md-4">
+                                    <label class="form-label">Start Date</label>
+                                    <input type="date" class="form-control" id="expenses-start-date">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">End Date</label>
+                                    <input type="date" class="form-control" id="expenses-end-date">
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-danger w-100" onclick="generateExpensesReport()">
+                                        <i class="bi bi-funnel-fill me-1"></i> Generate Expenses Report
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="p-3 bg-danger-subtle text-danger rounded">
+                                        <h6 class="mb-1">Total Period Expenses</h6>
+                                        <h3 class="mb-0" id="report-expenses-total">Rs. 0.00</h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6 class="fw-bold mt-2 mb-3">Category-Wise Breakdown</h6>
+                            <div class="table-responsive mb-4">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Expense Category</th>
+                                            <th class="text-end">Total Spent</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="expenses-report-category-body">
+                                        <tr>
+                                            <td colspan="2" class="text-center text-muted">Select a date range and click generate.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h6 class="fw-bold mb-3">Itemized Expense Transactions</h6>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Category</th>
+                                            <th>Date</th>
+                                            <th class="text-end">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="expenses-report-details-body">
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted">Select a date range and click generate.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. SYSTEM UPDATES PAGE -->
+            <div id="page-updates" class="page-section">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card card-custom bg-white p-4">
+                            <h5 class="mb-3">Log System Update / Roadmap</h5>
+                            <form id="update-form" onsubmit="saveUpdateLog(event)">
+                                <div class="mb-3">
+                                    <label class="form-label">Version / Feature Name</label>
+                                    <input type="text" class="form-control" id="update-version" required placeholder="e.g. v1.4.0 or Billing Module">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Log Type</label>
+                                    <select class="form-select" id="update-type" required>
+                                        <option value="New Feature">New Feature</option>
+                                        <option value="Bug Fix">Bug Fix</option>
+                                        <option value="Performance Improvement">Performance Improvement</option>
+                                        <option value="Planned Update">Planned Update (Roadmap)</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" id="update-desc" rows="4" required placeholder="Describe what's new or planned..."></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="update-date" required>
+                                </div>
+                                <button type="submit" class="btn btn-dark w-100">Add Log</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="card card-custom bg-white p-4">
+                            <h5 class="mb-3">Update History & System Roadmap</h5>
+                            <div id="updates-timeline-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. USER MANAGEMENT PAGE -->
+            <div id="page-users" class="page-section">
+                <div class="row">
+                    <div class="col-md-5 mb-4">
+                        <div class="card card-custom bg-white p-4">
+                            <h5 class="mb-3" id="form-user-title">Create New User</h5>
+                            <form id="user-creation-form" onsubmit="saveUserAccount(event)">
+                                <input type="hidden" id="manage-uid">
+                                <div class="mb-3">
+                                    <label class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="manage-username" required placeholder="e.g. sunil">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="manage-email" required placeholder="e.g. sunil@hellobubu.com">
+                                </div>
+                                <div class="mb-3" id="password-field-container">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="manage-password" required placeholder="Min 6 characters">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Default Template Role</label>
+                                    <select class="form-select" id="manage-role" onchange="applyDefaultRoleTemplate()">
+                                        <option value="Admin">Admin (All Access)</option>
+                                        <option value="Manager">Manager (Operational Access)</option>
+                                        <option value="Cashier">Cashier (POS & Dashboard)</option>
+                                        <option value="Custom">Custom Permissions</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label class="form-label d-block fw-bold border-bottom pb-2">Custom Page Permissions (Tick to Allow)</label>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input perm-check" type="checkbox" value="dashboard" id="perm-dashboard" checked>
+                                                <label class="form-check-label" for="perm-dashboard">Dashboard</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input perm-check" type="checkbox" value="billing" id="perm-billing" checked>
+                                                <label class="form-check-label" for="perm-billing">Billing (POS)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input perm-check" type="checkbox" value="products" id="perm-products" checked>
+                                                <label class="form-check-label" for="perm-products">Products</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input perm-check" type="checkbox" value="expenses" id="perm-expenses" checked>
+                                                <label class="form-check-label" for="perm-expenses">Expenses</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input perm-check" type="checkbox" value="wastage" id="perm-wastage" checked>
+                                                <label class="form-check-label" for="perm-wastage">Wastage</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input perm-check" type="checkbox" value="reports" id="perm-reports" checked>
+                                                <label class="form-check-label" for="perm-reports">Reports</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input perm-check" type="checkbox" value="dayend" id="perm-dayend" checked>
+                                                <label class="form-check-label" for="perm-dayend">Day End</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-check">
+                                                <input class="form-check-input perm-check" type="checkbox" value="updates" id="perm-updates" checked>
+                                                <label class="form-check-label" for="perm-updates">Updates</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 flex-grow-1">
+                                            <div class="form-check">
+                                                <input class="form-check-input perm-check" type="checkbox" value="users" id="perm-users" checked>
+                                                <label class="form-check-label" for="perm-users">Users (Admin)</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100" id="btn-user-submit">Create User</button>
+                                <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btn-user-cancel" onclick="clearUserForm()">Cancel Edit</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-7">
+                        <div class="card card-custom bg-white p-4">
+                            <h5 class="mb-3">Registered Users</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>Role</th>
+                                            <th>Permissions Summary</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="users-table-body">
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted">Loading users list...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. DAY END (Z-REPORT / RECONCILIATION) PAGE -->
+            <div id="page-dayend" class="page-section">
+                <div class="row">
+                    <div class="col-md-5 mb-4">
+                        <div class="card card-custom bg-white p-4">
+                            <h5 class="mb-3">Submit Shift Closure (Z-Report)</h5>
+                            <form id="dayend-form" onsubmit="submitDayEnd(event)">
+                                <div class="mb-3">
+                                    <label class="form-label text-dark small fw-bold">Opening Float / Starting Cash (Rs.)</label>
+                                    <input type="number" step="0.01" class="form-control" id="de-opening-float" value="0" oninput="calculateLiveDayEndReconciliation()" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-dark small fw-bold">Actual Cash Collected in Hand (Rs.)</label>
+                                    <input type="number" step="0.01" class="form-control" id="de-actual-cash" value="0" oninput="calculateLiveDayEndReconciliation()" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-dark small fw-bold">Actual Card Collected (Terminal Total) (Rs.)</label>
+                                    <input type="number" step="0.01" class="form-control" id="de-actual-card" value="0" oninput="calculateLiveDayEndReconciliation()" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-dark small fw-bold">Actual Online Transfers Received (Rs.)</label>
+                                    <input type="number" step="0.01" class="form-control" id="de-actual-online" value="0" oninput="calculateLiveDayEndReconciliation()" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-dark small fw-bold">Shift Notes / Explanations</label>
+                                    <textarea class="form-control" id="de-notes" rows="3" placeholder="Explain any shortages, cash issues or manual float overrides here..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-lg w-100 fw-bold">
+                                    <i class="bi bi-shield-check me-2"></i> Submit & Print Day End (Z-Report)
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-7">
+                        <!-- Reconciliation Preview -->
+                        <div class="card card-custom bg-white p-4 mb-4">
+                            <h5 class="mb-3 border-bottom pb-2">Shift Reconciliation Preview</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Method</th>
+                                            <th class="text-end">System Expected</th>
+                                            <th class="text-end">Actual Entered</th>
+                                            <th class="text-end">Variance / Difference</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Cash</strong> (Float + Sales)</td>
+                                            <td class="text-end" id="de-preview-exp-cash">Rs. 0.00</td>
+                                            <td class="text-end text-primary" id="de-preview-act-cash">Rs. 0.00</td>
+                                            <td class="text-end fw-bold" id="de-preview-var-cash">Rs. 0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Card</strong></td>
+                                            <td class="text-end" id="de-preview-exp-card">Rs. 0.00</td>
+                                            <td class="text-end text-primary" id="de-preview-act-card">Rs. 0.00</td>
+                                            <td class="text-end fw-bold" id="de-preview-var-card">Rs. 0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Online Transfer</strong></td>
+                                            <td class="text-end" id="de-preview-exp-online">Rs. 0.00</td>
+                                            <td class="text-end text-primary" id="de-preview-act-online">Rs. 0.00</td>
+                                            <td class="text-end fw-bold" id="de-preview-var-online">Rs. 0.00</td>
+                                        </tr>
+                                        <tr class="table-secondary fw-bold text-dark">
+                                            <td>TOTAL SUMMARY</td>
+                                            <td class="text-end" id="de-preview-exp-total">Rs. 0.00</td>
+                                            <td class="text-end" id="de-preview-act-total">Rs. 0.00</td>
+                                            <td class="text-end" id="de-preview-var-total">Rs. 0.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Day End History -->
+                        <div class="card card-custom bg-white p-4">
+                            <h5 class="mb-3">Recent Shift Closures (Last 10 Days)</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle table-sm" style="font-size: 0.9rem;">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Closed By</th>
+                                            <th class="text-end">Expected Cash</th>
+                                            <th class="text-end">Actual Cash</th>
+                                            <th class="text-end">Variance</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dayend-history-body">
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted">No shifts close history loaded.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Firebase SDK (Compat Version) -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<script>
+    // Firebase Configuration using Realtime Database
+    const firebaseConfig = {
+        apiKey: "AIzaSyBjZacRIpQ6YEjMxt2HjRw7xIsDvjmUDA0",
+        authDomain: "supermarket-57b42.firebaseapp.com",
+        databaseURL: "https://supermarket-57b42-default-rtdb.firebaseio.com",
+        projectId: "supermarket-57b42",
+        storageBucket: "supermarket-57b42.firebasestorage.app",
+        messagingSenderId: "530353967594",
+        appId: "1:530353967594:web:b147cbfff7aeb9acc8a293",
+        measurementId: "G-EHB2YYS230"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const rtdb = firebase.database();
+    const auth = firebase.auth();
+
+    // Secondary Firebase instance for registering users without logging out Admin
+    let secondaryApp;
+    try {
+        secondaryApp = firebase.initializeApp(firebaseConfig, "SecondaryAuth");
+    } catch (e) {
+        secondaryApp = firebase.app("SecondaryAuth");
+    }
+
+    // App state arrays
+    let categories = [];
+    let products = [];
+    let expenseCategories = [];
+    let expenses = []; 
+    let wastage = [];
+    let updates = [];
+    let cart = [];
+    let userAccountsList = [];
+    let currentUserPermissions = null;
+    let todayExpectedSales = { cash: 0, card: 0, online: 0 };
+    
+    // Billing Sales History States
+    let fetchedInvoicesList = [];
+    let currentHistoryPage = 1;
+    const historyPerPage = 10;
+
+    // Set Current Date
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('current-date').innerText = new Date().toDateString();
+    document.getElementById('expense-date').value = todayStr;
+    document.getElementById('wastage-date').value = todayStr;
+    document.getElementById('update-date').value = todayStr;
+
+    // Set Default Date Range for Reports
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+
+    document.getElementById('sales-start-date').value = sevenDaysAgoStr;
+    document.getElementById('sales-end-date').value = todayStr;
+    document.getElementById('expenses-start-date').value = sevenDaysAgoStr;
+    document.getElementById('expenses-end-date').value = todayStr;
+    
+    // Set Default Date Filters for Lists (Expenses & Wastage)
+    document.getElementById('expense-filter-start').value = sevenDaysAgoStr;
+    document.getElementById('expense-filter-end').value = todayStr;
+    document.getElementById('wastage-filter-start').value = sevenDaysAgoStr;
+    document.getElementById('wastage-filter-end').value = todayStr;
+
+    // Helper: Clean standard Date and Time formatting
+    function formatDateTime(dateObj) {
+        const yyyy = dateObj.getFullYear();
+        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const dd = String(dateObj.getDate()).padStart(2, '0');
+        const hh = String(dateObj.getHours()).padStart(2, '0');
+        const min = String(dateObj.getMinutes()).padStart(2, '0');
+        const ss = String(dateObj.getSeconds()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+    }
+
+    // Monitor Authentication State
+    auth.onAuthStateChanged(async (user) => {
+        const loginScreen = document.getElementById('login-screen');
+        const mainApp = document.getElementById('main-app-container');
+        
+        if (user) {
+            try {
+                // Get authenticated user record from database
+                const snapshot = await rtdb.ref(`users/${user.uid}`).once('value');
+                let userData = snapshot.val();
+                
+                // If it is the first Admin logging in or a user record is missing, bootstrap permissions
+                if (!userData) {
+                    userData = {
+                        username: user.email.split('@')[0],
+                        email: user.email,
+                        role: "Admin",
+                        permissions: {
+                            dashboard: true,
+                            billing: true,
+                            products: true,
+                            expenses: true,
+                            wastage: true,
+                            reports: true,
+                            updates: true,
+                            users: true,
+                            dayend: true
+                        }
+                    };
+                    await rtdb.ref(`users/${user.uid}`).set(userData);
+                }
+
+                // --- AUTO MIGRATION LOGIC FOR OLD ACCOUNTS / MISSING PERMISSIONS ---
+                if (!userData.permissions) {
+                    userData.permissions = {};
+                }
+                if (userData.role === "Admin") {
+                    const modules = ['dashboard', 'billing', 'products', 'expenses', 'wastage', 'reports', 'dayend', 'updates', 'users'];
+                    let needUpdate = false;
+                    modules.forEach(mod => {
+                        if (userData.permissions[mod] !== true) {
+                            userData.permissions[mod] = true;
+                            needUpdate = true;
+                        }
+                    });
+                    if (needUpdate) {
+                        await rtdb.ref(`users/${user.uid}/permissions`).set(userData.permissions);
+                    }
+                }
+                // -----------------------------------------------------------------
+
+                currentUserPermissions = userData.permissions;
+                document.getElementById('user-role-badge').innerText = `Role: ${userData.role} (${userData.username})`;
+
+                // Render dynamic navigation menu based on tick permissions
+                enforceNavigationPermissions(userData.permissions);
+
+                // Show app screen
+                loginScreen.classList.add('d-none');
+                mainApp.classList.remove('d-none');
+                
+                // Load operational data
+                loadDataFromFirebase();
+
+                // Find first tab they are allowed to see, then display it
+                const firstAllowedTab = Object.keys(userData.permissions).find(key => userData.permissions[key] === true);
+                if (firstAllowedTab) {
+                    switchPage(firstAllowedTab, firstAllowedTab.charAt(0).toUpperCase() + firstAllowedTab.slice(1));
+                }
+
+            } catch (error) {
+                console.error("Auth routing failure: ", error);
+                alert("Error Detail: " + error.message + " (Code: " + error.code + ")");
+                auth.signOut();
+            }
+        } else {
+            // User is signed out. Show login, hide application.
+            loginScreen.classList.remove('d-none');
+            mainApp.classList.add('d-none');
+        }
+    });
+
+    // Clean up active printing classes when print preview is closed
+    window.addEventListener('afterprint', () => {
+        document.body.classList.remove('print-receipt', 'print-zreport');
+    });
+
+    // Sidebar Permission Filter UI updater
+    function enforceNavigationPermissions(perms) {
+        const modules = ['dashboard', 'billing', 'products', 'expenses', 'wastage', 'reports', 'dayend', 'updates', 'users'];
+        modules.forEach(mod => {
+            const navBtn = document.getElementById(`nav-btn-${mod}`);
+            if (navBtn) {
+                if (perms[mod] === true) {
+                    navBtn.classList.remove('d-none');
+                } else {
+                    navBtn.classList.add('d-none');
+                }
+            }
+        });
+    }
+
+    // Handle Login Submit
+    async function handleLogin(event) {
+        event.preventDefault();
+        
+        const usernameInput = document.getElementById('login-username').value.trim();
+        const passwordInput = document.getElementById('login-password').value;
+        const spinner = document.getElementById('login-spinner');
+        const errorMsg = document.getElementById('login-error-msg');
+        
+        spinner.classList.remove('d-none');
+        errorMsg.classList.add('d-none');
+
+        // Map pure username to an email format if '@' is not present
+        let email = usernameInput;
+        if (!usernameInput.includes('@')) {
+            email = `${usernameInput}@hellobubu.com`;
+        }
+
+        try {
+            await auth.signInWithEmailAndPassword(email, passwordInput);
+        } catch (error) {
+            console.error("Login failed: ", error);
+            errorMsg.innerText = "Invalid username/email or password.";
+            errorMsg.classList.remove('d-none');
+        } finally {
+            spinner.classList.add('d-none');
+        }
+    }
+
+    // Handle Logout
+    async function handleLogout() {
+        if (confirm("Are you sure you want to sign out?")) {
+            try {
+                await auth.signOut();
+                // Clear active arrays to prevent residue data leakage
+                categories = [];
+                products = [];
+                expenseCategories = [];
+                expenses = []; 
+                wastage = [];
+                updates = [];
+                cart = [];
+                userAccountsList = [];
+                currentUserPermissions = null;
+                todayExpectedSales = { cash: 0, card: 0, online: 0 };
+            } catch (error) {
+                console.error("Logout failed: ", error);
+            }
+        }
+    }
+
+    // Load Initial Lightweight Data from Firebase Realtime Database
+    async function loadDataFromFirebase() {
+        try {
+            // 1. Categories
+            const catSnapshot = await rtdb.ref('categories').once('value');
+            const catData = catSnapshot.val();
+            if (catData) {
+                categories = Object.keys(catData);
+            } else {
+                categories = ['Rice', 'Kottu', 'Beverages', 'Desserts'];
+                for (let cat of categories) {
+                    await rtdb.ref('categories/' + cat).set(true);
+                }
+            }
+
+            // 2. Products
+            const prodSnapshot = await rtdb.ref('products').once('value');
+            const prodData = prodSnapshot.val();
+            products = [];
+            if (prodData) {
+                products = Object.keys(prodData).map(key => ({ id: key, ...prodData[key] }));
+            }
+
+            // 3. Expense Categories
+            const expCatSnapshot = await rtdb.ref('expenseCategories').once('value');
+            const expCatData = expCatSnapshot.val();
+            if (expCatData) {
+                expenseCategories = Object.keys(expCatData);
+            } else {
+                expenseCategories = ['Raw Materials', 'Transport', 'Utilities', 'Rent', 'Salaries'];
+                for (let cat of expenseCategories) {
+                    await rtdb.ref('expenseCategories/' + cat).set(true);
+                }
+            }
+
+            // 4. Updates (Limit to last 30 to prevent DOM lagging over time)
+            const updatesSnapshot = await rtdb.ref('updates').limitToLast(30).once('value');
+            const updatesData = updatesSnapshot.val();
+            updates = [];
+            if (updatesData) {
+                updates = Object.keys(updatesData).map(key => ({ id: key, ...updatesData[key] }));
+            }
+
+            displayCategories();
+            displayExpenseCategories();
+            updateDashboardData();
+            displayUpdates();
+
+            // Load users database array if user permissions allow it
+            if (currentUserPermissions && currentUserPermissions.users === true) {
+                loadAllUsers();
+            }
+
+        } catch (error) {
+            console.error("Firebase data load error: ", error);
+        }
+    }
+
+    // Page switcher SPA logic
+    function switchPage(pageId, pageTitle) {
+        // Enforce secure client-side check
+        if (currentUserPermissions && currentUserPermissions[pageId] !== true) {
+            alert("Security Block: Access to this page is restricted for your user account.");
+            return;
+        }
+
+        const pages = document.querySelectorAll('.page-section');
+        pages.forEach(page => page.classList.remove('active-page'));
+
+        document.getElementById('page-' + pageId).classList.add('active-page');
+
+        const navLinks = document.querySelectorAll('.sidebar .nav-link');
+        navLinks.forEach(link => link.classList.remove('active'));
+        
+        const activeNavBtn = document.querySelector(`#nav-btn-${pageId} .nav-link`);
+        if (activeNavBtn) {
+            activeNavBtn.classList.add('active');
+        }
+
+        document.getElementById('page-title').innerText = pageTitle;
+
+        if (pageId === 'billing') {
+            displayPOSCategories();
+            displayPOSProducts();
+            // Default active billing tab is New Sale
+            const bootstrapTab = new bootstrap.Tab(document.getElementById('new-sale-tab'));
+            bootstrapTab.show();
+        } else if (pageId === 'reports') {
+            generateSalesReport();
+            generateExpensesReport();
+        } else if (pageId === 'users') {
+            loadAllUsers();
+        } else if (pageId === 'dayend') {
+            fetchTodaySalesForDayEnd();
+        }
+    }
+
+    // High Performance Dashboard Reader (O(1) Complexity)
+    async function updateDashboardData() {
+        try {
+            const snapshot = await rtdb.ref('daily_summaries/' + todayStr).once('value');
+            const data = snapshot.val() || { sales_total: 0, expenses_total: 0, wastage_total: 0, orders_count: 0 };
+            
+            document.getElementById('dash-today-sales').innerText = `Rs. ${parseFloat(data.sales_total || 0).toFixed(2)}`;
+            document.getElementById('dash-today-expenses').innerText = `Rs. ${parseFloat(data.expenses_total || 0).toFixed(2)}`;
+            document.getElementById('dash-today-wastage').innerText = `Rs. ${parseFloat(data.wastage_total || 0).toFixed(2)}`;
+            document.getElementById('dash-today-orders').innerText = data.orders_count || 0;
+        } catch (error) {
+            console.error("Dashboard Loading Error: ", error);
+        }
+    }
+
+    // PAGINATION RENDERER HELPER
+    function renderPagination(elementId, totalPages, currentPage, callbackName) {
+        const container = document.getElementById(elementId);
+        container.innerHTML = '';
+
+        if (totalPages <= 1) return;
+
+        container.innerHTML += `
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="${callbackName}(${currentPage - 1}); return false;">Previous</a>
+            </li>
+        `;
+
+        for (let i = 1; i <= totalPages; i++) {
+            container.innerHTML += `
+                <li class="page-item ${currentPage === i ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="${callbackName}(${i}); return false;">${i}</a>
+                </li>
+            `;
+        }
+
+        container.innerHTML += `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="${callbackName}(${currentPage + 1}); return false;">Next</a>
+            </li>
+        `;
+    }
+
+    // DYNAMIC CATEGORIES
+    function displayCategories() {
+        const dropdown = document.getElementById('product-category');
+        const badgeContainer = document.getElementById('category-badges-container');
+        const selectedValue = dropdown.value;
+
+        dropdown.innerHTML = '<option value="">Select Category</option>';
+        badgeContainer.innerHTML = '';
+
+        categories.sort().forEach(category => {
+            dropdown.innerHTML += `<option value="${category}">${category}</option>`;
+            badgeContainer.innerHTML += `
+                <span class="badge bg-secondary p-2 category-badge">
+                    ${category}
+                    <button type="button" class="btn-close btn-close-white" onclick="deleteCategory('${category}')" aria-label="Close"></button>
+                </span>
+            `;
+        });
+
+        if (categories.includes(selectedValue)) {
+            dropdown.value = selectedValue;
+        }
+    }
+
+    async function saveCategory(event) {
+        event.preventDefault();
+        const categoryInput = document.getElementById('new-category-name');
+        const newCategory = categoryInput.value.trim();
+
+        if (newCategory && !categories.includes(newCategory)) {
+            try {
+                await rtdb.ref('categories/' + newCategory).set(true);
+                categories.push(newCategory);
+                categoryInput.value = '';
+                displayCategories();
+            } catch (error) {
+                console.error("Error saving category: ", error);
+            }
+        } else if (categories.includes(newCategory)) {
+            alert("Category already exists!");
+        }
+    }
+
+    async function deleteCategory(categoryToDelete) {
+        if (confirm(`Are you sure you want to delete the category "${categoryToDelete}"?`)) {
+            try {
+                await rtdb.ref('categories/' + categoryToDelete).remove();
+                categories = categories.filter(cat => cat !== categoryToDelete);
+                displayCategories();
+            } catch (error) {
+                console.error("Error deleting category: ", error);
+            }
+        }
+    }
+
+    // PRODUCT MANAGEMENT
+    let isProductsLoaded = false;
+    let currentProductPage = 1;
+    const productsPerPage = 5;
+
+    function loadProductsClicked() {
+        isProductsLoaded = true;
+        document.getElementById('products-list-wrapper').classList.remove('d-none');
+        document.getElementById('products-load-placeholder').classList.add('d-none');
+        displayProducts();
+    }
+
+    function displayProducts() {
+        if (!isProductsLoaded) return;
+
+        const tableBody = document.getElementById('product-table-body');
+        tableBody.innerHTML = '';
+
+        if(products.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No products available.</td></tr>`;
+            document.getElementById('product-pagination').innerHTML = '';
+            return;
+        }
+
+        const totalPages = Math.ceil(products.length / productsPerPage);
+        if (currentProductPage > totalPages) currentProductPage = totalPages;
+        if (currentProductPage < 1) currentProductPage = 1;
+
+        const startIdx = (currentProductPage - 1) * productsPerPage;
+        const endIdx = startIdx + productsPerPage;
+        const paginatedProducts = products.slice(startIdx, endIdx);
+
+        paginatedProducts.forEach(product => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td><strong>${product.name}</strong></td>
+                    <td><span class="badge bg-secondary">${product.category}</span></td>
+                    <td class="text-end">Rs. ${parseFloat(product.price).toFixed(2)}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editProduct('${product.id}')">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct('${product.id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        renderPagination('product-pagination', totalPages, currentProductPage, 'changeProductPage');
+    }
+
+    function changeProductPage(pageNumber) {
+        currentProductPage = pageNumber;
+        displayProducts();
+    }
+
+    async function saveProduct(event) {
+        event.preventDefault();
+
+        const id = document.getElementById('product-id').value;
+        const name = document.getElementById('product-name').value;
+        const price = parseFloat(document.getElementById('product-price').value);
+        const category = document.getElementById('product-category').value;
+
+        try {
+            if (id) {
+                await rtdb.ref('products/' + id).update({ name, price, category });
+                const index = products.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    products[index] = { id, name, price, category };
+                }
+            } else {
+                const newRef = rtdb.ref('products').push();
+                await newRef.set({ name, price, category });
+                products.push({ id: newRef.key, name, price, category });
+            }
+            clearProductForm();
+            displayProducts();
+        } catch (error) {
+            console.error("Error saving product: ", error);
+        }
+    }
+
+    function editProduct(id) {
+        const product = products.find(p => p.id === id);
+        if (product) {
+            document.getElementById('product-id').value = product.id;
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-price').value = product.price;
+            document.getElementById('product-category').value = product.category;
+
+            document.getElementById('form-product-title').innerText = "Edit Product";
+            document.getElementById('btn-product-submit').innerText = "Update Product";
+            document.getElementById('btn-product-cancel').classList.remove('d-none');
+        }
+    }
+
+    async function deleteProduct(id) {
+        if (confirm("Are you sure you want to delete this product?")) {
+            try {
+                await rtdb.ref('products/' + id).remove();
+                products = products.filter(p => p.id !== id);
+                displayProducts();
+            } catch (error) {
+                console.error("Error deleting product: ", error);
+            }
+        }
+    }
+
+    function clearProductForm() {
+        document.getElementById('product-id').value = '';
+        document.getElementById('product-form').reset();
+
+        document.getElementById('form-product-title').innerText = "Add New Product";
+        document.getElementById('btn-product-submit').innerText = "Save Product";
+        document.getElementById('btn-product-cancel').classList.add('d-none');
+    }
+
+    // EXPENSE CATEGORIES
+    function displayExpenseCategories() {
+        const dropdown = document.getElementById('expense-category');
+        const badgeContainer = document.getElementById('expense-category-badges-container');
+        const selectedValue = dropdown.value;
+
+        dropdown.innerHTML = '<option value="">Select Category</option>';
+        badgeContainer.innerHTML = '';
+
+        expenseCategories.sort().forEach(category => {
+            dropdown.innerHTML += `<option value="${category}">${category}</option>`;
+            badgeContainer.innerHTML += `
+                <span class="badge bg-danger p-2 category-badge">
+                    ${category}
+                    <button type="button" class="btn-close btn-close-white" onclick="deleteExpenseCategory('${category}')" aria-label="Close"></button>
+                </span>
+            `;
+        });
+
+        if (expenseCategories.includes(selectedValue)) {
+            dropdown.value = selectedValue;
+        }
+    }
+
+    async function saveExpenseCategory(event) {
+        event.preventDefault();
+        const categoryInput = document.getElementById('new-expense-category-name');
+        const newCategory = categoryInput.value.trim();
+
+        if (newCategory && !expenseCategories.includes(newCategory)) {
+            try {
+                await rtdb.ref('expenseCategories/' + newCategory).set(true);
+                expenseCategories.push(newCategory);
+                categoryInput.value = '';
+                displayExpenseCategories();
+            } catch (error) {
+                console.error("Error saving expense category: ", error);
+            }
+        } else if (expenseCategories.includes(newCategory)) {
+            alert("Expense Category already exists!");
+        }
+    }
+
+    async function deleteExpenseCategory(categoryToDelete) {
+        if (confirm(`Are you sure you want to delete the category "${categoryToDelete}"?`)) {
+            try {
+                await rtdb.ref('expenseCategories/' + categoryToDelete).remove();
+                expenseCategories = expenseCategories.filter(cat => cat !== categoryToDelete);
+                displayExpenseCategories();
+            } catch (error) {
+                console.error("Error deleting expense category: ", error);
+            }
+        }
+    }
+
+    // EXPENSES MANAGEMENT (Optimized with Limited Loaded Records to avoid Slowdowns)
+    let isExpensesLoaded = false;
+    let currentExpensePage = 1;
+    const expensesPerPage = 5;
+
+    async function loadExpensesClicked(forceFilter = false) {
+        isExpensesLoaded = true;
+        document.getElementById('expenses-list-wrapper').classList.remove('d-none');
+        document.getElementById('expenses-load-placeholder').classList.add('d-none');
+        
+        const startFilter = document.getElementById('expense-filter-start').value;
+        const endFilter = document.getElementById('expense-filter-end').value;
+
+        try {
+            let queryRef;
+            if (forceFilter && startFilter && endFilter) {
+                // Fetch strictly within date index and limit results to prevent browser crash
+                queryRef = rtdb.ref('expenses').orderByChild('date').startAt(startFilter).endAt(endFilter).limitToLast(200);
+            } else {
+                // Limit to last 50 entries by default to protect browser performance
+                queryRef = rtdb.ref('expenses').limitToLast(50);
+            }
+
+            const snapshot = await queryRef.once('value');
+            const expData = snapshot.val();
+            expenses = [];
+            if (expData) {
+                expenses = Object.keys(expData).map(key => ({ id: key, ...expData[key] }));
+                expenses.sort((a,b) => b.date.localeCompare(a.date));
+            }
+            displayExpenses();
+        } catch (error) {
+            console.error("Error loading expenses: ", error);
+        }
+    }
+
+    function displayExpenses() {
+        if (!isExpensesLoaded) return;
+
+        const tableBody = document.getElementById('expense-table-body');
+        tableBody.innerHTML = '';
+
+        if (expenses.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No expenses found for selection.</td></tr>`;
+            document.getElementById('expense-pagination').innerHTML = '';
+            return;
+        }
+
+        const totalPages = Math.ceil(expenses.length / expensesPerPage);
+        if (currentExpensePage > totalPages) currentExpensePage = totalPages;
+        if (currentExpensePage < 1) currentExpensePage = 1;
+
+        const startIdx = (currentExpensePage - 1) * expensesPerPage;
+        const endIdx = startIdx + expensesPerPage;
+        const paginatedExpenses = expenses.slice(startIdx, endIdx);
+
+        paginatedExpenses.forEach(expense => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td><strong>${expense.desc}</strong></td>
+                    <td><span class="badge bg-danger">${expense.category}</span></td>
+                    <td>${expense.date}</td>
+                    <td class="text-end">Rs. ${parseFloat(expense.amount).toFixed(2)}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editExpense('${expense.id}')">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteExpense('${expense.id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        renderPagination('expense-pagination', totalPages, currentExpensePage, 'changeExpensePage');
+    }
+
+    function changeExpensePage(pageNumber) {
+        currentExpensePage = pageNumber;
+        displayExpenses();
+    }
+
+    async function saveExpense(event) {
+        event.preventDefault();
+
+        const id = document.getElementById('expense-id').value;
+        const desc = document.getElementById('expense-desc').value;
+        const amount = parseFloat(document.getElementById('expense-amount').value);
+        const category = document.getElementById('expense-category').value;
+        const date = document.getElementById('expense-date').value;
+
+        try {
+            const updatesMap = {};
+            if (id) {
+                const oldExpense = expenses.find(e => e.id === id);
+                updatesMap[`expenses/${id}`] = { desc, amount, category, date };
+                
+                if (oldExpense) {
+                    if (oldExpense.date === date) {
+                        const diff = amount - oldExpense.amount;
+                        updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(diff);
+                    } else {
+                        updatesMap[`daily_summaries/${oldExpense.date}/expenses_total`] = firebase.database.ServerValue.increment(-oldExpense.amount);
+                        updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(amount);
+                    }
+                }
+            } else {
+                const newRef = rtdb.ref('expenses').push();
+                updatesMap[`expenses/${newRef.key}`] = { desc, amount, category, date };
+                updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(amount);
+            }
+
+            await rtdb.ref().update(updatesMap);
+            
+            clearExpenseForm();
+            await loadExpensesClicked();
+            updateDashboardData();
+        } catch (error) {
+            console.error("Error saving expense: ", error);
+        }
+    }
+
+    function editExpense(id) {
+        const expense = expenses.find(e => e.id === id);
+        if (expense) {
+            document.getElementById('expense-id').value = expense.id;
+            document.getElementById('expense-desc').value = expense.desc;
+            document.getElementById('expense-amount').value = expense.amount;
+            document.getElementById('expense-category').value = expense.category;
+            document.getElementById('expense-date').value = expense.date;
+
+            document.getElementById('form-expense-title').innerText = "Edit Expense";
+            document.getElementById('btn-expense-submit').innerText = "Update Expense";
+            document.getElementById('btn-expense-cancel').classList.remove('d-none');
+        }
+    }
+
+    async function deleteExpense(id) {
+        const expense = expenses.find(e => e.id === id);
+        if (!expense) return;
+
+        if (confirm("Are you sure you want to delete this expense record?")) {
+            try {
+                const updatesMap = {};
+                updatesMap[`expenses/${id}`] = null;
+                updatesMap[`daily_summaries/${expense.date}/expenses_total`] = firebase.database.ServerValue.increment(-expense.amount);
+
+                await rtdb.ref().update(updatesMap);
+                await loadExpensesClicked();
+                updateDashboardData();
+            } catch (error) {
+                console.error("Error deleting expense: ", error);
+            }
+        }
+    }
+
+    function clearExpenseForm() {
+        document.getElementById('expense-id').value = '';
+        document.getElementById('expense-form').reset();
+        document.getElementById('expense-date').value = todayStr;
+
+        document.getElementById('form-expense-title').innerText = "Add New Expense";
+        document.getElementById('btn-expense-submit').innerText = "Save Expense";
+        document.getElementById('btn-expense-cancel').classList.add('d-none');
+    }
+
+
+    // WASTAGE TRACKER MODULE (Optimized with Query Capping)
+    let isWastageLoaded = false;
+    let currentWastagePage = 1;
+    const wastagePerPage = 5;
+
+    async function loadWastageClicked(forceFilter = false) {
+        isWastageLoaded = true;
+        document.getElementById('wastage-list-wrapper').classList.remove('d-none');
+        document.getElementById('wastage-load-placeholder').classList.add('d-none');
+
+        const startFilter = document.getElementById('wastage-filter-start').value;
+        const endFilter = document.getElementById('wastage-filter-end').value;
+        
+        try {
+            let queryRef;
+            if (forceFilter && startFilter && endFilter) {
+                // Fetch strictly within date index and limit results
+                queryRef = rtdb.ref('wastage').orderByChild('date').startAt(startFilter).endAt(endFilter).limitToLast(200);
+            } else {
+                // Fetch only last 50 entries by default to protect DOM bandwidth
+                queryRef = rtdb.ref('wastage').limitToLast(50);
+            }
+
+            const snapshot = await queryRef.once('value');
+            const data = snapshot.val();
+            wastage = [];
+            if (data) {
+                wastage = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                wastage.sort((a,b) => b.date.localeCompare(a.date));
+            }
+            displayWastage();
+        } catch (error) {
+            console.error("Error loading wastage records: ", error);
+        }
+    }
+
+    function displayWastage() {
+        if (!isWastageLoaded) return;
+
+        const tableBody = document.getElementById('wastage-table-body');
+        tableBody.innerHTML = '';
+
+        if (wastage.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No wastage tracker records found.</td></tr>`;
+            document.getElementById('wastage-pagination').innerHTML = '';
+            return;
+        }
+
+        const totalPages = Math.ceil(wastage.length / wastagePerPage);
+        if (currentWastagePage > totalPages) currentWastagePage = totalPages;
+        if (currentWastagePage < 1) currentWastagePage = 1;
+
+        const startIdx = (currentWastagePage - 1) * wastagePerPage;
+        const endIdx = startIdx + wastagePerPage;
+        const paginatedWastage = wastage.slice(startIdx, endIdx);
+
+        paginatedWastage.forEach(record => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td><strong>${record.item}</strong></td>
+                    <td>${record.date}</td>
+                    <td class="text-end text-danger">Rs. ${parseFloat(record.amount).toFixed(2)}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editWastage('${record.id}')">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteWastage('${record.id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        renderPagination('wastage-pagination', totalPages, currentWastagePage, 'changeWastagePage');
+    }
+
+    function changeWastagePage(pageNumber) {
+        currentWastagePage = pageNumber;
+        displayWastage();
+    }
+
+    async function saveWastage(event) {
+        event.preventDefault();
+
+        const id = document.getElementById('wastage-id').value;
+        const item = document.getElementById('wastage-item').value;
+        const amount = parseFloat(document.getElementById('wastage-amount').value);
+        const date = document.getElementById('wastage-date').value;
+
+        try {
+            const updatesMap = {};
+            if (id) {
+                const oldRecord = wastage.find(w => w.id === id);
+                updatesMap[`wastage/${id}`] = { item, amount, date };
+                
+                if (oldRecord) {
+                    if (oldRecord.date === date) {
+                        const diff = amount - oldRecord.amount;
+                        updatesMap[`daily_summaries/${date}/wastage_total`] = firebase.database.ServerValue.increment(diff);
+                    } else {
+                        updatesMap[`daily_summaries/${oldRecord.date}/wastage_total`] = firebase.database.ServerValue.increment(-oldRecord.amount);
+                        updatesMap[`daily_summaries/${date}/wastage_total`] = firebase.database.ServerValue.increment(amount);
+                    }
+                }
+            } else {
+                const newRef = rtdb.ref('wastage').push();
+                updatesMap[`wastage/${newRef.key}`] = { item, amount, date };
+                updatesMap[`daily_summaries/${date}/wastage_total`] = firebase.database.ServerValue.increment(amount);
+            }
+
+            await rtdb.ref().update(updatesMap);
+            
+            clearWastageForm();
+            await loadWastageClicked();
+            updateDashboardData();
+        } catch (error) {
+            console.error("Error saving wastage: ", error);
+        }
+    }
+
+    function editWastage(id) {
+        const record = wastage.find(w => w.id === id);
+        if (record) {
+            document.getElementById('wastage-id').value = record.id;
+            document.getElementById('wastage-item').value = record.item;
+            document.getElementById('wastage-amount').value = record.amount;
+            document.getElementById('wastage-date').value = record.date;
+
+            document.getElementById('form-wastage-title').innerText = "Edit Wastage";
+            document.getElementById('btn-wastage-submit').innerText = "Update Wastage";
+            document.getElementById('btn-wastage-cancel').classList.remove('d-none');
+        }
+    }
+
+    async function deleteWastage(id) {
+        const record = wastage.find(w => w.id === id);
+        if (!record) return;
+
+        if (confirm("Are you sure you want to delete this wastage record?")) {
+            try {
+                const updatesMap = {};
+                updatesMap[`wastage/${id}`] = null;
+                updatesMap[`daily_summaries/${record.date}/wastage_total`] = firebase.database.ServerValue.increment(-record.amount);
+
+                await rtdb.ref().update(updatesMap);
+                await loadWastageClicked();
+                updateDashboardData();
+            } catch (error) {
+                console.error("Error deleting wastage record: ", error);
+            }
+        }
+    }
+
+    function clearWastageForm() {
+        document.getElementById('wastage-id').value = '';
+        document.getElementById('wastage-form').reset();
+        document.getElementById('wastage-date').value = todayStr;
+
+        document.getElementById('form-wastage-title').innerText = "Add Wastage Record";
+        document.getElementById('btn-wastage-submit').innerText = "Save Wastage";
+        document.getElementById('btn-wastage-cancel').classList.add('d-none');
+    }
+
+
+    // SYSTEM UPDATES ROADMAP
+    function displayUpdates() {
+        const container = document.getElementById('updates-timeline-container');
+        container.innerHTML = '';
+
+        if(updates.length === 0) {
+            container.innerHTML = `<p class="text-center text-muted">No updates logged yet.</p>`;
+            return;
+        }
+
+        updates.sort((a,b) => b.date.localeCompare(a.date)).forEach(update => {
+            let badgeColor = 'bg-secondary';
+            if (update.type === 'New Feature') badgeColor = 'bg-success';
+            else if (update.type === 'Bug Fix') badgeColor = 'bg-danger';
+            else if (update.type === 'Performance Improvement') badgeColor = 'bg-primary';
+            else if (update.type === 'Planned Update') badgeColor = 'bg-warning text-dark';
+
+            container.innerHTML += `
+                <div class="timeline-item mb-4 pb-2">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h6 class="mb-1 text-dark"><strong>${update.version}</strong></h6>
+                        <span class="badge ${badgeColor} btn-sm mb-1">${update.type}</span>
+                    </div>
+                    <p class="mb-1 text-muted" style="font-size: 0.9rem;">${update.desc}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted"><i class="bi bi-calendar-event me-1"></i>${update.date}</small>
+                        <button class="btn btn-sm btn-link text-danger p-0" onclick="deleteUpdateLog('${update.id}')">Delete</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    async function saveUpdateLog(event) {
+        event.preventDefault();
+        const version = document.getElementById('update-version').value;
+        const type = document.getElementById('update-type').value;
+        const desc = document.getElementById('update-desc').value;
+        const date = document.getElementById('update-date').value;
+
+        try {
+            const newRef = rtdb.ref('updates').push();
+            await newRef.set({ version, type, desc, date });
+            const newLog = { id: newRef.key, version, type, desc, date };
+            updates.unshift(newLog);
+
+            document.getElementById('update-form').reset();
+            document.getElementById('update-date').value = todayStr;
+            displayUpdates();
+        } catch (error) {
+            console.error("Error saving update log: ", error);
+        }
+    }
+
+    async function deleteUpdateLog(id) {
+        if(confirm("Are you sure you want to delete this update log?")) {
+            try {
+                await rtdb.ref('updates/' + id).remove();
+                updates = updates.filter(up => up.id !== id);
+                displayUpdates();
+            } catch (error) {
+                console.error("Error deleting update log: ", error);
+            }
+        }
+    }
+
+    // BILLING POS MODULE
+    function displayPOSCategories() {
+        const filterSelect = document.getElementById('pos-category-filter');
+        const selectedValue = filterSelect.value;
+        
+        filterSelect.innerHTML = '<option value="All">All Categories</option>';
+        categories.sort().forEach(category => {
+            filterSelect.innerHTML += `<option value="${category}">${category}</option>`;
+        });
+
+        if (categories.includes(selectedValue)) {
+            filterSelect.value = selectedValue;
+        }
+    }
+
+    function displayPOSProducts() {
+        const grid = document.getElementById('pos-products-grid');
+        const searchVal = document.getElementById('pos-search').value.toLowerCase();
+        const categoryVal = document.getElementById('pos-category-filter').value;
+
+        grid.innerHTML = '';
+
+        const filteredProducts = products.filter(p => {
+            const matchesSearch = p.name.toLowerCase().includes(searchVal);
+            const matchesCategory = (categoryVal === 'All' || p.category === categoryVal);
+            return matchesSearch && matchesCategory;
+        });
+
+        if (filteredProducts.length === 0) {
+            grid.innerHTML = `<div class="w-100 text-center py-5 text-muted">No items match your search filter.</div>`;
+            return;
+        }
+
+        filteredProducts.forEach(product => {
+            grid.innerHTML += `
+                <div class="col">
+                    <div class="card h-100 pos-product-card text-center p-2 bg-light" onclick="addToCart('${product.id}')">
+                        <div class="card-body p-1">
+                            <span class="badge bg-secondary mb-1 small">${product.category}</span>
+                            <h6 class="card-title text-truncate" style="font-size: 0.95rem; font-weight: 600;">${product.name}</h6>
+                            <p class="card-text text-success mb-0" style="font-weight: 700; font-size: 0.9rem;">Rs.${parseFloat(product.price).toFixed(2)}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function addToCart(productId) {
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
+
+        const cartItem = cart.find(item => item.product.id === productId);
+        if (cartItem) {
+            cartItem.qty += 1;
+        } else {
+            cart.push({ product, qty: 1 });
+        }
+        displayCart();
+    }
+
+    function displayCart() {
+        const tbody = document.getElementById('cart-table-body');
+        tbody.innerHTML = '';
+
+        if (cart.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-5">Cart is currently empty.</td></tr>`;
+            calculatePOSCart();
+            return;
+        }
+
+        cart.forEach(item => {
+            const itemTotal = item.product.price * item.qty;
+            tbody.innerHTML += `
+                <tr>
+                    <td>
+                        <span class="d-block fw-bold" style="font-size: 0.9rem;">${item.product.name}</span>
+                        <small class="text-muted">Rs. ${parseFloat(item.product.price).toFixed(2)}</small>
+                    </td>
+                    <td class="text-center">
+                        <div class="input-group input-group-sm">
+                            <button class="btn btn-outline-secondary px-2 py-0" onclick="changeCartQty('${item.product.id}', -1)">-</button>
+                            <span class="form-control text-center px-1" style="max-width: 35px;">${item.qty}</span>
+                            <button class="btn btn-outline-secondary px-2 py-0" onclick="changeCartQty('${item.product.id}', 1)">+</button>
+                        </div>
+                    </td>
+                    <td class="text-end fw-bold">Rs. ${parseFloat(itemTotal).toFixed(2)}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm text-danger" onclick="removeFromCart('${item.product.id}')"><i class="bi bi-x-circle-fill"></i></button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        calculatePOSCart();
+    }
+
+    function changeCartQty(productId, delta) {
+        const cartItem = cart.find(item => item.product.id === productId);
+        if (cartItem) {
+            cartItem.qty += delta;
+            if (cartItem.qty <= 0) {
+                removeFromCart(productId);
+            } else {
+                displayCart();
+            }
+        }
+    }
+
+    function removeFromCart(productId) {
+        cart = cart.filter(item => item.product.id !== productId);
+        displayCart();
+    }
+
+    function toggleCashInput() {
+        const payMethod = document.getElementById('pos-pay-method').value;
+        const cashReceivedContainer = document.getElementById('cash-received-container');
+        const balanceContainer = document.getElementById('balance-due-container');
+
+        if (payMethod === 'Cash') {
+            cashReceivedContainer.classList.remove('d-none');
+            balanceContainer.classList.remove('d-none');
+        } else {
+            cashReceivedContainer.classList.add('d-none');
+            balanceContainer.classList.add('d-none');
+        }
+        calculatePOSCart();
+    }
+
+    let checkoutTotals = { subtotal: 0, discount: 0, total: 0, balance: 0, cashReceived: 0 };
+
+    function calculatePOSCart() {
+        let subtotal = 0;
+        cart.forEach(item => {
+            subtotal += item.product.price * item.qty;
+        });
+
+        const discountVal = parseFloat(document.getElementById('pos-discount').value) || 0;
+        const discountType = document.getElementById('pos-discount-type').value;
+        let discountAmount = 0;
+
+        if (discountType === 'percentage') {
+            discountAmount = (subtotal * discountVal) / 100;
+        } else {
+            discountAmount = discountVal;
+        }
+
+        if (discountAmount > subtotal) {
+            discountAmount = subtotal;
+        }
+
+        const grandTotal = subtotal - discountAmount;
+
+        const payMethod = document.getElementById('pos-pay-method').value;
+        let cashReceived = parseFloat(document.getElementById('pos-cash-received').value) || 0;
+        let balance = 0;
+
+        if (payMethod === 'Cash') {
+            balance = cashReceived - grandTotal;
+        } else {
+            cashReceived = grandTotal;
+        }
+
+        checkoutTotals = {
+            subtotal: subtotal,
+            discount: discountAmount,
+            total: grandTotal,
+            balance: balance >= 0 ? balance : 0,
+            cashReceived: cashReceived
+        };
+
+        document.getElementById('pos-subtotal').innerText = `Rs. ${subtotal.toFixed(2)}`;
+        document.getElementById('pos-total').innerText = `Rs. ${grandTotal.toFixed(2)}`;
+        document.getElementById('pos-balance').innerText = `Rs. ${(balance >= 0 ? balance : 0).toFixed(2)}`;
+    }
+
+    async function checkoutAndPrintReceipt() {
+        if (cart.length === 0) {
+            alert("Your checkout cart is empty!");
+            return;
+        }
+
+        const payMethod = document.getElementById('pos-pay-method').value;
+        if (payMethod === 'Cash' && checkoutTotals.cashReceived < checkoutTotals.total) {
+            alert(`Insufficient Cash Received! Total payable is Rs. ${checkoutTotals.total.toFixed(2)}`);
+            return;
+        }
+
+        const billNo = Date.now().toString().slice(-6);
+        const rightNow = new Date();
+        const formattedDateString = formatDateTime(rightNow);
+
+        document.getElementById('print-bill-details').innerText = `Date: ${formattedDateString}\nBill No: #${billNo}`;
+        document.getElementById('print-subtotal').innerText = `Rs. ${checkoutTotals.subtotal.toFixed(2)}`;
+        document.getElementById('print-discount').innerText = `Rs. ${checkoutTotals.discount.toFixed(2)}`;
+        document.getElementById('print-total').innerText = `Rs. ${checkoutTotals.total.toFixed(2)}`;
+        document.getElementById('print-pay-method').innerText = payMethod;
+        document.getElementById('print-paid').innerText = `Rs. ${checkoutTotals.cashReceived.toFixed(2)}`;
+        document.getElementById('print-balance').innerText = `Rs. ${checkoutTotals.balance.toFixed(2)}`;
+
+        const printBody = document.getElementById('print-receipt-body');
+        printBody.innerHTML = '';
+        
+        cart.forEach(item => {
+            const rowTotal = item.product.price * item.qty;
+            printBody.innerHTML += `
+                <tr>
+                    <td style="padding: 3px 0;">${item.product.name}</td>
+                    <td style="text-align: center;">${item.qty}</td>
+                    <td style="text-align: right;">Rs. ${rowTotal.toFixed(2)}</td>
+                </tr>
+            `;
+        });
+
+        // Apply targeted printing class to body BEFORE print
+        document.body.classList.add('print-receipt');
+        document.body.classList.remove('print-zreport');
+
+        window.print();
+
+        const saleRecord = {
+            billNo: billNo,
+            date: todayStr,
+            items: JSON.parse(JSON.stringify(cart)),
+            subtotal: checkoutTotals.subtotal,
+            discount: checkoutTotals.discount,
+            total: checkoutTotals.total,
+            payMethod: payMethod,
+            cashReceived: checkoutTotals.cashReceived,
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            status: "Active"
+        };
+
+        // Determine pay method property for O(1) day end summaries mapping
+        let methodKey = 'cash_sales';
+        if (payMethod === 'Card') {
+            methodKey = 'card_sales';
+        } else if (payMethod === 'Online Transfer') {
+            methodKey = 'online_sales';
+        }
+
+        try {
+            const updatesMap = {};
+            updatesMap[`sales/${billNo}`] = saleRecord;
+            updatesMap[`daily_summaries/${todayStr}/sales_total`] = firebase.database.ServerValue.increment(checkoutTotals.total);
+            updatesMap[`daily_summaries/${todayStr}/orders_count`] = firebase.database.ServerValue.increment(1);
+            updatesMap[`daily_summaries/${todayStr}/${methodKey}`] = firebase.database.ServerValue.increment(checkoutTotals.total);
+
+            await rtdb.ref().update(updatesMap);
+            
+            cart = [];
+            displayCart();
+            document.getElementById('pos-discount').value = 0;
+            document.getElementById('pos-cash-received').value = '';
+
+            updateDashboardData();
+        } catch (error) {
+            console.error("Error saving sale: ", error);
+            alert("Payment processed, but database failed to sync.");
+        }
+    }
+
+
+    // BILLING HISTORY & SEARCH LOGIC
+    async function loadRecentSales() {
+        const tbody = document.getElementById('pos-history-table-body');
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Fetching recent invoices...</td></tr>`;
+
+        try {
+            // Highly optimized payload size: Fetching only the latest 50 entries
+            const snapshot = await rtdb.ref('sales').orderByChild('timestamp').limitToLast(50).once('value');
+            const data = snapshot.val();
+            fetchedInvoicesList = [];
+
+            if (data) {
+                fetchedInvoicesList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                // Reverse chronological order
+                fetchedInvoicesList.sort((a, b) => b.timestamp - a.timestamp);
+            }
+            
+            currentHistoryPage = 1;
+            displayHistorySales();
+        } catch (error) {
+            console.error("Error loading recent sales: ", error);
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Failed to fetch transactions history.</td></tr>`;
+        }
+    }
+
+    function displayHistorySales() {
+        const tbody = document.getElementById('pos-history-table-body');
+        tbody.innerHTML = '';
+
+        if (fetchedInvoicesList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">No sales invoices found.</td></tr>`;
+            document.getElementById('pos-history-pagination').innerHTML = '';
+            return;
+        }
+
+        const totalPages = Math.ceil(fetchedInvoicesList.length / historyPerPage);
+        if (currentHistoryPage > totalPages) currentHistoryPage = totalPages;
+        if (currentHistoryPage < 1) currentHistoryPage = 1;
+
+        const startIdx = (currentHistoryPage - 1) * historyPerPage;
+        const endIdx = startIdx + historyPerPage;
+        const paginatedInvoices = fetchedInvoicesList.slice(startIdx, endIdx);
+
+        paginatedInvoices.forEach(invoice => {
+            const invoiceDate = invoice.timestamp ? formatDateTime(new Date(invoice.timestamp)) : invoice.date;
+            const statusBadge = invoice.status === 'Reversed' 
+                ? `<span class="badge bg-danger">Reversed</span>` 
+                : `<span class="badge bg-success">Active</span>`;
+
+            // Only allow Managers and Admins to reverse transaction
+            const canReverse = currentUserPermissions && (currentUserPermissions.users === true || invoice.status !== 'Reversed');
+            const reverseButton = invoice.status !== 'Reversed' 
+                ? `<button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="reverseInvoice('${invoice.id}')"><i class="bi bi-arrow-counterclockwise"></i> Reverse</button>`
+                : `<button class="btn btn-sm btn-outline-secondary py-0 px-2" disabled>Reversed</button>`;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>#${invoice.id}</strong></td>
+                    <td>${invoiceDate}</td>
+                    <td><span class="badge bg-light text-dark">${invoice.payMethod}</span></td>
+                    <td class="text-end fw-bold">Rs. ${parseFloat(invoice.total || 0).toFixed(2)}</td>
+                    <td class="text-center">${statusBadge}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-dark py-0 px-2 me-1" onclick="reprintSaleInvoice('${invoice.id}')"><i class="bi bi-printer"></i> Reprint</button>
+                        ${reverseButton}
+                    </td>
+                </tr>
+            `;
+        });
+
+        renderPagination('pos-history-pagination', totalPages, currentHistoryPage, 'changeHistoryPage');
+    }
+
+    function changeHistoryPage(pageNumber) {
+        currentHistoryPage = pageNumber;
+        displayHistorySales();
+    }
+
+    async function searchInvoiceByID() {
+        const queryVal = document.getElementById('invoice-search-field').value.trim();
+        if (!queryVal) {
+            loadRecentSales();
+            return;
+        }
+
+        const tbody = document.getElementById('pos-history-table-body');
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Searching strictly for invoice...</td></tr>`;
+
+        try {
+            // Highly optimized O(1) single-key lookup operation
+            const snapshot = await rtdb.ref(`sales/${queryVal}`).once('value');
+            const data = snapshot.val();
+            fetchedInvoicesList = [];
+
+            if (data) {
+                fetchedInvoicesList.push({ id: queryVal, ...data });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-warning">No invoice found matching ID #${queryVal}</td></tr>`;
+                document.getElementById('pos-history-pagination').innerHTML = '';
+                return;
+            }
+
+            currentHistoryPage = 1;
+            displayHistorySales();
+        } catch (error) {
+            console.error("Error executing targeted search: ", error);
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Search operation failed.</td></tr>`;
+        }
+    }
+
+    async function reprintSaleInvoice(billNo) {
+        try {
+            const snapshot = await rtdb.ref(`sales/${billNo}`).once('value');
+            const sale = snapshot.val();
+            if (!sale) {
+                alert("Failed to locate invoice details.");
+                return;
+            }
+
+            const invoiceTime = sale.timestamp ? formatDateTime(new Date(sale.timestamp)) : sale.date;
+            const titleModifier = sale.status === 'Reversed' ? '\n(VOID / REVERSED)' : '';
+
+            document.getElementById('print-bill-details').innerText = `Date: ${invoiceTime}\nBill No: #${billNo}${titleModifier}`;
+            document.getElementById('print-subtotal').innerText = `Rs. ${parseFloat(sale.subtotal || 0).toFixed(2)}`;
+            document.getElementById('print-discount').innerText = `Rs. ${parseFloat(sale.discount || 0).toFixed(2)}`;
+            document.getElementById('print-total').innerText = `Rs. ${parseFloat(sale.total || 0).toFixed(2)}`;
+            document.getElementById('print-pay-method').innerText = sale.payMethod;
+            document.getElementById('print-paid').innerText = `Rs. ${parseFloat(sale.cashReceived || sale.total || 0).toFixed(2)}`;
+
+            const balanceVal = (sale.cashReceived || sale.total || 0) - (sale.total || 0);
+            document.getElementById('print-balance').innerText = `Rs. ${(balanceVal >= 0 ? balanceVal : 0).toFixed(2)}`;
+
+            const printBody = document.getElementById('print-receipt-body');
+            printBody.innerHTML = '';
+            
+            sale.items.forEach(item => {
+                const rowTotal = item.product.price * item.qty;
+                printBody.innerHTML += `
+                    <tr>
+                        <td style="padding: 3px 0;">${item.product.name}</td>
+                        <td style="text-align: center;">${item.qty}</td>
+                        <td style="text-align: right;">Rs. ${rowTotal.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            document.body.classList.add('print-receipt');
+            document.body.classList.remove('print-zreport');
+
+            window.print();
+        } catch (error) {
+            console.error("Failed to reprint receipt: ", error);
+            alert("Reprint sequence interrupted.");
+        }
+    }
+
+    async function reverseInvoice(billNo) {
+        if (!confirm(`Are you sure you want to reverse (void) Invoice #${billNo}? This will subtract its total values from active summaries.`)) {
+            return;
+        }
+
+        try {
+            const snapshot = await rtdb.ref(`sales/${billNo}`).once('value');
+            const sale = snapshot.val();
+
+            if (!sale) {
+                alert("Sale invoice not found!");
+                return;
+            }
+
+            if (sale.status === 'Reversed') {
+                alert("This invoice has already been reversed!");
+                return;
+            }
+
+            const saleDate = sale.date;
+            const saleTotal = parseFloat(sale.total || 0);
+            const payMethod = sale.payMethod;
+
+            let methodKey = 'cash_sales';
+            if (payMethod === 'Card') {
+                methodKey = 'card_sales';
+            } else if (payMethod === 'Online Transfer') {
+                methodKey = 'online_sales';
+            }
+
+            const updatesMap = {};
+            // Set invoice state to Reversed
+            updatesMap[`sales/${billNo}/status`] = "Reversed";
+            // Atomically deduct totals and counts from original sales date summary
+            updatesMap[`daily_summaries/${saleDate}/sales_total`] = firebase.database.ServerValue.increment(-saleTotal);
+            updatesMap[`daily_summaries/${saleDate}/orders_count`] = firebase.database.ServerValue.increment(-1);
+            updatesMap[`daily_summaries/${saleDate}/${methodKey}`] = firebase.database.ServerValue.increment(-saleTotal);
+
+            await rtdb.ref().update(updatesMap);
+
+            alert(`Invoice #${billNo} has been successfully reversed.`);
+            
+            // Refresh operational summaries and views
+            updateDashboardData();
+            
+            // If currently looking at the history pane, trigger reload
+            if (document.getElementById('invoice-lookup-pane').classList.contains('show')) {
+                const searchVal = document.getElementById('invoice-search-field').value.trim();
+                if (searchVal) {
+                    searchInvoiceByID();
+                } else {
+                    loadRecentSales();
+                }
+            }
+        } catch (error) {
+            console.error("Failed to reverse sale invoice: ", error);
+            alert("Database reversal process failed.");
+        }
+    }
+
+
+    // REPORTS GENERATION - Optimized with performance safe range guards
+    async function generateSalesReport() {
+        const startDate = document.getElementById('sales-start-date').value;
+        const endDate = document.getElementById('sales-end-date').value;
+
+        if (!startDate || !endDate) {
+            alert("Please select both Start Date and End Date!");
+            return;
+        }
+
+        // Performance Guard: Limit dates to avoid browser heap overload
+        const diffTime = Math.abs(new Date(endDate) - new Date(startDate));
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays > 31) {
+            alert("Performance Guard: Please select a date range of 31 days or less to prevent database performance lagging.");
+            return;
+        }
+
+        const tbody = document.getElementById('sales-report-table-body');
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Generating... Please wait.</td></tr>`;
+
+        try {
+            // Fetch indexed records within the date range
+            const snapshot = await rtdb.ref('sales').orderByChild('date').startAt(startDate).endAt(endDate).once('value');
+            const data = snapshot.val() || {};
+            // Filter out Reversed sales to guarantee accurate revenue output
+            const filteredSales = Object.values(data).filter(sale => sale.status !== 'Reversed');
+
+            let overallTotal = 0;
+            let overallCount = filteredSales.length;
+            let itemWiseReport = {};
+
+            filteredSales.forEach(sale => {
+                overallTotal += parseFloat(sale.total);
+                
+                sale.items.forEach(cartItem => {
+                    const itemID = cartItem.product.id;
+                    const itemName = cartItem.product.name;
+                    const itemCat = cartItem.product.category;
+                    const itemPrice = parseFloat(cartItem.product.price);
+                    const itemQty = parseInt(cartItem.qty);
+
+                    if (itemWiseReport[itemID]) {
+                        itemWiseReport[itemID].qtySold += itemQty;
+                        itemWiseReport[itemID].revenue += itemPrice * itemQty;
+                    } else {
+                        itemWiseReport[itemID] = {
+                            name: itemName,
+                            category: itemCat,
+                            qtySold: itemQty,
+                            revenue: itemPrice * itemQty
+                        };
+                    }
+                });
+            });
+
+            document.getElementById('report-sales-total').innerText = `Rs. ${overallTotal.toFixed(2)}`;
+            document.getElementById('report-sales-count').innerText = overallCount;
+
+            tbody.innerHTML = '';
+            const itemKeys = Object.keys(itemWiseReport);
+            if (itemKeys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No itemized sales found in this period.</td></tr>`;
+                return;
+            }
+
+            itemKeys.forEach(key => {
+                const itemData = itemWiseReport[key];
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${itemData.name}</strong></td>
+                        <td><span class="badge bg-secondary">${itemData.category}</span></td>
+                        <td class="text-center">${itemData.qtySold}</td>
+                        <td class="text-end fw-bold">Rs. ${itemData.revenue.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+        } catch (error) {
+            console.error("Error generating sales report: ", error);
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center text-danger">Failed to load report data.</td></tr>`;
+        }
+    }
+
+    async function generateExpensesReport() {
+        const startDate = document.getElementById('expenses-start-date').value;
+        const endDate = document.getElementById('expenses-end-date').value;
+
+        if (!startDate || !endDate) {
+            alert("Please select both Start Date and End Date!");
+            return;
+        }
+
+        // Performance Guard: Limit dates to avoid database load latency
+        const diffTime = Math.abs(new Date(endDate) - new Date(startDate));
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays > 31) {
+            alert("Performance Guard: Please select a date range of 31 days or less to prevent database performance lagging.");
+            return;
+        }
+
+        const catBody = document.getElementById('expenses-report-category-body');
+        const detailsBody = document.getElementById('expenses-report-details-body');
+        
+        catBody.innerHTML = `<tr><td colspan="2" class="text-center text-muted">Generating...</td></tr>`;
+        detailsBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Generating...</td></tr>`;
+
+        try {
+            // Fetch indexed records within the date range
+            const snapshot = await rtdb.ref('expenses').orderByChild('date').startAt(startDate).endAt(endDate).once('value');
+            const data = snapshot.val() || {};
+            const filteredExpenses = Object.values(data);
+
+            let overallTotal = 0;
+            let categoryWiseSummary = {};
+
+            filteredExpenses.forEach(exp => {
+                const amount = parseFloat(exp.amount);
+                overallTotal += amount;
+
+                if (categoryWiseSummary[exp.category]) {
+                    categoryWiseSummary[exp.category] += amount;
+                } else {
+                    categoryWiseSummary[exp.category] = amount;
+                }
+            });
+
+            document.getElementById('report-expenses-total').innerText = `Rs. ${overallTotal.toFixed(2)}`;
+
+            catBody.innerHTML = '';
+            const catKeys = Object.keys(categoryWiseSummary);
+            if (catKeys.length === 0) {
+                catBody.innerHTML = `<tr><td colspan="2" class="text-center text-muted">No category-wise expenses found.</td></tr>`;
+            } else {
+                catKeys.forEach(cat => {
+                    catBody.innerHTML += `
+                        <tr>
+                            <td><strong>${cat}</strong></td>
+                            <td class="text-end fw-bold text-danger">Rs. ${categoryWiseSummary[cat].toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            detailsBody.innerHTML = '';
+            if (filteredExpenses.length === 0) {
+                detailsBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No expense transactions recorded in this period.</td></tr>`;
+                return;
+            }
+
+            filteredExpenses.sort((a,b) => b.date.localeCompare(a.date)).forEach(exp => {
+                detailsBody.innerHTML += `
+                    <tr>
+                        <td><strong>${exp.desc}</strong></td>
+                        <td><span class="badge bg-danger">${exp.category}</span></td>
+                        <td>${exp.date}</td>
+                        <td class="text-end fw-bold">Rs. ${parseFloat(exp.amount).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+        } catch (error) {
+            console.error("Error generating expenses report: ", error);
+            catBody.innerHTML = `<tr><td colspan="2" class="text-center text-danger">Failed to load summary.</td></tr>`;
+            detailsBody.innerHTML = `<tr><td colspan="4" class="text-center text-danger">Failed to load report data.</td></tr>`;
+        }
+    }
+
+
+    // DAY END (Z-REPORT / SHIFT RECONCILIATION) HIGH PERFORMANCE O(1) FUNCTIONS
+    async function fetchTodaySalesForDayEnd() {
+        try {
+            // Highly optimized: Reading single day summary record in O(1) time complexity
+            const snapshot = await rtdb.ref(`daily_summaries/${todayStr}`).once('value');
+            const data = snapshot.val() || { cash_sales: 0, card_sales: 0, online_sales: 0 };
+            
+            todayExpectedSales = {
+                cash: parseFloat(data.cash_sales || 0),
+                card: parseFloat(data.card_sales || 0),
+                online: parseFloat(data.online_sales || 0)
+            };
+            
+            calculateLiveDayEndReconciliation();
+            loadDayEndHistory();
+        } catch (error) {
+            console.error("Error fetching day end summary: ", error);
+        }
+    }
+
+    function calculateLiveDayEndReconciliation() {
+        const openingFloat = parseFloat(document.getElementById('de-opening-float').value) || 0;
+        const actualCash = parseFloat(document.getElementById('de-actual-cash').value) || 0;
+        const actualCard = parseFloat(document.getElementById('de-actual-card').value) || 0;
+        const actualOnline = parseFloat(document.getElementById('de-actual-online').value) || 0;
+
+        // Cash Expected = Today's Cash Sales + Opening Float/Starting Balance
+        const expectedCashTotal = todayExpectedSales.cash + openingFloat;
+        const expectedCardTotal = todayExpectedSales.card;
+        const expectedOnlineTotal = todayExpectedSales.online;
+
+        const varianceCash = actualCash - expectedCashTotal;
+        const varianceCard = actualCard - expectedCardTotal;
+        const varianceOnline = actualOnline - expectedOnlineTotal;
+
+        const totalExpected = expectedCashTotal + expectedCardTotal + expectedOnlineTotal;
+        const totalActual = actualCash + actualCard + actualOnline;
+        const totalVariance = totalActual - totalExpected;
+
+        // Render preview tables
+        document.getElementById('de-preview-exp-cash').innerText = `Rs. ${expectedCashTotal.toFixed(2)}`;
+        document.getElementById('de-preview-act-cash').innerText = `Rs. ${actualCash.toFixed(2)}`;
+        document.getElementById('de-preview-var-cash').innerText = `Rs. ${varianceCash.toFixed(2)}`;
+        setVarianceClass('de-preview-var-cash', varianceCash);
+
+        document.getElementById('de-preview-exp-card').innerText = `Rs. ${expectedCardTotal.toFixed(2)}`;
+        document.getElementById('de-preview-act-card').innerText = `Rs. ${actualCard.toFixed(2)}`;
+        document.getElementById('de-preview-var-card').innerText = `Rs. ${varianceCard.toFixed(2)}`;
+        setVarianceClass('de-preview-var-card', varianceCard);
+
+        document.getElementById('de-preview-exp-online').innerText = `Rs. ${expectedOnlineTotal.toFixed(2)}`;
+        document.getElementById('de-preview-act-online').innerText = `Rs. ${actualOnline.toFixed(2)}`;
+        document.getElementById('de-preview-var-online').innerText = `Rs. ${varianceOnline.toFixed(2)}`;
+        setVarianceClass('de-preview-var-online', varianceOnline);
+
+        document.getElementById('de-preview-exp-total').innerText = `Rs. ${totalExpected.toFixed(2)}`;
+        document.getElementById('de-preview-act-total').innerText = `Rs. ${totalActual.toFixed(2)}`;
+        document.getElementById('de-preview-var-total').innerText = `Rs. ${totalVariance.toFixed(2)}`;
+        setVarianceClass('de-preview-var-total', totalVariance);
+    }
+
+    function setVarianceClass(elementId, value) {
+        const el = document.getElementById(elementId);
+        el.className = "text-end fw-bold";
+        if (value < 0) {
+            el.classList.add("text-danger");
+        } else if (value > 0) {
+            el.classList.add("text-success");
+        } else {
+            el.classList.add("text-muted");
+        }
+    }
+
+    async function submitDayEnd(event) {
+        event.preventDefault();
+
+        const openingFloat = parseFloat(document.getElementById('de-opening-float').value) || 0;
+        const actualCash = parseFloat(document.getElementById('de-actual-cash').value) || 0;
+        const actualCard = parseFloat(document.getElementById('de-actual-card').value) || 0;
+        const actualOnline = parseFloat(document.getElementById('de-actual-online').value) || 0;
+        const notes = document.getElementById('de-notes').value.trim();
+
+        const expectedCashTotal = todayExpectedSales.cash + openingFloat;
+        const expectedCardTotal = todayExpectedSales.card;
+        const expectedOnlineTotal = todayExpectedSales.online;
+
+        const varianceCash = actualCash - expectedCashTotal;
+        const varianceCard = actualCard - expectedCardTotal;
+        const varianceOnline = actualOnline - expectedOnlineTotal;
+
+        const totalExpected = expectedCashTotal + expectedCardTotal + expectedOnlineTotal;
+        const totalActual = actualCash + actualCard + actualOnline;
+        const totalVariance = totalActual - totalExpected;
+
+        const currentUserName = auth.currentUser ? (auth.currentUser.email.split('@')[0]) : "system";
+
+        const dayEndRecord = {
+            date: todayStr,
+            closedBy: currentUserName,
+            openingFloat: openingFloat,
+            expectedCash: expectedCashTotal,
+            actualCash: actualCash,
+            varianceCash: varianceCash,
+            expectedCard: expectedCardTotal,
+            actualCard: actualCard,
+            varianceCard: varianceCard,
+            expectedOnline: expectedOnlineTotal,
+            actualOnline: actualOnline,
+            varianceOnline: varianceOnline,
+            totalExpected: totalExpected,
+            totalActual: totalActual,
+            totalVariance: totalVariance,
+            notes: notes || "N/A",
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        try {
+            // Save Day End closure object to database under specific date
+            await rtdb.ref(`day_ends/${todayStr}`).set(dayEndRecord);
+            alert("POS Shift closed & reconciled successfully!");
+
+            // Populate thermal print template
+            document.getElementById('print-z-meta').innerText = `Date: ${new Date().toLocaleString()} | User: ${currentUserName}`;
+            document.getElementById('print-z-float').innerText = `Rs. ${openingFloat.toFixed(2)}`;
+            
+            document.getElementById('print-z-exp-cash').innerText = `Rs. ${expectedCashTotal.toFixed(2)}`;
+            document.getElementById('print-z-act-cash').innerText = `Rs. ${actualCash.toFixed(2)}`;
+            document.getElementById('print-z-var-cash').innerText = `Rs. ${varianceCash.toFixed(2)}`;
+
+            document.getElementById('print-z-exp-card').innerText = `Rs. ${expectedCardTotal.toFixed(2)}`;
+            document.getElementById('print-z-act-card').innerText = `Rs. ${actualCard.toFixed(2)}`;
+            document.getElementById('print-z-var-card').innerText = `Rs. ${varianceCard.toFixed(2)}`;
+
+            document.getElementById('print-z-exp-online').innerText = `Rs. ${expectedOnlineTotal.toFixed(2)}`;
+            document.getElementById('print-z-act-online').innerText = `Rs. ${actualOnline.toFixed(2)}`;
+            document.getElementById('print-z-var-online').innerText = `Rs. ${varianceOnline.toFixed(2)}`;
+
+            document.getElementById('print-z-sales-total').innerText = `Rs. ${totalExpected.toFixed(2)}`;
+            document.getElementById('print-z-collected-total').innerText = `Rs. ${totalActual.toFixed(2)}`;
+            document.getElementById('print-z-variance-total').innerText = `Rs. ${totalVariance.toFixed(2)}`;
+            document.getElementById('print-z-notes').innerText = notes || "N/A";
+
+            // Apply targeted printing class to body BEFORE print
+            document.body.classList.add('print-zreport');
+            document.body.classList.remove('print-receipt');
+
+            // Trigger browser print screen
+            window.print();
+
+            // Reload history table
+            loadDayEndHistory();
+        } catch (error) {
+            console.error("Z-Report save error: ", error);
+            alert("Error writing Shift Closure to database.");
+        }
+    }
+
+    async function loadDayEndHistory() {
+        const tbody = document.getElementById('dayend-history-body');
+        if (!tbody) return;
+
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Loading closures...</td></tr>`;
+
+        try {
+            // Highly optimized fetch: retrieving only last 10 closures to prevent DOM lagging over time
+            const snapshot = await rtdb.ref('day_ends').limitToLast(10).once('value');
+            const data = snapshot.val();
+            tbody.innerHTML = '';
+
+            if (!data) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">No shifts closed yet.</td></tr>`;
+                return;
+            }
+
+            const list = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+            list.sort((a, b) => b.date.localeCompare(a.date));
+
+            list.forEach(item => {
+                const varClass = item.totalVariance < 0 ? 'text-danger' : (item.totalVariance > 0 ? 'text-success' : 'text-muted');
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${item.date}</strong></td>
+                        <td>${item.closedBy}</td>
+                        <td class="text-end">Rs. ${parseFloat(item.expectedCash).toFixed(2)}</td>
+                        <td class="text-end">Rs. ${parseFloat(item.actualCash).toFixed(2)}</td>
+                        <td class="text-end fw-bold ${varClass}">Rs. ${parseFloat(item.totalVariance).toFixed(2)}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-dark py-0 px-1" onclick="reprintZReport('${item.date}')" style="font-size: 0.8rem;">
+                                <i class="bi bi-printer"></i> Reprint
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        } catch (error) {
+            console.error("Error loading day ends: ", error);
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading shift history.</td></tr>`;
+        }
+    }
+
+    async function reprintZReport(dateStr) {
+        try {
+            const snapshot = await rtdb.ref(`day_ends/${dateStr}`).once('value');
+            const item = snapshot.val();
+            if (!item) return;
+
+            document.getElementById('print-z-meta').innerText = `Date: ${item.date} | User: ${item.closedBy}`;
+            document.getElementById('print-z-float').innerText = `Rs. ${parseFloat(item.openingFloat || 0).toFixed(2)}`;
+            
+            document.getElementById('print-z-exp-cash').innerText = `Rs. ${parseFloat(item.expectedCash || 0).toFixed(2)}`;
+            document.getElementById('print-z-act-cash').innerText = `Rs. ${parseFloat(item.actualCash || 0).toFixed(2)}`;
+            document.getElementById('print-z-var-cash').innerText = `Rs. ${parseFloat(item.varianceCash || 0).toFixed(2)}`;
+
+            document.getElementById('print-z-exp-card').innerText = `Rs. ${parseFloat(item.expectedCard || 0).toFixed(2)}`;
+            document.getElementById('print-z-act-card').innerText = `Rs. ${parseFloat(item.actualCard || 0).toFixed(2)}`;
+            document.getElementById('print-z-var-card').innerText = `Rs. ${parseFloat(item.varianceCard || 0).toFixed(2)}`;
+
+            document.getElementById('print-z-exp-online').innerText = `Rs. ${parseFloat(item.expectedOnline || 0).toFixed(2)}`;
+            document.getElementById('print-z-act-online').innerText = `Rs. ${parseFloat(item.actualOnline || 0).toFixed(2)}`;
+            document.getElementById('print-z-var-online').innerText = `Rs. ${parseFloat(item.varianceOnline || 0).toFixed(2)}`;
+
+            document.getElementById('print-z-sales-total').innerText = `Rs. ${parseFloat(item.totalExpected || 0).toFixed(2)}`;
+            document.getElementById('print-z-collected-total').innerText = `Rs. ${parseFloat(item.totalActual || 0).toFixed(2)}`;
+            document.getElementById('print-z-variance-total').innerText = `Rs. ${parseFloat(item.totalVariance || 0).toFixed(2)}`;
+            document.getElementById('print-z-notes').innerText = item.notes || "N/A";
+
+            // Apply targeted printing class to body BEFORE print
+            document.body.classList.add('print-zreport');
+            document.body.classList.remove('print-receipt');
+
+            window.print();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    // ==========================================
+    // USER MANAGEMENT FUNCTIONS
+    // ==========================================
+
+    // Load registered users from Firebase
+    async function loadAllUsers() {
+        const tbody = document.getElementById('users-table-body');
+        if (!tbody) return;
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Loading users...</td></tr>`;
+
+        try {
+            const snapshot = await rtdb.ref('users').once('value');
+            const data = snapshot.val();
+            tbody.innerHTML = '';
+            userAccountsList = [];
+
+            if (!data) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No users found.</td></tr>`;
+                return;
+            }
+
+            userAccountsList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+
+            userAccountsList.forEach(userObj => {
+                // Generate a summary of permissions granted
+                const activePerms = [];
+                if (userObj.permissions) {
+                    Object.keys(userObj.permissions).forEach(k => {
+                        if (userObj.permissions[k] === true) {
+                            activePerms.push(k);
+                        }
+                    });
+                }
+                const permsText = activePerms.length > 0 ? activePerms.join(', ') : 'None';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            <strong>${userObj.username}</strong>
+                            <br><small class="text-muted">${userObj.email}</small>
+                        </td>
+                        <td><span class="badge bg-primary">${userObj.role}</span></td>
+                        <td><span class="small text-wrap d-inline-block" style="max-width: 250px;">${permsText}</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary me-1" onclick="editUser('${userObj.id}')">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${userObj.id}')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        } catch (error) {
+            console.error("Error fetching users: ", error);
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center text-danger">Error loading users from database.</td></tr>`;
+        }
+    }
+
+    // Role dynamic template applicator
+    function applyDefaultRoleTemplate() {
+        const role = document.getElementById('manage-role').value;
+        const perms = {
+            Admin: { dashboard: true, billing: true, products: true, expenses: true, wastage: true, reports: true, dayend: true, updates: true, users: true },
+            Manager: { dashboard: true, billing: true, products: true, expenses: true, wastage: true, reports: true, dayend: true, updates: true, users: false },
+            Cashier: { dashboard: true, billing: true, products: false, expenses: false, wastage: false, reports: false, dayend: true, updates: false, users: false },
+            Custom: null
+        };
+
+        const selectedPerms = perms[role];
+        if (selectedPerms) {
+            Object.keys(selectedPerms).forEach(mod => {
+                const checkbox = document.getElementById(`perm-${mod}`);
+                if (checkbox) checkbox.checked = selectedPerms[mod];
+            });
+        }
+    }
+
+    // Create or Edit User
+    async function saveUserAccount(event) {
+        event.preventDefault();
+
+        const manageUid = document.getElementById('manage-uid').value;
+        const username = document.getElementById('manage-username').value.trim();
+        const emailInput = document.getElementById('manage-email').value.trim();
+        const password = document.getElementById('manage-password').value;
+        const role = document.getElementById('manage-role').value;
+
+        // Gather permission check state values
+        const permissions = {};
+        const modules = ['dashboard', 'billing', 'products', 'expenses', 'wastage', 'reports', 'dayend', 'updates', 'users'];
+        modules.forEach(mod => {
+            const checkbox = document.getElementById(`perm-${mod}`);
+            permissions[mod] = checkbox ? checkbox.checked : false;
+        });
+
+        try {
+            if (manageUid) {
+                // Update existing user metadata and database permissions
+                await rtdb.ref(`users/${manageUid}`).update({
+                    username: username,
+                    email: emailInput,
+                    role: role,
+                    permissions: permissions
+                });
+                alert("User record updated successfully!");
+            } else {
+                // Register a new authentication profile securely using a secondary auth pipeline
+                if (!password || password.length < 6) {
+                    alert("Password must be at least 6 characters long.");
+                    return;
+                }
+
+                const userCredential = await secondaryApp.auth().createUserWithEmailAndPassword(emailInput, password);
+                const newUid = userCredential.user.uid;
+
+                // Create record within application database tree
+                await rtdb.ref(`users/${newUid}`).set({
+                    username: username,
+                    email: emailInput,
+                    role: role,
+                    permissions: permissions
+                });
+
+                // Instantly decouple secondary auth engine to keep current administrator logged in
+                await secondaryApp.auth().signOut();
+                alert("New user created successfully!");
+            }
+
+            clearUserForm();
+            loadAllUsers();
+        } catch (error) {
+            console.error("User management execution failure: ", error);
+            alert("Execution Error: " + error.message);
+        }
+    }
+
+    // Edit User configuration loader
+    function editUser(uid) {
+        const userObj = userAccountsList.find(u => u.id === uid);
+        if (!userObj) return;
+
+        document.getElementById('manage-uid').value = uid;
+        document.getElementById('manage-username').value = userObj.username;
+        document.getElementById('manage-email').value = userObj.email;
+
+        // Turn password input requirement off during edits
+        document.getElementById('manage-password').required = false;
+        document.getElementById('password-field-container').classList.add('d-none');
+
+        document.getElementById('manage-role').value = userObj.role;
+
+        const modules = ['dashboard', 'billing', 'products', 'expenses', 'wastage', 'reports', 'dayend', 'updates', 'users'];
+        modules.forEach(mod => {
+            const checkbox = document.getElementById(`perm-${mod}`);
+            if (checkbox) {
+                checkbox.checked = !!(userObj.permissions && userObj.permissions[mod] === true);
+            }
+        });
+
+        document.getElementById('form-user-title').innerText = "Edit User Settings";
+        document.getElementById('btn-user-submit').innerText = "Update User Profile";
+        document.getElementById('btn-user-cancel').classList.remove('d-none');
+    }
+
+    // Delete user from Database metadata profile
+    async function deleteUser(uid) {
+        if (auth.currentUser && auth.currentUser.uid === uid) {
+            alert("Security Block: You cannot delete your own logged-in user profile.");
+            return;
+        }
+
+        if (confirm("Are you sure you want to delete this user profile? Note: This deletes the database profile. Authentication records are managed in Firebase console.")) {
+            try {
+                await rtdb.ref(`users/${uid}`).remove();
+                alert("User database profile deleted successfully.");
+                loadAllUsers();
+            } catch (error) {
+                console.error("Failed to delete user profile: ", error);
+                alert("Error deleting user: " + error.message);
+            }
+        }
+    }
+
+    // Reset User form fields back to pristine state
+    function clearUserForm() {
+        document.getElementById('manage-uid').value = '';
+        document.getElementById('user-creation-form').reset();
+        
+        document.getElementById('manage-password').required = true;
+        document.getElementById('password-field-container').classList.remove('d-none');
+
+        document.getElementById('form-user-title').innerText = "Create New User";
+        document.getElementById('btn-user-submit').innerText = "Create User";
+        document.getElementById('btn-user-cancel').classList.add('d-none');
+        
+        applyDefaultRoleTemplate();
+    }
+</script>
+</body>
+</html>
+
