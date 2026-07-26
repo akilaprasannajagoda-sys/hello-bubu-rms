@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -161,7 +162,7 @@
 <div id="receipt-print-area">
     <div style="text-align: center;">
         <h3 style="margin: 0; padding: 0; font-size: 16px; font-weight: bold;">HELLO BUBU</h3>
-        <p style="margin: 2px 0; font-size: 11px;">123, Galle Road, Colombo</p>
+        <p style="margin: 2px 0; font-size: 11px;">No.02,Rajakeeya Mawatha, Colombo</p>
         <p style="margin: 2px 0; font-size: 11px;">Tel: 011-2345678</p>
         <p style="margin: 5px 0;">--------------------------------</p>
         <h4 style="margin: 5px 0;"><strong>INVOICE</strong></h4>
@@ -446,6 +447,26 @@
                                     <h6 class="text-muted mb-1">Total Orders</h6>
                                     <h4 class="mb-0" id="dash-today-orders">0</h4>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Database Latency / Speed Meter Card -->
+                    <div class="col-md-3 mb-3">
+                        <div class="card card-custom bg-white p-3">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="p-3 bg-primary-subtle text-primary rounded-circle me-3" id="latency-icon-box">
+                                        <i class="bi bi-speedometer fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-muted mb-1">System Speed</h6>
+                                        <h4 class="mb-0 text-dark" id="dash-latency-val">-- ms</h4>
+                                        <span class="badge bg-secondary" id="dash-latency-status">Testing...</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-secondary p-1 border-0" onclick="checkSystemLatency()" title="Test Connection Speed">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -856,7 +877,7 @@
                         </div>
                     </div>
 
-                    <!-- B. INVOICE HISTORY & LOOKUP TAB (Moved here from POS) -->
+                    <!-- B. INVOICE HISTORY & LOOKUP TAB -->
                     <div class="tab-pane fade" id="invoice-history-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
                             <h5 class="mb-3 border-bottom pb-2">Search Invoice / Transaction History</h5>
@@ -1477,6 +1498,47 @@
         }
     }
 
+    // Performance Test Meter Function (Safe & Lightweight)
+    async function checkSystemLatency() {
+        const statusBadge = document.getElementById('dash-latency-status');
+        const latencyText = document.getElementById('dash-latency-val');
+        const iconBox = document.getElementById('latency-icon-box');
+
+        if (!statusBadge || !latencyText) return;
+
+        statusBadge.className = "badge bg-secondary text-white";
+        statusBadge.innerText = "Testing...";
+
+        const startTime = performance.now();
+        try {
+            // Ping a small reference node to measure database network response
+            await rtdb.ref('categories').once('value');
+            const endTime = performance.now();
+            const latency = Math.round(endTime - startTime);
+
+            latencyText.innerText = `${latency} ms`;
+
+            if (latency < 150) {
+                statusBadge.className = "badge bg-success text-white";
+                statusBadge.innerText = "Excellent";
+                if (iconBox) iconBox.className = "p-3 bg-success-subtle text-success rounded-circle me-3";
+            } else if (latency < 350) {
+                statusBadge.className = "badge bg-warning text-dark";
+                statusBadge.innerText = "Good";
+                if (iconBox) iconBox.className = "p-3 bg-warning-subtle text-warning rounded-circle me-3";
+            } else {
+                statusBadge.className = "badge bg-danger text-white";
+                statusBadge.innerText = "Slow Link";
+                if (iconBox) iconBox.className = "p-3 bg-danger-subtle text-danger rounded-circle me-3";
+            }
+        } catch (error) {
+            console.error("Latency check aborted: ", error);
+            statusBadge.className = "badge bg-dark text-white";
+            statusBadge.innerText = "Offline/Error";
+            latencyText.innerText = "-- ms";
+        }
+    }
+
     // Load Initial Lightweight Data from Firebase Realtime Database
     async function loadDataFromFirebase() {
         try {
@@ -1524,6 +1586,7 @@
             displayExpenseCategories();
             updateDashboardData();
             displayUpdates();
+            checkSystemLatency(); // Measure performance once upon loading
 
             // Load users database array if user permissions allow it
             if (currentUserPermissions && currentUserPermissions.users === true) {
@@ -1558,7 +1621,9 @@
 
         document.getElementById('page-title').innerText = pageTitle;
 
-        if (pageId === 'billing') {
+        if (pageId === 'dashboard') {
+            checkSystemLatency(); // Fast latency check when visiting dashboard
+        } else if (pageId === 'billing') {
             displayPOSCategories();
             displayPOSProducts();
         } else if (pageId === 'reports') {
@@ -1761,7 +1826,6 @@
         }
     }
 
-    // editProduct, deleteProduct, clearProductForm, etc... remain identical
     function editProduct(id) {
         const product = products.find(p => p.id === id);
         if (product) {
@@ -1905,7 +1969,7 @@
         if (currentExpensePage > totalPages) currentExpensePage = totalPages;
         if (currentExpensePage < 1) currentExpensePage = 1;
 
-        const startIdx = (currentHistoryPage - 1) * expensesPerPage;
+        const startIdx = (currentExpensePage - 1) * expensesPerPage;
         const endIdx = startIdx + expensesPerPage;
         const paginatedExpenses = expenses.slice(startIdx, endIdx);
 
