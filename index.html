@@ -31,7 +31,7 @@
             max-width: 400px;
         }
         
-        /* Updated Sidebar Styles for Scrollability and Logout Button Visibility */
+        /* Updated Sidebar Styles */
         .sidebar {
             height: 100vh;
             background-color: #343a40;
@@ -63,10 +63,10 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .page-section {
-            display: none; /* Hide all pages by default */
+            display: none;
         }
         .page-section.active-page {
-            display: block; /* Show only the active page */
+            display: block;
         }
         .category-badge {
             display: inline-flex;
@@ -77,7 +77,7 @@
             font-size: 0.65em;
             margin-left: 5px;
         }
-        /* Timeline style for updates section */
+        /* Timeline style */
         .timeline-item {
             border-left: 3px solid #6c757d;
             padding-left: 20px;
@@ -104,12 +104,10 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
-        /* Thermal Receipt Printing Styles */
         #receipt-print-area, #zreport-print-area {
             display: none;
         }
 
-        /* Mobile responsive adjustments for sidebar */
         @media (max-width: 767.98px) {
             .sidebar {
                 height: auto;
@@ -118,60 +116,72 @@
             }
         }
         
-        /* HIGH-COMPATIBILITY PRINT MEDIA QUERY (NO BLANK PAGES ON MOBILE CHROME) */
+        /* ==========================================================================
+           HIGH-PERFORMANCE THERMAL PRINT CSS (NO PAPER WASTAGE + CRISP TEXT)
+           ========================================================================== */
         @media print {
-            /* Hide everything that is NOT meant for printing */
-            #main-app-container, #login-screen, .no-print {
+            @page {
+                size: 80mm auto; /* Fixed 80mm paper width & dynamic height */
+                margin: 0mm;     /* Removes headers, footers & blank margins */
+            }
+            
+            html, body {
+                width: 80mm !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            #main-app-container, #login-screen, .no-print, #receipt-print-area, #zreport-print-area {
                 display: none !important;
             }
             
-            /* Hide print templates by default during printing */
-            #receipt-print-area, #zreport-print-area {
-                display: none !important;
-            }
-            
-            /* If printing Receipt */
-            body.print-receipt #receipt-print-area {
-                display: block !important;
-                position: relative;
-                width: 80mm;
-                font-family: 'Courier New', Courier, monospace;
-                font-size: 12px;
-                color: #000;
-                margin: 0;
-                padding: 10px;
-            }
-
-            /* If printing Z-Report */
+            body.print-receipt #receipt-print-area,
             body.print-zreport #zreport-print-area {
                 display: block !important;
-                position: relative;
-                width: 80mm;
-                font-family: 'Courier New', Courier, monospace;
-                font-size: 12px;
-                color: #000;
-                margin: 0;
-                padding: 10px;
+                width: 76mm !important;
+                margin: 0 auto !important;
+                padding: 3mm 1mm !important;
+                font-family: Arial, Helvetica, sans-serif !important; /* Extremely sharp on thermal printers */
+                font-size: 12px !important;
+                font-weight: 700 !important; /* Bold text burns clearly */
+                color: #000000 !important;
+                box-sizing: border-box;
+                page-break-inside: avoid !important;
+                
+                -webkit-font-smoothing: none !important;
+                -moz-osx-font-smoothing: unset !important;
+                text-rendering: optimizeSpeed !important;
+            }
+
+            #receipt-print-area *, #zreport-print-area * {
+                color: #000000 !important;
+                font-weight: 700 !important;
+                border-color: #000000 !important;
             }
         }
     </style>
 </head>
 <body>
 
-<!-- Hidden Print Template for Thermal Printer -->
+<!-- Hidden Print Template for Thermal Receipt -->
 <div id="receipt-print-area">
     <div style="text-align: center;">
         <h3 style="margin: 0; padding: 0; font-size: 16px; font-weight: bold;">HELLO BUBU</h3>
         <p style="margin: 2px 0; font-size: 11px;">No.02,Rajakeeya Mawatha, Colombo</p>
         <p style="margin: 2px 0; font-size: 11px;">Tel: 011-2345678</p>
-        <p style="margin: 5px 0;">--------------------------------</p>
-        <h4 style="margin: 5px 0;"><strong>INVOICE</strong></h4>
-        <p style="margin: 2px 0; text-align: left; white-space: pre-line;" id="print-bill-details">Date: - | Bill No: -</p>
-        <p style="margin: 5px 0;">--------------------------------</p>
+        <p style="margin: 4px 0;">------------------------------------------</p>
+        <h4 style="margin: 4px 0; font-size: 14px;"><strong>INVOICE</strong></h4>
+        <p style="margin: 2px 0; text-align: left; white-space: pre-line; font-size: 11px;" id="print-bill-details">Date: - | Bill No: -</p>
+        <p style="margin: 4px 0;">------------------------------------------</p>
     </div>
     <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
         <thead>
-            <tr style="border-bottom: 1px dashed #000;">
+            <tr style="border-bottom: 1px solid #000;">
                 <th style="text-align: left;">Item</th>
                 <th style="text-align: center;">Qty</th>
                 <th style="text-align: right;">Price</th>
@@ -180,7 +190,7 @@
         <tbody id="print-receipt-body"></tbody>
     </table>
     <div style="margin-top: 5px;">
-        <p style="margin: 2px 0;">--------------------------------</p>
+        <p style="margin: 4px 0;">------------------------------------------</p>
         <div style="display: flex; justify-content: space-between;">
             <span>Subtotal:</span>
             <span id="print-subtotal">Rs. 0.00</span>
@@ -189,11 +199,11 @@
             <span>Discount:</span>
             <span id="print-discount">Rs. 0.00</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 13px;">
             <span>TOTAL:</span>
             <span id="print-total">Rs. 0.00</span>
         </div>
-        <p style="margin: 2px 0;">--------------------------------</p>
+        <p style="margin: 4px 0;">------------------------------------------</p>
         <div style="display: flex; justify-content: space-between;">
             <span>Paid via <span id="print-pay-method">Cash</span>:</span>
             <span id="print-paid">Rs. 0.00</span>
@@ -202,11 +212,11 @@
             <span>Balance:</span>
             <span id="print-balance">Rs. 0.00</span>
         </div>
-        <p style="margin: 2px 0;">--------------------------------</p>
+        <p style="margin: 4px 0;">------------------------------------------</p>
     </div>
-    <div style="text-align: center; margin-top: 15px;">
-        <p style="margin: 0;">Thank You! Come Again.</p>
-        <small style="font-size: 9px; color: #555;">Software by Hello Bubu RMS</small>
+    <div style="text-align: center; margin-top: 10px;">
+        <p style="margin: 0; font-size: 11px;">Thank You! Come Again.</p>
+        <small style="font-size: 9px;">Software by Hello Bubu RMS</small>
     </div>
 </div>
 
@@ -215,15 +225,15 @@
     <div style="text-align: center;">
         <h3 style="margin: 0; padding: 0; font-size: 15px; font-weight: bold;">HELLO BUBU</h3>
         <h4 style="margin: 2px 0; font-size: 12px; font-weight: bold;">POS DAY END REPORT (Z-REPORT)</h4>
-        <p style="margin: 2px 0; font-size: 11px;" id="print-z-meta">Date: - | User: -</p>
-        <p style="margin: 5px 0;">--------------------------------</p>
+        <p style="margin: 2px 0; font-size: 10px;" id="print-z-meta">Date: - | User: -</p>
+        <p style="margin: 4px 0;">------------------------------------------</p>
     </div>
     <div style="font-size: 11px;">
         <div style="display: flex; justify-content: space-between;">
             <span>Opening Float:</span>
             <strong id="print-z-float">Rs. 0.00</strong>
         </div>
-        <p style="margin: 2px 0;">--------------------------------</p>
+        <p style="margin: 4px 0;">------------------------------------------</p>
         <div style="display: flex; justify-content: space-between;">
             <span>Expected Cash Sales:</span>
             <span id="print-z-exp-cash">Rs. 0.00</span>
@@ -236,7 +246,7 @@
             <span>Cash Variance:</span>
             <span id="print-z-var-cash">Rs. 0.00</span>
         </div>
-        <p style="margin: 2px 0;">--------------------------------</p>
+        <p style="margin: 4px 0;">------------------------------------------</p>
         <div style="display: flex; justify-content: space-between;">
             <span>Expected Card Sales:</span>
             <span id="print-z-exp-card">Rs. 0.00</span>
@@ -249,7 +259,7 @@
             <span>Card Variance:</span>
             <span id="print-z-var-card">Rs. 0.00</span>
         </div>
-        <p style="margin: 2px 0;">--------------------------------</p>
+        <p style="margin: 4px 0;">------------------------------------------</p>
         <div style="display: flex; justify-content: space-between;">
             <span>Expected Online Sales:</span>
             <span id="print-z-exp-online">Rs. 0.00</span>
@@ -262,7 +272,7 @@
             <span>Online Variance:</span>
             <span id="print-z-var-online">Rs. 0.00</span>
         </div>
-        <p style="margin: 2px 0;">--------------------------------</p>
+        <p style="margin: 4px 0;">------------------------------------------</p>
         <div style="display: flex; justify-content: space-between; font-weight: bold;">
             <span>TOTAL SYSTEM SALES:</span>
             <span id="print-z-sales-total">Rs. 0.00</span>
@@ -275,17 +285,17 @@
             <span>OVERALL VARIANCE:</span>
             <span id="print-z-variance-total">Rs. 0.00</span>
         </div>
-        <p style="margin: 2px 0;">--------------------------------</p>
+        <p style="margin: 4px 0;">------------------------------------------</p>
         <p style="margin: 2px 0; font-size: 10px;"><strong>Notes:</strong> <span id="print-z-notes">-</span></p>
     </div>
-    <div style="text-align: center; margin-top: 25px;">
+    <div style="text-align: center; margin-top: 20px;">
         <p style="margin: 0; font-size: 10px;">................................</p>
         <p style="margin: 0; font-size: 10px;">Cashier Signature</p>
-        <p style="margin: 15px 0 0 0; font-size: 8px; color: #555;">Printed via Hello Bubu RMS</p>
+        <p style="margin: 10px 0 0 0; font-size: 8px;">Printed via Hello Bubu RMS</p>
     </div>
 </div>
 
-<!-- LOGIN SCREEN (Shown by default, hidden when authenticated) -->
+<!-- LOGIN SCREEN -->
 <div id="login-screen">
     <div class="card login-card p-4">
         <div class="text-center mb-4">
@@ -316,7 +326,7 @@
     </div>
 </div>
 
-<!-- MAIN SYSTEM CONTAINER (Hidden until authenticated) -->
+<!-- MAIN SYSTEM CONTAINER -->
 <div class="container-fluid no-print d-none" id="main-app-container">
     <div class="row">
         <!-- Sidebar Navigation -->
@@ -378,7 +388,6 @@
                     </ul>
                 </div>
                 
-                <!-- Sign Out Section -->
                 <div class="pt-3 border-top border-secondary mt-auto mb-3">
                     <button class="btn btn-outline-danger w-100" onclick="handleLogout()">
                         <i class="bi bi-box-arrow-right me-2"></i> Sign Out
@@ -389,7 +398,6 @@
 
         <!-- Main Content Area -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content-area">
-            <!-- Header -->
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2" id="page-title">Dashboard</h1>
                 <span class="badge bg-primary p-2" id="current-date">Date</span>
@@ -450,7 +458,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Database Latency / Speed Meter Card -->
                     <div class="col-md-3 mb-3">
                         <div class="card card-custom bg-white p-3">
                             <div class="d-flex align-items-center justify-content-between">
@@ -497,7 +504,6 @@
 
                     <div class="col-md-5">
                         <div class="card card-custom bg-white p-4 d-flex flex-column" style="min-height: 580px;">
-                            <!-- POS Cart Header with Customer Display Connection Button -->
                             <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
                                 <h5 class="mb-0"><i class="bi bi-cart3"></i> Customer Cart</h5>
                                 <button class="btn btn-sm btn-outline-dark" id="btn-connect-display" onclick="connectCustomerDisplay()">
@@ -693,7 +699,6 @@
                                 <h5 class="mb-0">Expense List</h5>
                             </div>
                             
-                            <!-- Search & Dynamic Date Filter with Firebase Indexing (Extremely Fast) -->
                             <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded">
                                 <div class="col-md-4 col-6">
                                     <label class="small text-muted fw-bold">From Date</label>
@@ -770,7 +775,6 @@
                                 <h5 class="mb-0">Wastage List</h5>
                             </div>
 
-                            <!-- Fast Dynamic Indexed Date Filter -->
                             <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded">
                                 <div class="col-md-4 col-6">
                                     <label class="small text-muted fw-bold">From Date</label>
@@ -1193,7 +1197,6 @@
                     </div>
 
                     <div class="col-md-7">
-                        <!-- Reconciliation Preview -->
                         <div class="card card-custom bg-white p-4 mb-4">
                             <h5 class="mb-3 border-bottom pb-2">Shift Reconciliation Preview</h5>
                             <div class="table-responsive">
@@ -1236,7 +1239,6 @@
                             </div>
                         </div>
 
-                        <!-- Day End History -->
                         <div class="card card-custom bg-white p-4">
                             <h5 class="mb-3">Recent Shift Closures (Last 10 Days)</h5>
                             <div class="table-responsive">
@@ -1276,7 +1278,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
 <script>
-    // Firebase Configuration using Realtime Database
     const firebaseConfig = {
         apiKey: "AIzaSyBjZacRIpQ6YEjMxt2HjRw7xIsDvjmUDA0",
         authDomain: "supermarket-57b42.firebaseapp.com",
@@ -1288,12 +1289,10 @@
         measurementId: "G-EHB2YYS230"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const rtdb = firebase.database();
     const auth = firebase.auth();
 
-    // Secondary Firebase instance for registering users without logging out Admin
     let secondaryApp;
     try {
         secondaryApp = firebase.initializeApp(firebaseConfig, "SecondaryAuth");
@@ -1301,7 +1300,6 @@
         secondaryApp = firebase.app("SecondaryAuth");
     }
 
-    // App state arrays
     let categories = [];
     let products = [];
     let expenseCategories = [];
@@ -1313,23 +1311,19 @@
     let currentUserPermissions = null;
     let todayExpectedSales = { cash: 0, card: 0, online: 0 };
     
-    // Serial Port Customer Display Globals
     let serialPort = null;
     let serialWriter = null;
     
-    // Billing Sales History States
     let fetchedInvoicesList = [];
     let currentHistoryPage = 1;
     const historyPerPage = 10;
 
-    // Set Current Date
     const todayStr = new Date().toISOString().split('T')[0];
     document.getElementById('current-date').innerText = new Date().toDateString();
     document.getElementById('expense-date').value = todayStr;
     document.getElementById('wastage-date').value = todayStr;
     document.getElementById('update-date').value = todayStr;
 
-    // Set Default Date Range for Reports
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
@@ -1339,13 +1333,11 @@
     document.getElementById('expenses-start-date').value = sevenDaysAgoStr;
     document.getElementById('expenses-end-date').value = todayStr;
     
-    // Set Default Date Filters for Lists (Expenses & Wastage)
     document.getElementById('expense-filter-start').value = sevenDaysAgoStr;
     document.getElementById('expense-filter-end').value = todayStr;
     document.getElementById('wastage-filter-start').value = sevenDaysAgoStr;
     document.getElementById('wastage-filter-end').value = todayStr;
 
-    // Helper: Clean standard Date and Time formatting
     function formatDateTime(dateObj) {
         const yyyy = dateObj.getFullYear();
         const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -1356,18 +1348,15 @@
         return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
     }
 
-    // Monitor Authentication State
     auth.onAuthStateChanged(async (user) => {
         const loginScreen = document.getElementById('login-screen');
         const mainApp = document.getElementById('main-app-container');
         
         if (user) {
             try {
-                // Get authenticated user record from database
                 const snapshot = await rtdb.ref(`users/${user.uid}`).once('value');
                 let userData = snapshot.val();
                 
-                // If it is the first Admin logging in or a user record is missing, bootstrap permissions
                 if (!userData) {
                     userData = {
                         username: user.email.split('@')[0],
@@ -1388,7 +1377,6 @@
                     await rtdb.ref(`users/${user.uid}`).set(userData);
                 }
 
-                // --- AUTO MIGRATION LOGIC FOR OLD ACCOUNTS / MISSING PERMISSIONS ---
                 if (!userData.permissions) {
                     userData.permissions = {};
                 }
@@ -1405,22 +1393,17 @@
                         await rtdb.ref(`users/${user.uid}/permissions`).set(userData.permissions);
                     }
                 }
-                // -----------------------------------------------------------------
 
                 currentUserPermissions = userData.permissions;
                 document.getElementById('user-role-badge').innerText = `Role: ${userData.role} (${userData.username})`;
 
-                // Render dynamic navigation menu based on tick permissions
                 enforceNavigationPermissions(userData.permissions);
 
-                // Show app screen
                 loginScreen.classList.add('d-none');
                 mainApp.classList.remove('d-none');
                 
-                // Load operational data
                 loadDataFromFirebase();
 
-                // Find first tab they are allowed to see, then display it
                 const firstAllowedTab = Object.keys(userData.permissions).find(key => userData.permissions[key] === true);
                 if (firstAllowedTab) {
                     switchPage(firstAllowedTab, firstAllowedTab.charAt(0).toUpperCase() + firstAllowedTab.slice(1));
@@ -1432,18 +1415,15 @@
                 auth.signOut();
             }
         } else {
-            // User is signed out. Show login, hide application.
             loginScreen.classList.remove('d-none');
             mainApp.classList.add('d-none');
         }
     });
 
-    // Clean up active printing classes when print preview is closed
     window.addEventListener('afterprint', () => {
         document.body.classList.remove('print-receipt', 'print-zreport');
     });
 
-    // Sidebar Permission Filter UI updater
     function enforceNavigationPermissions(perms) {
         const modules = ['dashboard', 'billing', 'products', 'expenses', 'wastage', 'reports', 'dayend', 'updates', 'users'];
         modules.forEach(mod => {
@@ -1458,7 +1438,6 @@
         });
     }
 
-    // Handle Login Submit
     async function handleLogin(event) {
         event.preventDefault();
         
@@ -1470,7 +1449,6 @@
         spinner.classList.remove('d-none');
         errorMsg.classList.add('d-none');
 
-        // Map pure username to an email format if '@' is not present
         let email = usernameInput;
         if (!usernameInput.includes('@')) {
             email = `${usernameInput}@hellobubu.com`;
@@ -1487,12 +1465,10 @@
         }
     }
 
-    // Handle Logout
     async function handleLogout() {
         if (confirm("Are you sure you want to sign out?")) {
             try {
                 await auth.signOut();
-                // Clear active arrays to prevent residue data leakage
                 categories = [];
                 products = [];
                 expenseCategories = [];
@@ -1509,7 +1485,6 @@
         }
     }
 
-    // Performance Test Meter Function (Safe & Lightweight)
     async function checkSystemLatency() {
         const statusBadge = document.getElementById('dash-latency-status');
         const latencyText = document.getElementById('dash-latency-val');
@@ -1522,7 +1497,6 @@
 
         const startTime = performance.now();
         try {
-            // Ping a small reference node to measure database network response
             await rtdb.ref('categories').once('value');
             const endTime = performance.now();
             const latency = Math.round(endTime - startTime);
@@ -1550,10 +1524,8 @@
         }
     }
 
-    // Load Initial Lightweight Data from Firebase Realtime Database
     async function loadDataFromFirebase() {
         try {
-            // 1. Categories
             const catSnapshot = await rtdb.ref('categories').once('value');
             const catData = catSnapshot.val();
             if (catData) {
@@ -1565,7 +1537,6 @@
                 }
             }
 
-            // 2. Products
             const prodSnapshot = await rtdb.ref('products').once('value');
             const prodData = prodSnapshot.val();
             products = [];
@@ -1573,7 +1544,6 @@
                 products = Object.keys(prodData).map(key => ({ id: key, ...prodData[key] }));
             }
 
-            // 3. Expense Categories
             const expCatSnapshot = await rtdb.ref('expenseCategories').once('value');
             const expCatData = expCatSnapshot.val();
             if (expCatData) {
@@ -1585,7 +1555,6 @@
                 }
             }
 
-            // 4. Updates (Limit to last 30 to prevent DOM lagging over time)
             const updatesSnapshot = await rtdb.ref('updates').limitToLast(30).once('value');
             const updatesData = updatesSnapshot.val();
             updates = [];
@@ -1597,9 +1566,8 @@
             displayExpenseCategories();
             updateDashboardData();
             displayUpdates();
-            checkSystemLatency(); // Measure performance once upon loading
+            checkSystemLatency();
 
-            // Load users database array if user permissions allow it
             if (currentUserPermissions && currentUserPermissions.users === true) {
                 loadAllUsers();
             }
@@ -1609,9 +1577,7 @@
         }
     }
 
-    // Page switcher SPA logic
     function switchPage(pageId, pageTitle) {
-        // Enforce secure client-side check
         if (currentUserPermissions && currentUserPermissions[pageId] !== true) {
             alert("Security Block: Access to this page is restricted for your user account.");
             return;
@@ -1633,7 +1599,7 @@
         document.getElementById('page-title').innerText = pageTitle;
 
         if (pageId === 'dashboard') {
-            checkSystemLatency(); // Fast latency check when visiting dashboard
+            checkSystemLatency();
         } else if (pageId === 'billing') {
             displayPOSCategories();
             displayPOSProducts();
@@ -1647,7 +1613,6 @@
         }
     }
 
-    // High Performance Dashboard Reader (O(1) Complexity)
     async function updateDashboardData() {
         try {
             const snapshot = await rtdb.ref('daily_summaries/' + todayStr).once('value');
@@ -1662,7 +1627,6 @@
         }
     }
 
-    // PAGINATION RENDERER HELPER
     function renderPagination(elementId, totalPages, currentPage, callbackName) {
         const container = document.getElementById(elementId);
         container.innerHTML = '';
@@ -1692,7 +1656,6 @@
         container.innerHTML = paginationHtml;
     }
 
-    // DYNAMIC CATEGORIES (Optimized DOM Update)
     function displayCategories() {
         const dropdown = document.getElementById('product-category');
         const badgeContainer = document.getElementById('category-badges-container');
@@ -1750,7 +1713,6 @@
         }
     }
 
-    // PRODUCT MANAGEMENT (Optimized DOM Update)
     let isProductsLoaded = false;
     let currentProductPage = 1;
     const productsPerPage = 5;
@@ -1872,7 +1834,6 @@
         document.getElementById('btn-product-cancel').classList.add('d-none');
     }
 
-    // EXPENSE CATEGORIES (Optimized DOM Update)
     function displayExpenseCategories() {
         const dropdown = document.getElementById('expense-category');
         const badgeContainer = document.getElementById('expense-category-badges-container');
@@ -1930,7 +1891,6 @@
         }
     }
 
-    // EXPENSES MANAGEMENT (Optimized DOM Update)
     let isExpensesLoaded = false;
     let currentExpensePage = 1;
     const expensesPerPage = 5;
@@ -2097,7 +2057,6 @@
         document.getElementById('btn-expense-cancel').classList.add('d-none');
     }
 
-    // WASTAGE TRACKER MODULE (Optimized DOM Update)
     let isWastageLoaded = false;
     let currentWastagePage = 1;
     const wastagePerPage = 5;
@@ -2261,7 +2220,6 @@
         document.getElementById('btn-wastage-cancel').classList.add('d-none');
     }
 
-    // SYSTEM UPDATES ROADMAP (Optimized DOM Update)
     function displayUpdates() {
         const container = document.getElementById('updates-timeline-container');
         container.innerHTML = '';
@@ -2330,7 +2288,6 @@
         }
     }
 
-    // BILLING POS MODULE (Optimized DOM Update)
     function displayPOSCategories() {
         const filterSelect = document.getElementById('pos-category-filter');
         const selectedValue = filterSelect.value;
@@ -2512,7 +2469,6 @@
         document.getElementById('pos-total').innerText = `Rs. ${grandTotal.toFixed(2)}`;
         document.getElementById('pos-balance').innerText = `Rs. ${(balance >= 0 ? balance : 0).toFixed(2)}`;
 
-        // Send current grand total to LED8N Display dynamically
         sendAmountToLED8N(grandTotal, "total");
     }
 
@@ -2556,7 +2512,6 @@
         });
         printBody.innerHTML = printBodyHtml;
 
-        // Apply targeted printing class to body BEFORE print
         document.body.classList.add('print-receipt');
         document.body.classList.remove('print-zreport');
 
@@ -2575,7 +2530,6 @@
             status: "Active"
         };
 
-        // Determine pay method property for O(1) day end summaries mapping
         let methodKey = 'cash_sales';
         if (payMethod === 'Card') {
             methodKey = 'card_sales';
@@ -2599,7 +2553,6 @@
 
             updateDashboardData();
 
-            // Send Change Return amount or reset LED8N screen
             if (checkoutTotals.balance > 0) {
                 sendAmountToLED8N(checkoutTotals.balance, "change");
                 setTimeout(() => {
@@ -2614,21 +2567,17 @@
         }
     }
 
-
-    // BILLING HISTORY & SEARCH LOGIC (Optimized with Limited Queries & DOM Updates)
     async function loadRecentSales() {
         const tbody = document.getElementById('pos-history-table-body');
         tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Fetching recent invoices...</td></tr>`;
 
         try {
-            // Highly optimized payload size: Fetching only the latest 50 entries sorted by timestamp index
             const snapshot = await rtdb.ref('sales').orderByChild('timestamp').limitToLast(50).once('value');
             const data = snapshot.val();
             fetchedInvoicesList = [];
 
             if (data) {
                 fetchedInvoicesList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-                // Reverse chronological order
                 fetchedInvoicesList.sort((a, b) => b.timestamp - a.timestamp);
             }
             
@@ -2704,7 +2653,6 @@
         tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Searching strictly for invoice...</td></tr>`;
 
         try {
-            // Highly optimized O(1) single-key lookup operation
             const snapshot = await rtdb.ref(`sales/${queryVal}`).once('value');
             const data = snapshot.val();
             fetchedInvoicesList = [];
@@ -2804,9 +2752,7 @@
             }
 
             const updatesMap = {};
-            // Set invoice state to Reversed
             updatesMap[`sales/${billNo}/status`] = "Reversed";
-            // Atomically deduct totals and counts from original sales date summary
             updatesMap[`daily_summaries/${saleDate}/sales_total`] = firebase.database.ServerValue.increment(-saleTotal);
             updatesMap[`daily_summaries/${saleDate}/orders_count`] = firebase.database.ServerValue.increment(-1);
             updatesMap[`daily_summaries/${saleDate}/${methodKey}`] = firebase.database.ServerValue.increment(-saleTotal);
@@ -2815,10 +2761,8 @@
 
             alert(`Invoice #${billNo} has been successfully reversed.`);
             
-            // Refresh operational summaries and views
             updateDashboardData();
             
-            // If currently looking at the history pane, trigger reload
             if (document.getElementById('invoice-history-panel').classList.contains('show')) {
                 const searchVal = document.getElementById('invoice-search-field').value.trim();
                 if (searchVal) {
@@ -2833,8 +2777,6 @@
         }
     }
 
-
-    // REPORTS GENERATION - Optimized with performance safe range guards and fast DOM drawing
     async function generateSalesReport() {
         const startDate = document.getElementById('sales-start-date').value;
         const endDate = document.getElementById('sales-end-date').value;
@@ -2844,7 +2786,6 @@
             return;
         }
 
-        // Performance Guard: Limit dates to avoid browser heap overload
         const diffTime = Math.abs(new Date(endDate) - new Date(startDate));
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         if (diffDays > 31) {
@@ -2856,10 +2797,8 @@
         tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Generating... Please wait.</td></tr>`;
 
         try {
-            // Fetch indexed records within the date range
             const snapshot = await rtdb.ref('sales').orderByChild('date').startAt(startDate).endAt(endDate).once('value');
             const data = snapshot.val() || {};
-            // Filter out Reversed sales to guarantee accurate revenue output
             const filteredSales = Object.values(data).filter(sale => sale.status !== 'Reversed');
 
             let overallTotal = 0;
@@ -2929,7 +2868,6 @@
             return;
         }
 
-        // Performance Guard: Limit dates to avoid database load latency
         const diffTime = Math.abs(new Date(endDate) - new Date(startDate));
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         if (diffDays > 31) {
@@ -2944,7 +2882,6 @@
         detailsBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Generating...</td></tr>`;
 
         try {
-            // Fetch indexed records within the date range
             const snapshot = await rtdb.ref('expenses').orderByChild('date').startAt(startDate).endAt(endDate).once('value');
             const data = snapshot.val() || {};
             const filteredExpenses = Object.values(data);
@@ -3008,11 +2945,8 @@
         }
     }
 
-
-    // DAY END (Z-REPORT / SHIFT RECONCILIATION) HIGH PERFORMANCE O(1) FUNCTIONS
     async function fetchTodaySalesForDayEnd() {
         try {
-            // Highly optimized: Reading single day summary record in O(1) time complexity
             const snapshot = await rtdb.ref(`daily_summaries/${todayStr}`).once('value');
             const data = snapshot.val() || { cash_sales: 0, card_sales: 0, online_sales: 0 };
             
@@ -3035,7 +2969,6 @@
         const actualCard = parseFloat(document.getElementById('de-actual-card').value) || 0;
         const actualOnline = parseFloat(document.getElementById('de-actual-online').value) || 0;
 
-        // Cash Expected = Today's Cash Sales + Opening Float/Starting Balance
         const expectedCashTotal = todayExpectedSales.cash + openingFloat;
         const expectedCardTotal = todayExpectedSales.card;
         const expectedOnlineTotal = todayExpectedSales.online;
@@ -3048,7 +2981,6 @@
         const totalActual = actualCash + actualCard + actualOnline;
         const totalVariance = totalActual - totalExpected;
 
-        // Render preview tables
         document.getElementById('de-preview-exp-cash').innerText = `Rs. ${expectedCashTotal.toFixed(2)}`;
         document.getElementById('de-preview-act-cash').innerText = `Rs. ${actualCash.toFixed(2)}`;
         document.getElementById('de-preview-var-cash').innerText = `Rs. ${varianceCash.toFixed(2)}`;
@@ -3126,11 +3058,9 @@
         };
 
         try {
-            // Save Day End closure object to database under specific date
             await rtdb.ref(`day_ends/${todayStr}`).set(dayEndRecord);
             alert("POS Shift closed & reconciled successfully!");
 
-            // Populate thermal print template
             document.getElementById('print-z-meta').innerText = `Date: ${new Date().toLocaleString()} | User: ${currentUserName}`;
             document.getElementById('print-z-float').innerText = `Rs. ${openingFloat.toFixed(2)}`;
             
@@ -3151,14 +3081,11 @@
             document.getElementById('print-z-variance-total').innerText = `Rs. ${totalVariance.toFixed(2)}`;
             document.getElementById('print-z-notes').innerText = notes || "N/A";
 
-            // Apply targeted printing class to body BEFORE print
             document.body.classList.add('print-zreport');
             document.body.classList.remove('print-receipt');
 
-            // Trigger browser print screen
             window.print();
 
-            // Reload history table
             loadDayEndHistory();
         } catch (error) {
             console.error("Z-Report save error: ", error);
@@ -3173,7 +3100,6 @@
         tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Loading closures...</td></tr>`;
 
         try {
-            // Highly optimized fetch: retrieving only last 10 closures to prevent DOM lagging over time
             const snapshot = await rtdb.ref('day_ends').limitToLast(10).once('value');
             const data = snapshot.val();
             tbody.innerHTML = '';
@@ -3238,7 +3164,6 @@
             document.getElementById('print-z-variance-total').innerText = `Rs. ${parseFloat(item.totalVariance || 0).toFixed(2)}`;
             document.getElementById('print-z-notes').innerText = item.notes || "N/A";
 
-            // Apply targeted printing class to body BEFORE print
             document.body.classList.add('print-zreport');
             document.body.classList.remove('print-receipt');
 
@@ -3248,11 +3173,6 @@
         }
     }
 
-    // ==========================================
-    // USER MANAGEMENT FUNCTIONS (Optimized DOM Update)
-    // ==========================================
-
-    // Load registered users from Firebase
     async function loadAllUsers() {
         const tbody = document.getElementById('users-table-body');
         if (!tbody) return;
@@ -3273,7 +3193,6 @@
 
             let usersHtml = '';
             userAccountsList.forEach(userObj => {
-                // Generate a summary of permissions granted
                 const activePerms = [];
                 if (userObj.permissions) {
                     Object.keys(userObj.permissions).forEach(k => {
@@ -3311,7 +3230,6 @@
         }
     }
 
-    // Role dynamic template applicator
     function applyDefaultRoleTemplate() {
         const role = document.getElementById('manage-role').value;
         const perms = {
@@ -3330,7 +3248,6 @@
         }
     }
 
-    // Create or Edit User
     async function saveUserAccount(event) {
         event.preventDefault();
 
@@ -3340,7 +3257,6 @@
         const password = document.getElementById('manage-password').value;
         const role = document.getElementById('manage-role').value;
 
-        // Gather permission check state values
         const permissions = {};
         const modules = ['dashboard', 'billing', 'products', 'expenses', 'wastage', 'reports', 'dayend', 'updates', 'users'];
         modules.forEach(mod => {
@@ -3350,7 +3266,6 @@
 
         try {
             if (manageUid) {
-                // Update existing user metadata and database permissions
                 await rtdb.ref(`users/${manageUid}`).update({
                     username: username,
                     email: emailInput,
@@ -3359,7 +3274,6 @@
                 });
                 alert("User record updated successfully!");
             } else {
-                // Register a new authentication profile securely using a secondary auth pipeline
                 if (!password || password.length < 6) {
                     alert("Password must be at least 6 characters long.");
                     return;
@@ -3368,7 +3282,6 @@
                 const userCredential = await secondaryApp.auth().createUserWithEmailAndPassword(emailInput, password);
                 const newUid = userCredential.user.uid;
 
-                // Create record within application database tree
                 await rtdb.ref(`users/${newUid}`).set({
                     username: username,
                     email: emailInput,
@@ -3376,7 +3289,6 @@
                     permissions: permissions
                 });
 
-                // Instantly decouple secondary auth engine to keep current administrator logged in
                 await secondaryApp.auth().signOut();
                 alert("New user created successfully!");
             }
@@ -3389,7 +3301,6 @@
         }
     }
 
-    // Edit User configuration loader
     function editUser(uid) {
         const userObj = userAccountsList.find(u => u.id === uid);
         if (!userObj) return;
@@ -3398,7 +3309,6 @@
         document.getElementById('manage-username').value = userObj.username;
         document.getElementById('manage-email').value = userObj.email;
 
-        // Turn password input requirement off during edits
         document.getElementById('manage-password').required = false;
         document.getElementById('password-field-container').classList.add('d-none');
 
@@ -3417,7 +3327,6 @@
         document.getElementById('btn-user-cancel').classList.remove('d-none');
     }
 
-    // Delete user from Database metadata profile
     async function deleteUser(uid) {
         if (auth.currentUser && auth.currentUser.uid === uid) {
             alert("Security Block: You cannot delete your own logged-in user profile.");
@@ -3436,7 +3345,6 @@
         }
     }
 
-    // Reset User form fields back to pristine state
     function clearUserForm() {
         document.getElementById('manage-uid').value = '';
         document.getElementById('user-creation-form').reset();
@@ -3451,18 +3359,11 @@
         applyDefaultRoleTemplate();
     }
 
-    // ==========================================
-    // VIEWTECH VT-i9A (LED8N DISPLAY) INTEGRATION
-    // ==========================================
-
-    // LED8N display එක සමඟ සම්බන්ධ වීම (Web Serial API)
+    // LED8N DISPLAY INTEGRATION
     async function connectCustomerDisplay() {
         if ('serial' in navigator) {
             try {
-                // COM Port එක තෝරා ගැනීමට අවස්ථාව ලබාදේ
                 serialPort = await navigator.serial.requestPort();
-                
-                // LED8N සඳහා සාමාන්‍ය Baud Rate එක 2400 වේ
                 await serialPort.open({ baudRate: 2400 }); 
                 
                 serialWriter = serialPort.writable.getWriter();
@@ -3473,7 +3374,6 @@
                     btn.innerHTML = `<i class="bi bi-display-fill me-1"></i> Display Connected`;
                 }
                 
-                // ආරම්භයේදී තිරය Clear කර 0.00 පෙන්වා "Total" ලාම්පුව දල්වන්න
                 await sendAmountToLED8N(0.00, "total");
             } catch (error) {
                 console.error("LED8N Display connection failed:", error);
@@ -3484,24 +3384,15 @@
         }
     }
 
-    /**
-     * LED8N display එකට අගයන් සහ දර්ශක ලාම්පු යැවීමේ ප්‍රධාන ශ්‍රිතය
-     * @param {number} amount - පෙන්විය යුතු මුදල
-     * @param {string} mode - "price", "total", "change", "collect", "clear"
-     */
     async function sendAmountToLED8N(amount, mode = "total") {
         if (!serialWriter) return;
         
         try {
-            // දශම දෙකක් සහිතව අගය string එකක් බවට පත් කිරීම
             const amtStr = parseFloat(amount).toFixed(2); 
             
-            // 1. Clear Display Command (Hex: 0C)
             await serialWriter.write(new Uint8Array([0x0C]));
             
-            // 2. දර්ශක ලාම්පු ක්‍රියාත්මක කිරීමේ කේතයන් (ESC s [n] -> Hex: 1B 73 [n])
-            // n: 0 = Clear, 1 = Price, 2 = Total, 3 = Change, 4 = Collect
-            let modeByte = 0x30; // Default: Clear all
+            let modeByte = 0x30;
             if (mode === "price") modeByte = 0x31;
             else if (mode === "total") modeByte = 0x32;
             else if (mode === "change") modeByte = 0x33;
@@ -3510,8 +3401,6 @@
             const indicatorCmd = new Uint8Array([0x1B, 0x73, modeByte]);
             await serialWriter.write(indicatorCmd);
             
-            // 3. LED8N වෙත අගය යැවීමේ ESC/POS සංඥාව (ESC Q A [Amount] CR)
-            // Hex: 1B 51 41 [Amount] 0D
             const encoder = new TextEncoder();
             const escCmd = new Uint8Array([0x1B, 0x51, 0x41]);
             const crCmd = new Uint8Array([0x0D]);
