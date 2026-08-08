@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -117,16 +116,24 @@
         }
         
         /* ==========================================================================
-           HIGH-PERFORMANCE THERMAL PRINT CSS (NO PAPER WASTAGE + CRISP TEXT)
+           ULTRA-SHARP PERFECT 80MM THERMAL PRINT CSS (NO EXTRA PAPER FEED + CRISP TEXT)
            ========================================================================== */
         @media print {
             @page {
-                size: 80mm auto; /* Fixed 80mm paper width & dynamic height */
-                margin: 0mm;     /* Removes headers, footers & blank margins */
+                size: 80mm auto; /* Fixed 80mm paper width & dynamic minimal height */
+                margin: 0mm !important;
+            }
+            
+            *, *::before, *::after {
+                box-sizing: border-box !important;
+                color: #000000 !important;
+                text-shadow: none !important;
+                filter: none !important;
             }
             
             html, body {
                 width: 80mm !important;
+                max-width: 80mm !important;
                 height: auto !important;
                 margin: 0 !important;
                 padding: 0 !important;
@@ -134,34 +141,53 @@
                 color: #000000 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                overflow: hidden !important;
             }
             
-            #main-app-container, #login-screen, .no-print, #receipt-print-area, #zreport-print-area {
+            /* Prevent hidden elements from adding height to print layout */
+            #main-app-container, #login-screen, .no-print,
+            body:not(.print-receipt) #receipt-print-area,
+            body:not(.print-zreport) #zreport-print-area {
                 display: none !important;
+                height: 0 !important;
+                max-height: 0 !important;
+                overflow: hidden !important;
+                position: absolute !important;
+                left: -9999px !important;
             }
             
             body.print-receipt #receipt-print-area,
             body.print-zreport #zreport-print-area {
                 display: block !important;
-                width: 76mm !important;
+                position: relative !important;
+                left: 0 !important;
+                width: 72mm !important; /* Printable width inside 80mm margin */
                 margin: 0 auto !important;
-                padding: 3mm 1mm !important;
-                font-family: Arial, Helvetica, sans-serif !important; /* Extremely sharp on thermal printers */
-                font-size: 12px !important;
-                font-weight: 700 !important; /* Bold text burns clearly */
+                padding: 1mm 0mm 3mm 0mm !important;
+                font-family: 'Courier New', Courier, monospace !important; /* Extremely sharp on thermal printers */
+                font-size: 13px !important;
+                line-height: 1.25 !important;
+                font-weight: 900 !important; /* Bold text burns clearly */
                 color: #000000 !important;
-                box-sizing: border-box;
                 page-break-inside: avoid !important;
-                
+                break-inside: avoid !important;
+                page-break-after: avoid !important;
+                break-after: avoid !important;
                 -webkit-font-smoothing: none !important;
-                -moz-osx-font-smoothing: unset !important;
-                text-rendering: optimizeSpeed !important;
+                text-rendering: optimizeLegibility !important;
             }
 
             #receipt-print-area *, #zreport-print-area * {
                 color: #000000 !important;
-                font-weight: 700 !important;
+                font-weight: 900 !important;
                 border-color: #000000 !important;
+                font-family: 'Courier New', Courier, monospace !important;
+            }
+
+            .thermal-line {
+                overflow: hidden;
+                white-space: nowrap;
+                letter-spacing: -0.5px;
             }
         }
     </style>
@@ -171,26 +197,26 @@
 <!-- Hidden Print Template for Thermal Receipt -->
 <div id="receipt-print-area">
     <div style="text-align: center;">
-        <h3 style="margin: 0; padding: 0; font-size: 16px; font-weight: bold;">HELLO BUBU</h3>
+        <h3 style="margin: 0; padding: 0; font-size: 16px; font-weight: 900;">HELLO BUBU</h3>
         <p style="margin: 2px 0; font-size: 11px;">No.02,Rajakeeya Mawatha, Colombo</p>
         <p style="margin: 2px 0; font-size: 11px;">Tel: 011-2345678</p>
-        <p style="margin: 4px 0;">------------------------------------------</p>
-        <h4 style="margin: 4px 0; font-size: 14px;"><strong>INVOICE</strong></h4>
+        <div class="thermal-line">--------------------------------</div>
+        <h4 style="margin: 2px 0; font-size: 14px; font-weight: 900;">INVOICE</h4>
         <p style="margin: 2px 0; text-align: left; white-space: pre-line; font-size: 11px;" id="print-bill-details">Date: - | Bill No: -</p>
-        <p style="margin: 4px 0;">------------------------------------------</p>
+        <div class="thermal-line">--------------------------------</div>
     </div>
-    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+    <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 2px;">
         <thead>
             <tr style="border-bottom: 1px solid #000;">
-                <th style="text-align: left;">Item</th>
-                <th style="text-align: center;">Qty</th>
-                <th style="text-align: right;">Price</th>
+                <th style="text-align: left; padding-bottom: 2px;">Item</th>
+                <th style="text-align: center; padding-bottom: 2px;">Qty</th>
+                <th style="text-align: right; padding-bottom: 2px;">Price</th>
             </tr>
         </thead>
         <tbody id="print-receipt-body"></tbody>
     </table>
-    <div style="margin-top: 5px;">
-        <p style="margin: 4px 0;">------------------------------------------</p>
+    <div style="margin-top: 2px;">
+        <div class="thermal-line">--------------------------------</div>
         <div style="display: flex; justify-content: space-between;">
             <span>Subtotal:</span>
             <span id="print-subtotal">Rs. 0.00</span>
@@ -199,11 +225,11 @@
             <span>Discount:</span>
             <span id="print-discount">Rs. 0.00</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 13px;">
+        <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 14px; margin: 2px 0;">
             <span>TOTAL:</span>
             <span id="print-total">Rs. 0.00</span>
         </div>
-        <p style="margin: 4px 0;">------------------------------------------</p>
+        <div class="thermal-line">--------------------------------</div>
         <div style="display: flex; justify-content: space-between;">
             <span>Paid via <span id="print-pay-method">Cash</span>:</span>
             <span id="print-paid">Rs. 0.00</span>
@@ -212,28 +238,28 @@
             <span>Balance:</span>
             <span id="print-balance">Rs. 0.00</span>
         </div>
-        <p style="margin: 4px 0;">------------------------------------------</p>
+        <div class="thermal-line">--------------------------------</div>
     </div>
-    <div style="text-align: center; margin-top: 10px;">
-        <p style="margin: 0; font-size: 11px;">Thank You! Come Again.</p>
-        <small style="font-size: 9px;">Software by Hello Bubu RMS</small>
+    <div style="text-align: center; margin-top: 6px;">
+        <p style="margin: 0; font-size: 11px; font-weight: 900;">Thank You! Come Again.</p>
+        <small style="font-size: 9px; display: block; margin-top: 2px;">Software by Hello Bubu RMS</small>
     </div>
 </div>
 
 <!-- Thermal Print Template for Day End (Z-Report) -->
 <div id="zreport-print-area">
     <div style="text-align: center;">
-        <h3 style="margin: 0; padding: 0; font-size: 15px; font-weight: bold;">HELLO BUBU</h3>
-        <h4 style="margin: 2px 0; font-size: 12px; font-weight: bold;">POS DAY END REPORT (Z-REPORT)</h4>
+        <h3 style="margin: 0; padding: 0; font-size: 16px; font-weight: 900;">HELLO BUBU</h3>
+        <h4 style="margin: 2px 0; font-size: 12px; font-weight: 900;">POS DAY END REPORT (Z-REPORT)</h4>
         <p style="margin: 2px 0; font-size: 10px;" id="print-z-meta">Date: - | User: -</p>
-        <p style="margin: 4px 0;">------------------------------------------</p>
+        <div class="thermal-line">--------------------------------</div>
     </div>
     <div style="font-size: 11px;">
         <div style="display: flex; justify-content: space-between;">
             <span>Opening Float:</span>
             <strong id="print-z-float">Rs. 0.00</strong>
         </div>
-        <p style="margin: 4px 0;">------------------------------------------</p>
+        <div class="thermal-line">--------------------------------</div>
         <div style="display: flex; justify-content: space-between;">
             <span>Expected Cash Sales:</span>
             <span id="print-z-exp-cash">Rs. 0.00</span>
@@ -242,11 +268,11 @@
             <span>Actual Cash Submitted:</span>
             <span id="print-z-act-cash">Rs. 0.00</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+        <div style="display: flex; justify-content: space-between; font-weight: 900;">
             <span>Cash Variance:</span>
             <span id="print-z-var-cash">Rs. 0.00</span>
         </div>
-        <p style="margin: 4px 0;">------------------------------------------</p>
+        <div class="thermal-line">--------------------------------</div>
         <div style="display: flex; justify-content: space-between;">
             <span>Expected Card Sales:</span>
             <span id="print-z-exp-card">Rs. 0.00</span>
@@ -255,11 +281,11 @@
             <span>Actual Card Submitted:</span>
             <span id="print-z-act-card">Rs. 0.00</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+        <div style="display: flex; justify-content: space-between; font-weight: 900;">
             <span>Card Variance:</span>
             <span id="print-z-var-card">Rs. 0.00</span>
         </div>
-        <p style="margin: 4px 0;">------------------------------------------</p>
+        <div class="thermal-line">--------------------------------</div>
         <div style="display: flex; justify-content: space-between;">
             <span>Expected Online Sales:</span>
             <span id="print-z-exp-online">Rs. 0.00</span>
@@ -268,30 +294,30 @@
             <span>Actual Online Submitted:</span>
             <span id="print-z-act-online">Rs. 0.00</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+        <div style="display: flex; justify-content: space-between; font-weight: 900;">
             <span>Online Variance:</span>
             <span id="print-z-var-online">Rs. 0.00</span>
         </div>
-        <p style="margin: 4px 0;">------------------------------------------</p>
-        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+        <div class="thermal-line">--------------------------------</div>
+        <div style="display: flex; justify-content: space-between; font-weight: 900;">
             <span>TOTAL SYSTEM SALES:</span>
             <span id="print-z-sales-total">Rs. 0.00</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+        <div style="display: flex; justify-content: space-between; font-weight: 900;">
             <span>TOTAL ACTUAL COLLECTED:</span>
             <span id="print-z-collected-total">Rs. 0.00</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-weight: bold;" id="print-z-final-variance-row">
+        <div style="display: flex; justify-content: space-between; font-weight: 900;" id="print-z-final-variance-row">
             <span>OVERALL VARIANCE:</span>
             <span id="print-z-variance-total">Rs. 0.00</span>
         </div>
-        <p style="margin: 4px 0;">------------------------------------------</p>
+        <div class="thermal-line">--------------------------------</div>
         <p style="margin: 2px 0; font-size: 10px;"><strong>Notes:</strong> <span id="print-z-notes">-</span></p>
     </div>
-    <div style="text-align: center; margin-top: 20px;">
+    <div style="text-align: center; margin-top: 15px;">
         <p style="margin: 0; font-size: 10px;">................................</p>
         <p style="margin: 0; font-size: 10px;">Cashier Signature</p>
-        <p style="margin: 10px 0 0 0; font-size: 8px;">Printed via Hello Bubu RMS</p>
+        <p style="margin: 6px 0 0 0; font-size: 8px;">Printed via Hello Bubu RMS</p>
     </div>
 </div>
 
@@ -2504,9 +2530,9 @@
             const rowTotal = item.product.price * item.qty;
             printBodyHtml += `
                 <tr>
-                    <td style="padding: 3px 0;">${item.product.name}</td>
+                    <td style="padding: 2px 0; text-align: left;">${item.product.name}</td>
                     <td style="text-align: center;">${item.qty}</td>
-                    <td style="text-align: right;">Rs. ${rowTotal.toFixed(2)}</td>
+                    <td style="text-align: right;">Rs.${rowTotal.toFixed(2)}</td>
                 </tr>
             `;
         });
@@ -2703,9 +2729,9 @@
                 const rowTotal = item.product.price * item.qty;
                 printBodyHtml += `
                     <tr>
-                        <td style="padding: 3px 0;">${item.product.name}</td>
+                        <td style="padding: 2px 0; text-align: left;">${item.product.name}</td>
                         <td style="text-align: center;">${item.qty}</td>
-                        <td style="text-align: right;">Rs. ${rowTotal.toFixed(2)}</td>
+                        <td style="text-align: right;">Rs.${rowTotal.toFixed(2)}</td>
                     </tr>
                 `;
             });
