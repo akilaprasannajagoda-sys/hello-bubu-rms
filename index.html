@@ -497,7 +497,14 @@
 
                     <div class="col-md-5">
                         <div class="card card-custom bg-white p-4 d-flex flex-column" style="min-height: 580px;">
-                            <h5 class="border-bottom pb-2 mb-3"><i class="bi bi-cart3"></i> Customer Cart</h5>
+                            <!-- POS Cart Header with Customer Display Connection Button -->
+                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                                <h5 class="mb-0"><i class="bi bi-cart3"></i> Customer Cart</h5>
+                                <button class="btn btn-sm btn-outline-dark" id="btn-connect-display" onclick="connectCustomerDisplay()">
+                                    <i class="bi bi-display me-1"></i> Connect Display
+                                </button>
+                            </div>
+                            
                             <div class="flex-grow-1" style="max-height: 250px; overflow-y: auto;">
                                 <table class="table table-sm align-middle table-borderless">
                                     <thead>
@@ -1305,6 +1312,10 @@
     let userAccountsList = [];
     let currentUserPermissions = null;
     let todayExpectedSales = { cash: 0, card: 0, online: 0 };
+    
+    // Serial Port Customer Display Globals
+    let serialPort = null;
+    let serialWriter = null;
     
     // Billing Sales History States
     let fetchedInvoicesList = [];
@@ -2500,6 +2511,9 @@
         document.getElementById('pos-subtotal').innerText = `Rs. ${subtotal.toFixed(2)}`;
         document.getElementById('pos-total').innerText = `Rs. ${grandTotal.toFixed(2)}`;
         document.getElementById('pos-balance').innerText = `Rs. ${(balance >= 0 ? balance : 0).toFixed(2)}`;
+
+        // Send current grand total to LED8N Display dynamically
+        sendAmountToLED8N(grandTotal, "total");
     }
 
     async function checkoutAndPrintReceipt() {
@@ -2584,6 +2598,16 @@
             document.getElementById('pos-cash-received').value = '';
 
             updateDashboardData();
+
+            // Send Change Return amount or reset LED8N screen
+            if (checkoutTotals.balance > 0) {
+                sendAmountToLED8N(checkoutTotals.balance, "change");
+                setTimeout(() => {
+                    sendAmountToLED8N(0.00, "total");
+                }, 5000);
+            } else {
+                sendAmountToLED8N(0.00, "total");
+            }
         } catch (error) {
             console.error("Error saving sale: ", error);
             alert("Payment processed, but database failed to sync.");
@@ -3425,6 +3449,83 @@
         document.getElementById('btn-user-cancel').classList.add('d-none');
         
         applyDefaultRoleTemplate();
+    }
+
+    // ==========================================
+    // VIEWTECH VT-i9A (LED8N DISPLAY) INTEGRATION
+    // ==========================================
+
+    // LED8N display එක සමඟ සම්බන්ධ වීම (Web Serial API)
+    async function connectCustomerDisplay() {
+        if ('serial' in navigator) {
+            try {
+                // COM Port එක තෝරා ගැනීමට අවස්ථාව ලබාදේ
+                serialPort = await navigator.serial.requestPort();
+                
+                // LED8N සඳහා සාමාන්‍ය Baud Rate එක 2400 වේ
+                await serialPort.open({ baudRate: 2400 }); 
+                
+                serialWriter = serialPort.writable.getWriter();
+                
+                const btn = document.getElementById('btn-connect-display');
+                if (btn) {
+                    btn.className = "btn btn-sm btn-success";
+                    btn.innerHTML = `<i class="bi bi-display-fill me-1"></i> Display Connected`;
+                }
+                
+                // ආරම්භයේදී තිරය Clear කර 0.00 පෙන්වා "Total" ලාම්පුව දල්වන්න
+                await sendAmountToLED8N(0.00, "total");
+            } catch (error) {
+                console.error("LED8N Display connection failed:", error);
+                alert("Display එක සම්බන්ධ කිරීමට නොහැකි විය: " + error.message);
+            }
+        } else {
+            alert("ඔබේ බ්‍රවුසරය Web Serial API සඳහා සහය නොදක්වයි. කරුණාකර Google Chrome හෝ Edge භාවිතා කරන්න.");
+        }
+    }
+
+    /**
+     * LED8N display එකට අගයන් සහ දර්ශක ලාම්පු යැවීමේ ප්‍රධාන ශ්‍රිතය
+     * @param {number} amount - පෙන්විය යුතු මුදල
+     * @param {string} mode - "price", "total", "change", "collect", "clear"
+     */
+    async function sendAmountToLED8N(amount, mode = "total") {
+        if (!serialWriter) return;
+        
+        try {
+            // දශම දෙකක් සහිතව අගය string එකක් බවට පත් කිරීම
+            const amtStr = parseFloat(amount).toFixed(2); 
+            
+            // 1. Clear Display Command (Hex: 0C)
+            await serialWriter.write(new Uint8Array([0x0C]));
+            
+            // 2. දර්ශක ලාම්පු ක්‍රියාත්මක කිරීමේ කේතයන් (ESC s [n] -> Hex: 1B 73 [n])
+            // n: 0 = Clear, 1 = Price, 2 = Total, 3 = Change, 4 = Collect
+            let modeByte = 0x30; // Default: Clear all
+            if (mode === "price") modeByte = 0x31;
+            else if (mode === "total") modeByte = 0x32;
+            else if (mode === "change") modeByte = 0x33;
+            else if (mode === "collect") modeByte = 0x34;
+            
+            const indicatorCmd = new Uint8Array([0x1B, 0x73, modeByte]);
+            await serialWriter.write(indicatorCmd);
+            
+            // 3. LED8N වෙත අගය යැවීමේ ESC/POS සංඥාව (ESC Q A [Amount] CR)
+            // Hex: 1B 51 41 [Amount] 0D
+            const encoder = new TextEncoder();
+            const escCmd = new Uint8Array([0x1B, 0x51, 0x41]);
+            const crCmd = new Uint8Array([0x0D]);
+            const dataBytes = encoder.encode(amtStr);
+            
+            const finalPayload = new Uint8Array(escCmd.length + dataBytes.length + crCmd.length);
+            finalPayload.set(escCmd, 0);
+            finalPayload.set(dataBytes, escCmd.length);
+            finalPayload.set(crCmd, escCmd.length + dataBytes.length);
+            
+            await serialWriter.write(finalPayload);
+        } catch (error) {
+            console.error("Error sending data to LED8N display:", error);
+        }
     }
 </script>
 </body>
