@@ -13,7 +13,7 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f4f6f9;
         }
         /* Login Screen Styles */
         #login-screen {
@@ -47,20 +47,21 @@
         .sidebar .nav-link {
             color: #c2c7d0;
             margin-bottom: 5px;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
         .sidebar .nav-link:hover, .sidebar .nav-link.active {
             background-color: #495057;
             color: white;
         }
         .content-area {
-            padding: 20px;
+            padding: 25px;
         }
         .card-custom {
             border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
         .page-section {
             display: none;
@@ -98,10 +99,40 @@
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             border: 1px solid #dee2e6;
+            border-radius: 10px;
         }
         .pos-product-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Modern Premium Dashboard Styles */
+        .dash-card-stat {
+            border: none;
+            border-radius: 16px;
+            color: #fff;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            overflow: hidden;
+            position: relative;
+            min-height: 125px;
+        }
+        .dash-card-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+        }
+        .bg-grad-sales { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .bg-grad-expense { background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%); }
+        .bg-grad-wastage { background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); color: #212529 !important; }
+        .bg-grad-orders { background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%); }
+        .bg-grad-net { background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%); }
+
+        .dash-icon-bg {
+            font-size: 3.5rem;
+            opacity: 0.2;
+            position: absolute;
+            right: 15px;
+            bottom: 5px;
         }
         
         #receipt-print-area, #zreport-print-area {
@@ -379,12 +410,12 @@
                             </a>
                         </li>
                         <li class="nav-item" id="nav-btn-expenses">
-                            <a class="nav-link" onclick="switchPage('expenses', 'Expenses')">
-                                <i class="bi bi-wallet2 me-2"></i> Expenses
+                            <a class="nav-link" onclick="switchPage('expenses', 'Expenses & GRN')">
+                                <i class="bi bi-wallet2 me-2"></i> Expenses (GRN)
                             </a>
                         </li>
                         <li class="nav-item" id="nav-btn-wastage">
-                            <a class="nav-link" onclick="switchPage('wastage', 'Wastage')">
+                            <a class="nav-link" onclick="switchPage('wastage', 'Wastage Tracker')">
                                 <i class="bi bi-trash me-2"></i> Wastage
                             </a>
                         </li>
@@ -423,80 +454,129 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content-area">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2" id="page-title">Dashboard</h1>
-                <span class="badge bg-primary p-2" id="current-date">Date</span>
+                <span class="badge bg-primary p-2 fs-6 shadow-sm" id="current-date">Date</span>
             </div>
 
-            <!-- 1. DASHBOARD PAGE -->
+            <!-- 1. DASHBOARD PAGE (UPGRADED PREMIUM UI) -->
             <div id="page-dashboard" class="page-section active-page">
-                <div class="row mb-4">
-                    <div class="col-md-3 mb-3">
-                        <div class="card card-custom bg-white p-3">
-                            <div class="d-flex align-items-center">
-                                <div class="p-3 bg-success-subtle text-success rounded-circle me-3">
-                                    <i class="bi bi-currency-dollar fs-3"></i>
-                                </div>
-                                <div>
-                                    <h6 class="text-muted mb-1">Today's Sales</h6>
-                                    <h4 class="mb-0" id="dash-today-sales">Rs. 0.00</h4>
-                                </div>
-                            </div>
+                <!-- Welcome Banner -->
+                <div class="card card-custom bg-white p-4 mb-4 border-start border-5 border-primary">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <div>
+                            <h4 class="fw-bold mb-1 text-dark" id="dash-welcome-text">Welcome back, Hello Bubu RMS 👋</h4>
+                            <p class="text-muted mb-0 small">Here's a live overview of your restaurant's business performance today.</p>
+                        </div>
+                        <div class="mt-2 mt-md-0">
+                            <button class="btn btn-primary fw-bold me-2 shadow-sm" onclick="switchPage('billing', 'Billing (POS)')">
+                                <i class="bi bi-cart-plus me-1"></i> Open POS
+                            </button>
+                            <button class="btn btn-outline-danger fw-bold shadow-sm" onclick="switchPage('expenses', 'Expenses & GRN')">
+                                <i class="bi bi-file-earmark-plus me-1"></i> Create GRN
+                            </button>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card card-custom bg-white p-3">
-                            <div class="d-flex align-items-center">
-                                <div class="p-3 bg-danger-subtle text-danger rounded-circle me-3">
-                                    <i class="bi bi-wallet2 fs-3"></i>
-                                </div>
-                                <div>
-                                    <h6 class="text-muted mb-1">Today's Expenses</h6>
-                                    <h4 class="mb-0" id="dash-today-expenses">Rs. 0.00</h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card card-custom bg-white p-3">
-                            <div class="d-flex align-items-center">
-                                <div class="p-3 bg-warning-subtle text-warning rounded-circle me-3">
-                                    <i class="bi bi-trash fs-3"></i>
-                                </div>
-                                <div>
-                                    <h6 class="text-muted mb-1">Today's Wastage</h6>
-                                    <h4 class="mb-0" id="dash-today-wastage">Rs. 0.00</h4>
+                </div>
+
+                <!-- 4 Key Stat Metric Cards with Vibrant Gradients -->
+                <div class="row g-3 mb-4">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card dash-card-stat bg-grad-sales p-3">
+                            <div class="d-flex flex-column justify-content-between h-100">
+                                <span class="text-white-50 text-uppercase fw-bold small">Today's Sales</span>
+                                <h3 class="fw-bold my-2" id="dash-today-sales">Rs. 0.00</h3>
+                                <div class="d-flex align-items-center text-white-50 small">
+                                    <i class="bi bi-graph-up-arrow me-1"></i> Live POS Revenue
                                 </div>
                             </div>
+                            <i class="bi bi-currency-dollar dash-icon-bg"></i>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card card-custom bg-white p-3">
-                            <div class="d-flex align-items-center">
-                                <div class="p-3 bg-info-subtle text-info rounded-circle me-3">
-                                    <i class="bi bi-cart-check fs-3"></i>
-                                </div>
-                                <div>
-                                    <h6 class="text-muted mb-1">Total Orders</h6>
-                                    <h4 class="mb-0" id="dash-today-orders">0</h4>
+
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card dash-card-stat bg-grad-expense p-3">
+                            <div class="d-flex flex-column justify-content-between h-100">
+                                <span class="text-white-50 text-uppercase fw-bold small">Today's Expenses</span>
+                                <h3 class="fw-bold my-2" id="dash-today-expenses">Rs. 0.00</h3>
+                                <div class="d-flex align-items-center text-white-50 small">
+                                    <i class="bi bi-file-earmark-text me-1"></i> GRN & Vouchers
                                 </div>
                             </div>
+                            <i class="bi bi-wallet2 dash-icon-bg"></i>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="card card-custom bg-white p-3">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center">
-                                    <div class="p-3 bg-primary-subtle text-primary rounded-circle me-3" id="latency-icon-box">
-                                        <i class="bi bi-speedometer fs-3"></i>
+
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card dash-card-stat bg-grad-wastage p-3">
+                            <div class="d-flex flex-column justify-content-between h-100">
+                                <span class="text-dark-50 text-uppercase fw-bold small">Today's Wastage</span>
+                                <h3 class="fw-bold my-2 text-dark" id="dash-today-wastage">Rs. 0.00</h3>
+                                <div class="d-flex align-items-center text-dark-50 small">
+                                    <i class="bi bi-trash3 me-1"></i> Kitchen Loss Value
+                                </div>
+                            </div>
+                            <i class="bi bi-trash3 dash-icon-bg text-dark"></i>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card dash-card-stat bg-grad-orders p-3">
+                            <div class="d-flex flex-column justify-content-between h-100">
+                                <span class="text-white-50 text-uppercase fw-bold small">Total Orders</span>
+                                <h3 class="fw-bold my-2" id="dash-today-orders">0</h3>
+                                <div class="d-flex align-items-center text-white-50 small">
+                                    <i class="bi bi-cart-check me-1"></i> Processed Invoices
+                                </div>
+                            </div>
+                            <i class="bi bi-cart-check dash-icon-bg"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secondary Row: Financial Health Summary & System Connection Status -->
+                <div class="row g-3">
+                    <div class="col-lg-8 col-md-12">
+                        <div class="card card-custom bg-white p-4 h-100">
+                            <h5 class="fw-bold text-dark mb-3"><i class="bi bi-pie-chart me-2 text-primary"></i> Today's Estimated Net Position</h5>
+                            <div class="row g-3 align-items-center">
+                                <div class="col-md-6 border-end">
+                                    <div class="p-3 bg-light rounded">
+                                        <small class="text-muted fw-bold d-block mb-1">Estimated Net Cash Flow (Sales - Expenses)</small>
+                                        <h2 class="fw-bold mb-0 text-success" id="dash-net-position-val">Rs. 0.00</h2>
+                                        <small class="text-secondary" style="font-size: 0.8rem;">Calculated dynamically from today's active transactions.</small>
                                     </div>
-                                    <div>
-                                        <h6 class="text-muted mb-1">System Speed</h6>
-                                        <h4 class="mb-0 text-dark" id="dash-latency-val">-- ms</h4>
-                                        <span class="badge bg-secondary" id="dash-latency-status">Testing...</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted"><i class="bi bi-circle-fill text-success me-1"></i> Gross Sales:</span>
+                                        <strong id="dash-net-sales-summary">Rs. 0.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted"><i class="bi bi-circle-fill text-danger me-1"></i> Total Outflows:</span>
+                                        <strong id="dash-net-expense-summary">Rs. 0.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between border-top pt-2">
+                                        <span class="text-muted"><i class="bi bi-circle-fill text-warning me-1"></i> Kitchen Wastage:</span>
+                                        <strong id="dash-net-wastage-summary">Rs. 0.00</strong>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-12">
+                        <div class="card card-custom bg-white p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="fw-bold text-dark mb-0"><i class="bi bi-speedometer2 me-1 text-info"></i> System Latency</h5>
                                 <button class="btn btn-sm btn-outline-secondary p-1 border-0" onclick="checkSystemLatency()" title="Test Connection Speed">
-                                    <i class="bi bi-arrow-clockwise"></i>
+                                    <i class="bi bi-arrow-clockwise fs-5"></i>
                                 </button>
+                            </div>
+                            <div class="text-center py-3">
+                                <div class="p-3 bg-primary-subtle text-primary rounded-circle d-inline-block mb-2" id="latency-icon-box">
+                                    <i class="bi bi-wifi fs-2"></i>
+                                </div>
+                                <h3 class="fw-bold mb-1 text-dark" id="dash-latency-val">-- ms</h3>
+                                <span class="badge bg-secondary px-3 py-2 fs-6" id="dash-latency-status">Testing Link...</span>
                             </div>
                         </div>
                     </div>
@@ -597,29 +677,90 @@
                 </div>
             </div>
 
-            <!-- 3. PRODUCTS MANAGEMENT PAGE -->
+            <!-- 3. PRODUCTS MANAGEMENT PAGE (WITH RECIPE & PROFIT MARGINS) -->
             <div id="page-products" class="page-section">
                 <div class="row">
-                    <div class="col-md-4 mb-4">
+                    <!-- Left Side: Product Form with Recipe Builder -->
+                    <div class="col-lg-5 col-md-12 mb-4">
                         <div class="card card-custom bg-white p-4 mb-4">
-                            <h5 class="mb-3" id="form-product-title">Add New Product</h5>
+                            <h5 class="mb-3 border-bottom pb-2 fw-bold" id="form-product-title"><i class="bi bi-plus-circle me-1"></i> Add New Product</h5>
                             <form id="product-form" onsubmit="saveProduct(event)">
                                 <input type="hidden" id="product-id">
+                                
                                 <div class="mb-3">
-                                    <label class="form-label">Product Name</label>
+                                    <label class="form-label small fw-bold text-dark">Product Name</label>
                                     <input type="text" class="form-control" id="product-name" required placeholder="e.g. Chicken Fried Rice">
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Selling Price (Rs.)</label>
-                                    <input type="number" step="0.01" class="form-control" id="product-price" required placeholder="e.g. 1200.00">
+
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label small fw-bold text-dark">Category</label>
+                                        <select class="form-select" id="product-category" required>
+                                            <option value="">Select Category</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small fw-bold text-dark">Selling Price (Rs.)</label>
+                                        <input type="number" step="0.01" class="form-control" id="product-price" required placeholder="e.g. 1200.00" oninput="updateRecipeCostSummaryUI()">
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Category</label>
-                                    <select class="form-select" id="product-category" required>
-                                        <option value="">Select Category</option>
-                                    </select>
+
+                                <!-- Recipe Builder Section -->
+                                <div class="bg-light p-3 rounded mb-3 border">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold mb-0 small text-secondary"><i class="bi bi-journals me-1"></i> Recipe / Portion Ingredients</h6>
+                                        <span class="badge bg-info text-dark small">GRN Auto-Cost</span>
+                                    </div>
+                                    
+                                    <div class="row g-2 align-items-end mb-2">
+                                        <div class="col-12">
+                                            <select class="form-select form-select-sm" id="recipe-mat-select">
+                                                <option value="">-- Select Ingredient Material --</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-8">
+                                            <div class="input-group input-group-sm">
+                                                <input type="number" step="0.001" class="form-control" id="recipe-mat-qty" placeholder="Portion Qty" onkeydown="if(event.key==='Enter'){ event.preventDefault(); addRecipeIngredientRow(); }">
+                                                <span class="input-group-text" id="recipe-mat-unit-display">Qty</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <button type="button" class="btn btn-sm btn-primary w-100 fw-bold" onclick="addRecipeIngredientRow()"><i class="bi bi-plus-lg"></i> Add</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive mt-2" style="max-height: 150px; overflow-y: auto;">
+                                        <table class="table table-sm align-middle mb-0 bg-white border">
+                                            <thead class="table-secondary small">
+                                                <tr>
+                                                    <th>Ingredient</th>
+                                                    <th class="text-center">Qty</th>
+                                                    <th class="text-end">Cost</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="recipe-builder-table-body" class="small">
+                                                <tr>
+                                                    <td colspan="4" class="text-center text-muted">No recipe ingredients added.</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100" id="btn-product-submit">Save Product</button>
+
+                                <!-- Recipe Cost & Margin Summary Badge -->
+                                <div class="p-2 bg-dark text-white rounded mb-3">
+                                    <div class="d-flex justify-content-between small">
+                                        <span>Calculated Cost Price:</span>
+                                        <strong id="recipe-total-cost-display">Rs. 0.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between small border-top border-secondary pt-1 mt-1">
+                                        <span>Estimated Profit Margin:</span>
+                                        <strong class="text-warning" id="recipe-profit-margin-display">0.00 %</strong>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100 fw-bold py-2" id="btn-product-submit">Save Product & Recipe</button>
                                 <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btn-product-cancel" onclick="clearProductForm()">Cancel Edit</button>
                             </form>
                         </div>
@@ -637,10 +778,11 @@
                         </div>
                     </div>
 
-                    <div class="col-md-8">
+                    <!-- Right Side: Product List with Cost & Margins -->
+                    <div class="col-lg-7 col-md-12">
                         <div class="card card-custom bg-white p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="mb-0">Product List</h5>
+                                <h5 class="mb-0 fw-bold"><i class="bi bi-box-seam me-1"></i> Product List & Live Costings</h5>
                                 <button class="btn btn-sm btn-primary" id="btn-load-products" onclick="loadProductsClicked()">
                                     <i class="bi bi-arrow-clockwise me-1"></i> Load Products
                                 </button>
@@ -650,9 +792,10 @@
                                     <table class="table table-hover align-middle">
                                         <thead class="table-light">
                                             <tr>
-                                                <th>Name</th>
-                                                <th>Category</th>
-                                                <th class="text-end">Price</th>
+                                                <th>Name / Category</th>
+                                                <th class="text-end">Cost Price</th>
+                                                <th class="text-end">Selling Price</th>
+                                                <th class="text-center">Margin %</th>
                                                 <th class="text-center">Actions</th>
                                             </tr>
                                         </thead>
@@ -665,140 +808,465 @@
                             </div>
                             <div id="products-load-placeholder" class="text-center py-5 text-muted">
                                 <i class="bi bi-box-seam fs-1 d-block mb-2"></i>
-                                Click "Load Products" to display current products.
+                                Click "Load Products" to display products, live cost prices, and profit margins.
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 4. EXPENSES PAGE -->
+            <!-- 4. EXPENSES, GRN & PETTY CASH PAGE (SUB-TABBED) -->
             <div id="page-expenses" class="page-section">
-                <div class="row">
-                    <div class="col-md-4 mb-4">
-                        <div class="card card-custom bg-white p-4 mb-4">
-                            <h5 class="mb-3" id="form-expense-title">Add New Expense</h5>
-                            <form id="expense-form" onsubmit="saveExpense(event)">
-                                <input type="hidden" id="expense-id">
-                                <div class="mb-3">
-                                    <label class="form-label">Expense Description</label>
-                                    <input type="text" class="form-control" id="expense-desc" required placeholder="e.g. Vegetables purchase">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Amount (Rs.)</label>
-                                    <input type="number" step="0.01" class="form-control" id="expense-amount" required placeholder="e.g. 5000.00">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Category</label>
-                                    <select class="form-select" id="expense-category" required>
-                                        <option value="">Select Category</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Date</label>
-                                    <input type="date" class="form-control" id="expense-date" required>
-                                </div>
-                                <button type="submit" class="btn btn-danger w-100" id="btn-expense-submit">Save Expense</button>
-                                <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btn-expense-cancel" onclick="clearExpenseForm()">Cancel Edit</button>
-                            </form>
-                        </div>
+                <!-- Navigation Sub-Tabs for GRN vs Petty Cash -->
+                <ul class="nav nav-pills mb-3 bg-white p-2 rounded card-custom" id="expenseSubTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active fw-bold" id="grn-subtab" data-bs-toggle="pill" data-bs-target="#grn-subpanel" type="button" role="tab">
+                            <i class="bi bi-box-seam me-1"></i> Goods Received Note (GRN)
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-bold" id="pettycash-subtab" data-bs-toggle="pill" data-bs-target="#pettycash-subpanel" type="button" role="tab" onclick="loadPettyCashBalance()">
+                            <i class="bi bi-cash-coin me-1"></i> Petty Cash Voucher System
+                        </button>
+                    </li>
+                </ul>
 
-                        <div class="card card-custom bg-white p-4">
-                            <h5 class="mb-3">Manage Expense Categories</h5>
-                            <form id="expense-category-form" onsubmit="saveExpenseCategory(event)">
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" id="new-expense-category-name" placeholder="Category Name" required>
-                                    <button class="btn btn-outline-danger" type="submit">Add</button>
+                <div class="tab-content" id="expenseSubTabsContent">
+                    <!-- SUB-PANEL 1: GRN (RAW MATERIALS & SUPPLIER INVOICES) -->
+                    <div class="tab-pane fade show active" id="grn-subpanel" role="tabpanel">
+                        <div class="row">
+                            <!-- Left Side: Create GRN Note Form -->
+                            <div class="col-lg-5 col-md-12 mb-4">
+                                <div class="card card-custom bg-white p-4 mb-4">
+                                    <h5 class="mb-3 border-bottom pb-2 text-danger fw-bold"><i class="bi bi-file-earmark-plus me-1"></i> Create Goods Received Note (GRN)</h5>
+                                    <form id="grn-form" onsubmit="saveGrn(event)">
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold text-dark">Invoice / Bill No</label>
+                                                <input type="text" class="form-control form-control-sm" id="grn-invoice-no" placeholder="e.g. INV-9842" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold text-dark">Supplier / Store Name</label>
+                                                <input type="text" class="form-control form-control-sm" id="grn-supplier" placeholder="e.g. Keells Super / Market" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row g-2 mb-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold text-dark">Expense Category</label>
+                                                <select class="form-select form-select-sm" id="expense-category" required>
+                                                    <option value="">Select Category</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-bold text-dark">GRN Date</label>
+                                                <input type="date" class="form-control form-control-sm" id="expense-date" required>
+                                            </div>
+                                        </div>
+
+                                        <!-- Multi-Item Input Section with Raw Materials Master Dropdown -->
+                                        <div class="bg-light p-3 rounded mb-3 border">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <h6 class="fw-bold mb-0 small text-secondary"><i class="bi bi-cart-plus me-1"></i> Add Raw Material Items</h6>
+                                                <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 small" onclick="openNewRawMaterialModal()">
+                                                    <i class="bi bi-plus-circle-fill me-1"></i> New Material
+                                                </button>
+                                            </div>
+                                            
+                                            <div class="row g-2 align-items-end mb-2">
+                                                <div class="col-12">
+                                                    <select class="form-select form-select-sm" id="grn-item-select" onchange="onRawMaterialSelect()">
+                                                        <option value="">-- Select Raw Material Item --</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-5">
+                                                    <input type="number" step="0.01" class="form-control form-control-sm" id="grn-item-qty" placeholder="Qty" onkeydown="if(event.key==='Enter'){ event.preventDefault(); addGrnItemRow(); }">
+                                                </div>
+                                                <div class="col-5">
+                                                    <input type="number" step="0.01" class="form-control form-control-sm" id="grn-item-unitprice" placeholder="Unit Price (Rs.)" onkeydown="if(event.key==='Enter'){ event.preventDefault(); addGrnItemRow(); }">
+                                                </div>
+                                                <div class="col-2">
+                                                    <button type="button" class="btn btn-sm btn-danger w-100" onclick="addGrnItemRow()" title="Add Item to GRN List"><i class="bi bi-plus-lg"></i></button>
+                                                </div>
+                                            </div>
+
+                                            <div class="table-responsive mt-2" style="max-height: 160px; overflow-y: auto;">
+                                                <table class="table table-sm align-middle mb-0 bg-white border">
+                                                    <thead class="table-secondary small">
+                                                        <tr>
+                                                            <th>Item</th>
+                                                            <th class="text-center">Qty</th>
+                                                            <th class="text-end">Unit Cost</th>
+                                                            <th class="text-end">Total</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="grn-items-table-body" class="small">
+                                                        <tr>
+                                                            <td colspan="5" class="text-center text-muted">No items added to this GRN yet.</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between align-items-center mb-3 p-2 bg-danger-subtle text-danger rounded fw-bold">
+                                            <span>GRN NET TOTAL:</span>
+                                            <span class="fs-5" id="grn-net-total-display">Rs. 0.00</span>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold text-dark">Shift Notes / Remarks</label>
+                                            <input type="text" class="form-control form-control-sm" id="grn-notes" placeholder="Optional notes (e.g. Cash paid from drawer)">
+                                        </div>
+
+                                        <button type="submit" class="btn btn-danger btn-lg w-100 fw-bold fs-6" id="btn-expense-submit">
+                                            <i class="bi bi-save me-1"></i> Submit & Save GRN Note
+                                        </button>
+                                    </form>
                                 </div>
-                            </form>
-                            <h6>Existing Categories:</h6>
-                            <div id="expense-category-badges-container" class="mt-2"></div>
+
+                                <!-- Expense Category Management -->
+                                <div class="card card-custom bg-white p-4">
+                                    <h6 class="mb-3 fw-bold">Manage Expense Categories</h6>
+                                    <form id="expense-category-form" onsubmit="saveExpenseCategory(event)">
+                                        <div class="input-group mb-3">
+                                            <input type="text" class="form-control form-control-sm" id="new-expense-category-name" placeholder="New Category Name" required>
+                                            <button class="btn btn-sm btn-outline-danger" type="submit">Add</button>
+                                        </div>
+                                    </form>
+                                    <small class="fw-bold d-block mb-1">Existing Categories:</small>
+                                    <div id="expense-category-badges-container"></div>
+                                </div>
+                            </div>
+
+                            <!-- Right Side: GRN Notes History & On-Demand Filter -->
+                            <div class="col-lg-7 col-md-12">
+                                <div class="card card-custom bg-white p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                        <h5 class="mb-0 fw-bold"><i class="bi bi-receipt me-1"></i> GRN Notes History</h5>
+                                        <span class="badge bg-secondary">On-Demand Fetching</span>
+                                    </div>
+                                    
+                                    <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded border">
+                                        <div class="col-md-4 col-6">
+                                            <label class="small text-muted fw-bold">From Date</label>
+                                            <input type="date" class="form-control form-control-sm" id="expense-filter-start">
+                                        </div>
+                                        <div class="col-md-4 col-6">
+                                            <label class="small text-muted fw-bold">To Date</label>
+                                            <input type="date" class="form-control form-control-sm" id="expense-filter-end">
+                                        </div>
+                                        <div class="col-md-4 col-12">
+                                            <button class="btn btn-sm btn-danger w-100 fw-bold" onclick="loadExpensesClicked(true)">
+                                                <i class="bi bi-funnel"></i> Filter & Load GRN Records
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div id="expenses-list-wrapper" class="d-none">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Inv No / Supplier</th>
+                                                        <th>Category</th>
+                                                        <th>Date & Time</th>
+                                                        <th class="text-end">Total Amount</th>
+                                                        <th class="text-center">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="expense-table-body"></tbody>
+                                            </table>
+                                        </div>
+                                        <nav aria-label="Expense pagination">
+                                            <ul class="pagination pagination-sm justify-content-end" id="expense-pagination"></ul>
+                                        </nav>
+                                    </div>
+                                    <div id="expenses-load-placeholder" class="text-center py-5 text-muted">
+                                        <i class="bi bi-journal-text fs-1 d-block mb-2"></i>
+                                        Select date period and click "Filter & Load GRN Records" to fetch database records safely without slowing down the app.
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-md-8">
-                        <div class="card card-custom bg-white p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="mb-0">Expense List</h5>
+                    <!-- SUB-PANEL 2: PETTY CASH MANAGEMENT -->
+                    <div class="tab-pane fade" id="pettycash-subpanel" role="tabpanel">
+                        <!-- Top Petty Cash Summary Cards -->
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3">
+                                <div class="card card-custom bg-white p-3 border-start border-4 border-success">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="text-muted mb-1 small fw-bold">Current Petty Cash Balance (Float)</h6>
+                                            <h3 class="mb-0 text-success fw-bold" id="pc-current-balance-display">Rs. 0.00</h3>
+                                        </div>
+                                        <button class="btn btn-success fw-bold" onclick="openAddFloatModal()">
+                                            <i class="bi bi-plus-circle me-1"></i> Add Float (Top-Up)
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            
-                            <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded">
+
+                            <div class="col-md-6 mb-3">
+                                <div class="card card-custom bg-white p-3 border-start border-4 border-danger">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="text-muted mb-1 small fw-bold">Issue Out-of-Pocket Expense</h6>
+                                            <span class="small text-secondary">Pay small bills / vouchers from float</span>
+                                        </div>
+                                        <button class="btn btn-danger fw-bold" onclick="openIssueVoucherModal()">
+                                            <i class="bi bi-dash-circle me-1"></i> Issue Voucher
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Petty Cash Transactions History -->
+                        <div class="card card-custom bg-white p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                <h5 class="mb-0 fw-bold"><i class="bi bi-journals me-1"></i> Petty Cash Voucher & Allocation Logs</h5>
+                                <span class="badge bg-secondary">On-Demand Querying</span>
+                            </div>
+
+                            <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded border">
                                 <div class="col-md-4 col-6">
                                     <label class="small text-muted fw-bold">From Date</label>
-                                    <input type="date" class="form-control form-control-sm" id="expense-filter-start">
+                                    <input type="date" class="form-control form-control-sm" id="pc-filter-start">
                                 </div>
                                 <div class="col-md-4 col-6">
                                     <label class="small text-muted fw-bold">To Date</label>
-                                    <input type="date" class="form-control form-control-sm" id="expense-filter-end">
+                                    <input type="date" class="form-control form-control-sm" id="pc-filter-end">
                                 </div>
-                                <div class="col-md-4">
-                                    <button class="btn btn-sm btn-danger w-100 fw-bold" onclick="loadExpensesClicked(true)">
-                                        <i class="bi bi-funnel"></i> Filter & Load Records
+                                <div class="col-md-4 col-12">
+                                    <button class="btn btn-sm btn-primary w-100 fw-bold" onclick="loadPettyCashLogsClicked(true)">
+                                        <i class="bi bi-funnel"></i> Filter & Load Petty Cash Logs
                                     </button>
                                 </div>
                             </div>
 
-                            <div id="expenses-list-wrapper" class="d-none">
+                            <div id="pc-list-wrapper" class="d-none">
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle">
                                         <thead class="table-light">
                                             <tr>
-                                                <th>Description</th>
+                                                <th>Type</th>
+                                                <th>Payee / Reason</th>
                                                 <th>Category</th>
-                                                <th>Date</th>
+                                                <th>Date & Time</th>
                                                 <th class="text-end">Amount</th>
+                                                <th class="text-end">Balance After</th>
                                                 <th class="text-center">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="expense-table-body"></tbody>
+                                        <tbody id="pc-table-body"></tbody>
                                     </table>
                                 </div>
-                                <nav aria-label="Expense pagination">
-                                    <ul class="pagination pagination-sm justify-content-end" id="expense-pagination"></ul>
+                                <nav aria-label="Petty cash pagination">
+                                    <ul class="pagination pagination-sm justify-content-end" id="pc-pagination"></ul>
                                 </nav>
                             </div>
-                            <div id="expenses-load-placeholder" class="text-center py-5 text-muted">
-                                <i class="bi bi-wallet2 fs-1 d-block mb-2"></i>
-                                Select date range and click "Filter & Load Records" to safely fetch expenses.
+
+                            <div id="pc-load-placeholder" class="text-center py-5 text-muted">
+                                <i class="bi bi-cash-stack fs-1 d-block mb-2"></i>
+                                Select date period and click "Filter & Load Petty Cash Logs" to inspect previous voucher outflows and float top-ups.
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 5. WASTAGE PAGE -->
+            <!-- Modal for Adding Petty Cash Float (Top-Up) -->
+            <div class="modal fade" id="addFloatModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title fw-bold"><i class="bi bi-plus-circle me-1"></i> Add Petty Cash Float (Top-Up)</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="pc-float-form" onsubmit="savePettyCashFloat(event)">
+                            <div class="modal-body p-4">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold text-dark">Top-Up Amount (Rs.)</label>
+                                    <input type="number" step="0.01" class="form-control form-control-lg text-success fw-bold" id="pc-float-amount" placeholder="e.g. 10000.00" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold text-dark">Source / Reason</label>
+                                    <input type="text" class="form-control" id="pc-float-reason" placeholder="e.g. Added from Main Cash Drawer" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold text-dark">Date</label>
+                                    <input type="date" class="form-control" id="pc-float-date" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-success fw-bold">Deposit to Petty Cash</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Issuing Petty Cash Voucher -->
+            <div class="modal fade" id="issueVoucherModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title fw-bold"><i class="bi bi-dash-circle me-1"></i> Issue Petty Cash Voucher</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="pc-voucher-form" onsubmit="savePettyCashVoucher(event)">
+                            <div class="modal-body p-4">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold text-dark">Voucher Amount (Rs.)</label>
+                                    <input type="number" step="0.01" class="form-control form-control-lg text-danger fw-bold" id="pc-voucher-amount" placeholder="e.g. 1200.00" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold text-dark">Payee / Person Paid To</label>
+                                    <input type="text" class="form-control" id="pc-voucher-payee" placeholder="e.g. Nimal (Delivery Boy) / Electrician" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold text-dark">Expense Reason / Description</label>
+                                    <input type="text" class="form-control" id="pc-voucher-reason" placeholder="e.g. Fuel for bike / Tea & Biscuits for guests" required>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label small fw-bold text-dark">Expense Category</label>
+                                        <select class="form-select" id="pc-voucher-category" required>
+                                            <option value="">Select Category</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small fw-bold text-dark">Voucher Date</label>
+                                        <input type="date" class="form-control" id="pc-voucher-date" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger fw-bold">Issue Voucher & Deduct</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for GRN View Details -->
+            <div class="modal fade" id="grnDetailsModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title fw-bold" id="grnModalTitle">GRN Details</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <div id="grn-modal-content"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Creating New Raw Material On-the-Fly -->
+            <div class="modal fade" id="newRawMaterialModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title fw-bold"><i class="bi bi-box-seam me-1"></i> Add New Raw Material / Ingredient</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="new-raw-material-form" onsubmit="saveNewRawMaterial(event)">
+                            <div class="modal-body p-4">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold text-dark">Raw Material Name</label>
+                                    <input type="text" class="form-control" id="new-mat-name" required placeholder="e.g. Chicken Breast">
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label small fw-bold text-dark">Unit of Measure</label>
+                                        <select class="form-select" id="new-mat-unit" required>
+                                            <option value="Kg">Kg (Kilograms)</option>
+                                            <option value="L">L (Liters)</option>
+                                            <option value="Pkts">Pkts (Packets)</option>
+                                            <option value="Pcs">Pcs (Pieces)</option>
+                                            <option value="Units">Units</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small fw-bold text-dark">Initial Cost Price (Rs.)</label>
+                                        <input type="number" step="0.01" class="form-control" id="new-mat-cost" value="0" placeholder="0.00">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary fw-bold">Save Raw Material</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. WASTAGE PAGE (UPGRADED WITH RAW MATERIAL DROPDOWN & GRN AUTO-COST) -->
             <div id="page-wastage" class="page-section">
                 <div class="row">
-                    <div class="col-md-4 mb-4">
+                    <div class="col-lg-4 col-md-12 mb-4">
                         <div class="card card-custom bg-white p-4 mb-4">
-                            <h5 class="mb-3" id="form-wastage-title">Add Wastage Record</h5>
+                            <h5 class="mb-3 border-bottom pb-2 fw-bold text-warning" id="form-wastage-title"><i class="bi bi-trash3 me-1"></i> Log Kitchen Wastage</h5>
                             <form id="wastage-form" onsubmit="saveWastage(event)">
                                 <input type="hidden" id="wastage-id">
+                                
                                 <div class="mb-3">
-                                    <label class="form-label">Item / Ingredient Name</label>
-                                    <input type="text" class="form-control" id="wastage-item" required placeholder="e.g. Expired Chicken">
+                                    <label class="form-label small fw-bold text-dark">Wasted Raw Material / Ingredient</label>
+                                    <select class="form-select form-select-sm" id="wastage-item-select" onchange="onWastageMaterialSelect()" required>
+                                        <option value="">-- Select Raw Material --</option>
+                                    </select>
                                 </div>
+
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label small fw-bold text-dark">Wasted Qty</label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="number" step="0.001" class="form-control" id="wastage-qty" placeholder="0.00" oninput="calculateWastageTotal()" required>
+                                            <span class="input-group-text" id="wastage-unit-display">Qty</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small fw-bold text-dark">Unit Cost (GRN)</label>
+                                        <input type="number" step="0.01" class="form-control form-control-sm" id="wastage-unit-cost" placeholder="0.00" readonly>
+                                    </div>
+                                </div>
+
                                 <div class="mb-3">
-                                    <label class="form-label">Loss Value (Rs.)</label>
-                                    <input type="number" step="0.01" class="form-control" id="wastage-amount" required placeholder="e.g. 1500.00">
+                                    <label class="form-label small fw-bold text-dark">Calculated Loss Value (Rs.)</label>
+                                    <input type="number" step="0.01" class="form-control form-control-lg fw-bold text-danger bg-light" id="wastage-amount" readonly placeholder="0.00" required>
                                 </div>
+
                                 <div class="mb-3">
-                                    <label class="form-label">Date</label>
-                                    <input type="date" class="form-control" id="wastage-date" required>
+                                    <label class="form-label small fw-bold text-dark">Wastage Date</label>
+                                    <input type="date" class="form-control form-control-sm" id="wastage-date" required>
                                 </div>
-                                <button type="submit" class="btn btn-warning w-100" id="btn-wastage-submit">Save Wastage</button>
+
+                                <button type="submit" class="btn btn-warning w-100 fw-bold py-2" id="btn-wastage-submit">Save Wastage Record</button>
                                 <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btn-wastage-cancel" onclick="clearWastageForm()">Cancel Edit</button>
                             </form>
                         </div>
                     </div>
 
-                    <div class="col-md-8">
+                    <div class="col-lg-8 col-md-12">
                         <div class="card card-custom bg-white p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="mb-0">Wastage List</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                <h5 class="mb-0 fw-bold"><i class="bi bi-journal-text me-1"></i> Kitchen Wastage History</h5>
+                                <span class="badge bg-secondary">GRN Unit Cost Linked</span>
                             </div>
 
-                            <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded">
+                            <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded border">
                                 <div class="col-md-4 col-6">
                                     <label class="small text-muted fw-bold">From Date</label>
                                     <input type="date" class="form-control form-control-sm" id="wastage-filter-start">
@@ -807,8 +1275,8 @@
                                     <label class="small text-muted fw-bold">To Date</label>
                                     <input type="date" class="form-control form-control-sm" id="wastage-filter-end">
                                 </div>
-                                <div class="col-md-4">
-                                    <button class="btn btn-sm btn-warning" onclick="loadWastageClicked(true)">
+                                <div class="col-md-4 col-12">
+                                    <button class="btn btn-sm btn-warning w-100 fw-bold" onclick="loadWastageClicked(true)">
                                         <i class="bi bi-funnel"></i> Filter & Load Records
                                     </button>
                                 </div>
@@ -819,9 +1287,11 @@
                                     <table class="table table-hover align-middle">
                                         <thead class="table-light">
                                             <tr>
-                                                <th>Item / Ingredient</th>
+                                                <th>Raw Material Item</th>
+                                                <th class="text-center">Wasted Qty</th>
+                                                <th class="text-end">GRN Cost Rate</th>
+                                                <th class="text-end">Total Loss Value</th>
                                                 <th>Date</th>
-                                                <th class="text-end">Loss Value</th>
                                                 <th class="text-center">Actions</th>
                                             </tr>
                                         </thead>
@@ -957,7 +1427,7 @@
                     <!-- C. EXPENSES REPORT TAB -->
                     <div class="tab-pane fade" id="expenses-report-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
-                            <h5 class="mb-3">Expenses Summary Report</h5>
+                            <h5 class="mb-3">Expenses & GRN Summary Report</h5>
                             <div class="row g-3 align-items-end mb-4">
                                 <div class="col-md-4">
                                     <label class="form-label">Start Date</label>
@@ -977,7 +1447,7 @@
                             <div class="row mb-4">
                                 <div class="col-12">
                                     <div class="p-3 bg-danger-subtle text-danger rounded">
-                                        <h6 class="mb-1">Total Period Expenses</h6>
+                                        <h6 class="mb-1">Total Period Expenses / GRN</h6>
                                         <h3 class="mb-0" id="report-expenses-total">Rs. 0.00</h3>
                                     </div>
                                 </div>
@@ -1000,15 +1470,15 @@
                                 </table>
                             </div>
 
-                            <h6 class="fw-bold mb-3">Itemized Expense Transactions</h6>
+                            <h6 class="fw-bold mb-3">Itemized GRN Transactions</h6>
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Description</th>
+                                            <th>Invoice / Supplier</th>
                                             <th>Category</th>
-                                            <th>Date</th>
-                                            <th class="text-end">Amount</th>
+                                            <th>Date & Time</th>
+                                            <th class="text-end">Total Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody id="expenses-report-details-body">
@@ -1119,7 +1589,7 @@
                                         <div class="col-6">
                                             <div class="form-check">
                                                 <input class="form-check-input perm-check" type="checkbox" value="expenses" id="perm-expenses" checked>
-                                                <label class="form-check-label" for="perm-expenses">Expenses</label>
+                                                <label class="form-check-label" for="perm-expenses">Expenses (GRN)</label>
                                             </div>
                                         </div>
                                         <div class="col-6">
@@ -1325,6 +1795,7 @@
 
     let categories = [];
     let products = [];
+    let rawMaterials = []; // Raw Materials Master List
     let expenseCategories = [];
     let expenses = []; 
     let wastage = [];
@@ -1334,6 +1805,16 @@
     let currentUserPermissions = null;
     let todayExpectedSales = { cash: 0, card: 0, online: 0 };
     
+    // Petty Cash Global State
+    let currentPettyCashBalance = 0;
+    let pettyCashLogsList = [];
+    let isPettyCashLogsLoaded = false;
+    let currentPettyCashPage = 1;
+    const pettyCashPerPage = 10;
+
+    // Recipe Builder Temporary In-Memory List for Active Product Form
+    let recipeBuilderList = [];
+
     let serialPort = null;
     let serialWriter = null;
     
@@ -1341,12 +1822,16 @@
     let currentHistoryPage = 1;
     const historyPerPage = 10;
 
+    // Temporary Array for GRN Multi-Item Entry
+    let grnItemsList = [];
+
     const todayStr = new Date().toISOString().split('T')[0];
     document.getElementById('current-date').innerText = new Date().toDateString();
     document.getElementById('expense-date').value = todayStr;
     document.getElementById('wastage-date').value = todayStr;
     document.getElementById('update-date').value = todayStr;
 
+    // Default Date Range Filters
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
@@ -1360,6 +1845,13 @@
     document.getElementById('expense-filter-end').value = todayStr;
     document.getElementById('wastage-filter-start').value = sevenDaysAgoStr;
     document.getElementById('wastage-filter-end').value = todayStr;
+
+    if (document.getElementById('pc-filter-start')) {
+        document.getElementById('pc-filter-start').value = sevenDaysAgoStr;
+        document.getElementById('pc-filter-end').value = todayStr;
+        document.getElementById('pc-float-date').value = todayStr;
+        document.getElementById('pc-voucher-date').value = todayStr;
+    }
 
     function formatDateTime(dateObj) {
         const yyyy = dateObj.getFullYear();
@@ -1419,6 +1911,11 @@
 
                 currentUserPermissions = userData.permissions;
                 document.getElementById('user-role-badge').innerText = `Role: ${userData.role} (${userData.username})`;
+
+                const welcomeEl = document.getElementById('dash-welcome-text');
+                if (welcomeEl) {
+                    welcomeEl.innerText = `Welcome back, ${userData.username} 👋`;
+                }
 
                 enforceNavigationPermissions(userData.permissions);
 
@@ -1494,6 +1991,7 @@
                 await auth.signOut();
                 categories = [];
                 products = [];
+                rawMaterials = [];
                 expenseCategories = [];
                 expenses = []; 
                 wastage = [];
@@ -1502,6 +2000,9 @@
                 userAccountsList = [];
                 currentUserPermissions = null;
                 todayExpectedSales = { cash: 0, card: 0, online: 0 };
+                currentPettyCashBalance = 0;
+                pettyCashLogsList = [];
+                recipeBuilderList = [];
             } catch (error) {
                 console.error("Logout failed: ", error);
             }
@@ -1516,7 +2017,7 @@
         if (!statusBadge || !latencyText) return;
 
         statusBadge.className = "badge bg-secondary text-white";
-        statusBadge.innerText = "Testing...";
+        statusBadge.innerText = "Testing Link...";
 
         const startTime = performance.now();
         try {
@@ -1527,21 +2028,21 @@
             latencyText.innerText = `${latency} ms`;
 
             if (latency < 150) {
-                statusBadge.className = "badge bg-success text-white";
-                statusBadge.innerText = "Excellent";
-                if (iconBox) iconBox.className = "p-3 bg-success-subtle text-success rounded-circle me-3";
+                statusBadge.className = "badge bg-success text-white px-3 py-2 fs-6";
+                statusBadge.innerText = "Excellent (Ultra Fast)";
+                if (iconBox) iconBox.className = "p-3 bg-success-subtle text-success rounded-circle d-inline-block mb-2";
             } else if (latency < 350) {
-                statusBadge.className = "badge bg-warning text-dark";
-                statusBadge.innerText = "Good";
-                if (iconBox) iconBox.className = "p-3 bg-warning-subtle text-warning rounded-circle me-3";
+                statusBadge.className = "badge bg-warning text-dark px-3 py-2 fs-6";
+                statusBadge.innerText = "Good Link";
+                if (iconBox) iconBox.className = "p-3 bg-warning-subtle text-warning rounded-circle d-inline-block mb-2";
             } else {
-                statusBadge.className = "badge bg-danger text-white";
+                statusBadge.className = "badge bg-danger text-white px-3 py-2 fs-6";
                 statusBadge.innerText = "Slow Link";
-                if (iconBox) iconBox.className = "p-3 bg-danger-subtle text-danger rounded-circle me-3";
+                if (iconBox) iconBox.className = "p-3 bg-danger-subtle text-danger rounded-circle d-inline-block mb-2";
             }
         } catch (error) {
             console.error("Latency check aborted: ", error);
-            statusBadge.className = "badge bg-dark text-white";
+            statusBadge.className = "badge bg-dark text-white px-3 py-2 fs-6";
             statusBadge.innerText = "Offline/Error";
             latencyText.innerText = "-- ms";
         }
@@ -1567,12 +2068,20 @@
                 products = Object.keys(prodData).map(key => ({ id: key, ...prodData[key] }));
             }
 
+            // Load Raw Materials Master List
+            const rawMatSnapshot = await rtdb.ref('raw_materials').once('value');
+            const rawMatData = rawMatSnapshot.val();
+            rawMaterials = [];
+            if (rawMatData) {
+                rawMaterials = Object.keys(rawMatData).map(key => ({ id: key, ...rawMatData[key] }));
+            }
+
             const expCatSnapshot = await rtdb.ref('expenseCategories').once('value');
             const expCatData = expCatSnapshot.val();
             if (expCatData) {
                 expenseCategories = Object.keys(expCatData);
             } else {
-                expenseCategories = ['Raw Materials', 'Transport', 'Utilities', 'Rent', 'Salaries'];
+                expenseCategories = ['Raw Materials', 'Transport', 'Utilities', 'Rent', 'Salaries', 'Refreshments', 'Maintenance'];
                 for (let cat of expenseCategories) {
                     await rtdb.ref('expenseCategories/' + cat).set(true);
                 }
@@ -1587,9 +2096,14 @@
 
             displayCategories();
             displayExpenseCategories();
+            populateRawMaterialsDropdown();
+            populateWastageRawMaterialsDropdown();
+            populateRecipeRawMaterialsDropdown();
+            populatePettyCashCategoryDropdown();
             updateDashboardData();
             displayUpdates();
             checkSystemLatency();
+            loadPettyCashBalance();
 
             if (currentUserPermissions && currentUserPermissions.users === true) {
                 loadAllUsers();
@@ -1622,10 +2136,18 @@
         document.getElementById('page-title').innerText = pageTitle;
 
         if (pageId === 'dashboard') {
+            updateDashboardData();
             checkSystemLatency();
         } else if (pageId === 'billing') {
             displayPOSCategories();
             displayPOSProducts();
+        } else if (pageId === 'products') {
+            populateRecipeRawMaterialsDropdown();
+            if (isProductsLoaded) displayProducts();
+        } else if (pageId === 'expenses') {
+            loadPettyCashBalance();
+        } else if (pageId === 'wastage') {
+            populateWastageRawMaterialsDropdown();
         } else if (pageId === 'reports') {
             generateSalesReport();
             generateExpensesReport();
@@ -1641,10 +2163,32 @@
             const snapshot = await rtdb.ref('daily_summaries/' + todayStr).once('value');
             const data = snapshot.val() || { sales_total: 0, expenses_total: 0, wastage_total: 0, orders_count: 0 };
             
-            document.getElementById('dash-today-sales').innerText = `Rs. ${parseFloat(data.sales_total || 0).toFixed(2)}`;
-            document.getElementById('dash-today-expenses').innerText = `Rs. ${parseFloat(data.expenses_total || 0).toFixed(2)}`;
-            document.getElementById('dash-today-wastage').innerText = `Rs. ${parseFloat(data.wastage_total || 0).toFixed(2)}`;
-            document.getElementById('dash-today-orders').innerText = data.orders_count || 0;
+            const salesTotal = parseFloat(data.sales_total || 0);
+            const expensesTotal = parseFloat(data.expenses_total || 0);
+            const wastageTotal = parseFloat(data.wastage_total || 0);
+            const ordersCount = data.orders_count || 0;
+
+            document.getElementById('dash-today-sales').innerText = `Rs. ${salesTotal.toFixed(2)}`;
+            document.getElementById('dash-today-expenses').innerText = `Rs. ${expensesTotal.toFixed(2)}`;
+            document.getElementById('dash-today-wastage').innerText = `Rs. ${wastageTotal.toFixed(2)}`;
+            document.getElementById('dash-today-orders').innerText = ordersCount;
+
+            // Updated Estimated Net Position Calculator
+            const netPosition = salesTotal - expensesTotal;
+            const netPosEl = document.getElementById('dash-net-position-val');
+            if (netPosEl) {
+                netPosEl.innerText = `Rs. ${netPosition.toFixed(2)}`;
+                if (netPosition >= 0) {
+                    netPosEl.className = "fw-bold mb-0 text-success";
+                } else {
+                    netPosEl.className = "fw-bold mb-0 text-danger";
+                }
+            }
+
+            document.getElementById('dash-net-sales-summary').innerText = `Rs. ${salesTotal.toFixed(2)}`;
+            document.getElementById('dash-net-expense-summary').innerText = `Rs. ${expensesTotal.toFixed(2)}`;
+            document.getElementById('dash-net-wastage-summary').innerText = `Rs. ${wastageTotal.toFixed(2)}`;
+
         } catch (error) {
             console.error("Dashboard Loading Error: ", error);
         }
@@ -1736,9 +2280,145 @@
         }
     }
 
+    // =========================================================================
+    // PRODUCTS MANAGEMENT WITH RECIPE & AUTO-COSTING
+    // =========================================================================
     let isProductsLoaded = false;
     let currentProductPage = 1;
     const productsPerPage = 5;
+
+    function populateRecipeRawMaterialsDropdown() {
+        const select = document.getElementById('recipe-mat-select');
+        if (!select) return;
+
+        let html = '<option value="">-- Select Ingredient Material --</option>';
+        rawMaterials.sort((a,b) => a.name.localeCompare(b.name)).forEach(mat => {
+            const unitText = mat.unit ? ` (${mat.unit})` : '';
+            const costText = mat.unitCost ? ` - Rs.${parseFloat(mat.unitCost).toFixed(2)}/${mat.unit || 'Unit'}` : '';
+            html += `<option value="${mat.id}">${mat.name}${unitText}${costText}</option>`;
+        });
+
+        select.innerHTML = html;
+        
+        select.onchange = function() {
+            const matId = this.value;
+            const mat = rawMaterials.find(m => m.id === matId);
+            const unitDisplay = document.getElementById('recipe-mat-unit-display');
+            if (unitDisplay) {
+                unitDisplay.innerText = mat ? (mat.unit || 'Qty') : 'Qty';
+            }
+        };
+    }
+
+    function addRecipeIngredientRow() {
+        const selectEl = document.getElementById('recipe-mat-select');
+        const matId = selectEl.value;
+        const qtyInput = document.getElementById('recipe-mat-qty');
+        const qty = parseFloat(qtyInput.value) || 0;
+
+        const mat = rawMaterials.find(m => m.id === matId);
+
+        if (!mat || qty <= 0) {
+            alert("Please select a Raw Material and enter a valid Portion Quantity!");
+            return;
+        }
+
+        // Check if ingredient already in list
+        const existing = recipeBuilderList.find(i => i.materialId === matId);
+        if (existing) {
+            existing.qty += qty;
+        } else {
+            recipeBuilderList.push({
+                materialId: mat.id,
+                materialName: mat.name,
+                unit: mat.unit || 'Unit',
+                qty: qty
+            });
+        }
+
+        selectEl.value = '';
+        qtyInput.value = '';
+        document.getElementById('recipe-mat-unit-display').innerText = 'Qty';
+
+        displayRecipeBuilderTable();
+    }
+
+    function removeRecipeIngredientRow(index) {
+        recipeBuilderList.splice(index, 1);
+        displayRecipeBuilderTable();
+    }
+
+    function calculateProductCostFromRecipe(recipeList) {
+        if (!recipeList || !Array.isArray(recipeList) || recipeList.length === 0) {
+            return 0;
+        }
+
+        let totalCost = 0;
+        recipeList.forEach(item => {
+            const mat = rawMaterials.find(m => m.id === item.materialId);
+            const latestUnitCost = mat ? (parseFloat(mat.unitCost) || 0) : (parseFloat(item.unitCost) || 0);
+            totalCost += item.qty * latestUnitCost;
+        });
+
+        return totalCost;
+    }
+
+    function displayRecipeBuilderTable() {
+        const tbody = document.getElementById('recipe-builder-table-body');
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+
+        if (recipeBuilderList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No recipe ingredients added.</td></tr>`;
+            updateRecipeCostSummaryUI();
+            return;
+        }
+
+        let html = '';
+        recipeBuilderList.forEach((item, index) => {
+            const mat = rawMaterials.find(m => m.id === item.materialId);
+            const latestUnitCost = mat ? (parseFloat(mat.unitCost) || 0) : 0;
+            const lineCost = item.qty * latestUnitCost;
+
+            html += `
+                <tr>
+                    <td><strong>${item.materialName}</strong></td>
+                    <td class="text-center">${item.qty} ${item.unit || ''}</td>
+                    <td class="text-end fw-bold">Rs. ${lineCost.toFixed(2)}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm text-danger p-0 border-0" onclick="removeRecipeIngredientRow(${index})"><i class="bi bi-x-circle-fill"></i></button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html;
+        updateRecipeCostSummaryUI();
+    }
+
+    function updateRecipeCostSummaryUI() {
+        const totalCost = calculateProductCostFromRecipe(recipeBuilderList);
+        const sellingPrice = parseFloat(document.getElementById('product-price').value) || 0;
+
+        document.getElementById('recipe-total-cost-display').innerText = `Rs. ${totalCost.toFixed(2)}`;
+
+        let marginPct = 0;
+        if (sellingPrice > 0) {
+            marginPct = ((sellingPrice - totalCost) / sellingPrice) * 100;
+        }
+
+        const marginEl = document.getElementById('recipe-profit-margin-display');
+        marginEl.innerText = `${marginPct.toFixed(2)} %`;
+        
+        if (marginPct < 20) {
+            marginEl.className = "text-danger fw-bold";
+        } else if (marginPct < 40) {
+            marginEl.className = "text-warning fw-bold";
+        } else {
+            marginEl.className = "text-success fw-bold";
+        }
+    }
 
     function loadProductsClicked() {
         isProductsLoaded = true;
@@ -1754,7 +2434,7 @@
         tableBody.innerHTML = '';
 
         if(products.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No products available.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No products available.</td></tr>`;
             document.getElementById('product-pagination').innerHTML = '';
             return;
         }
@@ -1769,11 +2449,29 @@
 
         let tableHtml = '';
         paginatedProducts.forEach(product => {
+            const calculatedCost = calculateProductCostFromRecipe(product.recipe);
+            const sellingPrice = parseFloat(product.price) || 0;
+
+            let marginPct = 0;
+            if (sellingPrice > 0) {
+                marginPct = ((sellingPrice - calculatedCost) / sellingPrice) * 100;
+            }
+
+            let marginBadge = 'bg-success';
+            if (marginPct < 20) marginBadge = 'bg-danger';
+            else if (marginPct < 40) marginBadge = 'bg-warning text-dark';
+
             tableHtml += `
                 <tr>
-                    <td><strong>${product.name}</strong></td>
-                    <td><span class="badge bg-secondary">${product.category}</span></td>
-                    <td class="text-end">Rs. ${parseFloat(product.price).toFixed(2)}</td>
+                    <td>
+                        <strong>${product.name}</strong>
+                        <br><span class="badge bg-secondary small">${product.category}</span>
+                    </td>
+                    <td class="text-end text-secondary fw-bold">Rs. ${calculatedCost.toFixed(2)}</td>
+                    <td class="text-end text-success fw-bold">Rs. ${sellingPrice.toFixed(2)}</td>
+                    <td class="text-center">
+                        <span class="badge ${marginBadge}">${marginPct.toFixed(1)} %</span>
+                    </td>
                     <td class="text-center">
                         <button class="btn btn-sm btn-outline-primary me-1" onclick="editProduct('${product.id}')">
                             <i class="bi bi-pencil"></i>
@@ -1799,26 +2497,39 @@
         event.preventDefault();
 
         const id = document.getElementById('product-id').value;
-        const name = document.getElementById('product-name').value;
-        const price = parseFloat(document.getElementById('product-price').value);
+        const name = document.getElementById('product-name').value.trim();
+        const price = parseFloat(document.getElementById('product-price').value) || 0;
         const category = document.getElementById('product-category').value;
+
+        const calculatedCost = calculateProductCostFromRecipe(recipeBuilderList);
+
+        const productData = {
+            name: name,
+            price: price,
+            category: category,
+            recipe: JSON.parse(JSON.stringify(recipeBuilderList)),
+            costPrice: calculatedCost
+        };
 
         try {
             if (id) {
-                await rtdb.ref('products/' + id).update({ name, price, category });
+                await rtdb.ref('products/' + id).update(productData);
                 const index = products.findIndex(p => p.id === id);
                 if (index !== -1) {
-                    products[index] = { id, name, price, category };
+                    products[index] = { id, ...productData };
                 }
             } else {
                 const newRef = rtdb.ref('products').push();
-                await newRef.set({ name, price, category });
-                products.push({ id: newRef.key, name, price, category });
+                await newRef.set(productData);
+                products.push({ id: newRef.key, ...productData });
             }
+
+            alert("Product & Recipe saved successfully!");
             clearProductForm();
             displayProducts();
         } catch (error) {
             console.error("Error saving product: ", error);
+            alert("Failed to save product.");
         }
     }
 
@@ -1830,8 +2541,11 @@
             document.getElementById('product-price').value = product.price;
             document.getElementById('product-category').value = product.category;
 
-            document.getElementById('form-product-title').innerText = "Edit Product";
-            document.getElementById('btn-product-submit').innerText = "Update Product";
+            recipeBuilderList = product.recipe ? JSON.parse(JSON.stringify(product.recipe)) : [];
+            displayRecipeBuilderTable();
+
+            document.getElementById('form-product-title').innerText = "Edit Product & Recipe";
+            document.getElementById('btn-product-submit').innerText = "Update Product & Recipe";
             document.getElementById('btn-product-cancel').classList.remove('d-none');
         }
     }
@@ -1851,16 +2565,18 @@
     function clearProductForm() {
         document.getElementById('product-id').value = '';
         document.getElementById('product-form').reset();
+        recipeBuilderList = [];
+        displayRecipeBuilderTable();
 
         document.getElementById('form-product-title').innerText = "Add New Product";
-        document.getElementById('btn-product-submit').innerText = "Save Product";
+        document.getElementById('btn-product-submit').innerText = "Save Product & Recipe";
         document.getElementById('btn-product-cancel').classList.add('d-none');
     }
 
     function displayExpenseCategories() {
         const dropdown = document.getElementById('expense-category');
         const badgeContainer = document.getElementById('expense-category-badges-container');
-        const selectedValue = dropdown.value;
+        const selectedValue = dropdown ? dropdown.value : '';
 
         let dropdownHtml = '<option value="">Select Category</option>';
         let badgesHtml = '';
@@ -1875,12 +2591,25 @@
             `;
         });
 
-        dropdown.innerHTML = dropdownHtml;
-        badgeContainer.innerHTML = badgesHtml;
+        if (dropdown) dropdown.innerHTML = dropdownHtml;
+        if (badgeContainer) badgeContainer.innerHTML = badgesHtml;
 
-        if (expenseCategories.includes(selectedValue)) {
+        if (dropdown && expenseCategories.includes(selectedValue)) {
             dropdown.value = selectedValue;
         }
+
+        populatePettyCashCategoryDropdown();
+    }
+
+    function populatePettyCashCategoryDropdown() {
+        const dropdown = document.getElementById('pc-voucher-category');
+        if (!dropdown) return;
+
+        let html = '<option value="">Select Category</option>';
+        expenseCategories.sort().forEach(cat => {
+            html += `<option value="${cat}">${cat}</option>`;
+        });
+        dropdown.innerHTML = html;
     }
 
     async function saveExpenseCategory(event) {
@@ -1914,9 +2643,224 @@
         }
     }
 
+    // =========================================================================
+    // RAW MATERIALS MASTER & GRN SYSTEM FUNCTIONS
+    // =========================================================================
     let isExpensesLoaded = false;
     let currentExpensePage = 1;
     const expensesPerPage = 5;
+
+    function populateRawMaterialsDropdown() {
+        const select = document.getElementById('grn-item-select');
+        if (!select) return;
+
+        let html = '<option value="">-- Select Raw Material Item --</option>';
+        rawMaterials.sort((a,b) => a.name.localeCompare(b.name)).forEach(mat => {
+            const currentCostText = mat.unitCost ? ` (Rs.${parseFloat(mat.unitCost).toFixed(2)}/${mat.unit || 'Unit'})` : '';
+            html += `<option value="${mat.id}">${mat.name}${currentCostText}</option>`;
+        });
+
+        select.innerHTML = html;
+        populateRecipeRawMaterialsDropdown();
+        populateWastageRawMaterialsDropdown();
+    }
+
+    function onRawMaterialSelect() {
+        const materialId = document.getElementById('grn-item-select').value;
+        const priceInput = document.getElementById('grn-item-unitprice');
+        
+        const mat = rawMaterials.find(m => m.id === materialId);
+        if (mat) {
+            priceInput.value = mat.unitCost || '';
+        } else {
+            priceInput.value = '';
+        }
+    }
+
+    function openNewRawMaterialModal() {
+        const modal = new bootstrap.Modal(document.getElementById('newRawMaterialModal'));
+        modal.show();
+    }
+
+    async function saveNewRawMaterial(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('new-mat-name').value.trim();
+        const unit = document.getElementById('new-mat-unit').value;
+        const cost = parseFloat(document.getElementById('new-mat-cost').value) || 0;
+
+        if (!name) return;
+
+        try {
+            const newRef = rtdb.ref('raw_materials').push();
+            const matObj = { name, unit, unitCost: cost, lastUpdated: todayStr };
+            await newRef.set(matObj);
+
+            matObj.id = newRef.key;
+            rawMaterials.push(matObj);
+
+            populateRawMaterialsDropdown();
+
+            // Auto-select newly created material in GRN
+            document.getElementById('grn-item-select').value = newRef.key;
+            onRawMaterialSelect();
+
+            const modalEl = document.getElementById('newRawMaterialModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+
+            document.getElementById('new-raw-material-form').reset();
+            alert(`Raw Material "${name}" created successfully!`);
+        } catch (error) {
+            console.error("Error creating Raw Material: ", error);
+            alert("Failed to create Raw Material.");
+        }
+    }
+
+    function addGrnItemRow() {
+        const selectEl = document.getElementById('grn-item-select');
+        const materialId = selectEl.value;
+        const qtyInput = document.getElementById('grn-item-qty');
+        const priceInput = document.getElementById('grn-item-unitprice');
+
+        const mat = rawMaterials.find(m => m.id === materialId);
+        const qty = parseFloat(qtyInput.value) || 0;
+        const price = parseFloat(priceInput.value) || 0;
+
+        if (!mat || qty <= 0 || price <= 0) {
+            alert("Please select a Raw Material from the dropdown and enter valid Qty & Unit Price!");
+            return;
+        }
+
+        const total = qty * price;
+        grnItemsList.push({
+            materialId: mat.id,
+            name: mat.name,
+            unit: mat.unit || 'Unit',
+            qty: qty,
+            price: price,
+            total: total
+        });
+
+        selectEl.value = '';
+        qtyInput.value = '';
+        priceInput.value = '';
+
+        displayGrnItemsTable();
+    }
+
+    function removeGrnItemRow(index) {
+        grnItemsList.splice(index, 1);
+        displayGrnItemsTable();
+    }
+
+    function displayGrnItemsTable() {
+        const tbody = document.getElementById('grn-items-table-body');
+        const totalDisplay = document.getElementById('grn-net-total-display');
+        tbody.innerHTML = '';
+
+        if (grnItemsList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No items added to this GRN yet.</td></tr>`;
+            totalDisplay.innerText = "Rs. 0.00";
+            return;
+        }
+
+        let netTotal = 0;
+        let html = '';
+        grnItemsList.forEach((item, index) => {
+            netTotal += item.total;
+            html += `
+                <tr>
+                    <td><strong>${item.name}</strong> <small class="text-muted">(${item.unit})</small></td>
+                    <td class="text-center">${item.qty}</td>
+                    <td class="text-end">Rs. ${item.price.toFixed(2)}</td>
+                    <td class="text-end fw-bold">Rs. ${item.total.toFixed(2)}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm text-danger p-0 border-0" onclick="removeGrnItemRow(${index})"><i class="bi bi-x-circle-fill"></i></button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html;
+        totalDisplay.innerText = `Rs. ${netTotal.toFixed(2)}`;
+    }
+
+    async function saveGrn(event) {
+        event.preventDefault();
+
+        if (grnItemsList.length === 0) {
+            alert("Please add at least one item to the GRN before submitting!");
+            return;
+        }
+
+        const invoiceNo = document.getElementById('grn-invoice-no').value.trim();
+        const supplier = document.getElementById('grn-supplier').value.trim();
+        const category = document.getElementById('expense-category').value;
+        const date = document.getElementById('expense-date').value;
+        const notes = document.getElementById('grn-notes').value.trim();
+
+        let netTotal = 0;
+        grnItemsList.forEach(item => netTotal += item.total);
+
+        const now = new Date();
+        const timeStr = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+        const dateTimeFormatted = `${date} ${timeStr}`;
+
+        const grnRecord = {
+            invoiceNo: invoiceNo,
+            supplier: supplier,
+            category: category,
+            date: date,
+            dateTime: dateTimeFormatted,
+            totalAmount: netTotal,
+            items: JSON.parse(JSON.stringify(grnItemsList)),
+            notes: notes || "N/A",
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        try {
+            const newRef = rtdb.ref('expenses').push();
+            const updatesMap = {};
+            updatesMap[`expenses/${newRef.key}`] = grnRecord;
+            updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(netTotal);
+
+            // Auto-update Raw Material Unit Cost in Database
+            grnItemsList.forEach(item => {
+                if (item.materialId) {
+                    updatesMap[`raw_materials/${item.materialId}/unitCost`] = item.price;
+                    updatesMap[`raw_materials/${item.materialId}/lastUpdated`] = dateTimeFormatted;
+
+                    // Update local in-memory array too
+                    const matLocal = rawMaterials.find(m => m.id === item.materialId);
+                    if (matLocal) {
+                        matLocal.unitCost = item.price;
+                        matLocal.lastUpdated = dateTimeFormatted;
+                    }
+                }
+            });
+
+            await rtdb.ref().update(updatesMap);
+
+            alert("GRN Note saved successfully & Raw Material Unit Costs updated! Products Costing will auto-adjust.");
+
+            // Reset GRN Form
+            document.getElementById('grn-form').reset();
+            document.getElementById('expense-date').value = todayStr;
+            grnItemsList = [];
+            displayGrnItemsTable();
+            populateRawMaterialsDropdown();
+
+            if (isExpensesLoaded) {
+                await loadExpensesClicked(true);
+            }
+            updateDashboardData();
+
+        } catch (error) {
+            console.error("Error saving GRN: ", error);
+            alert("Failed to save GRN to database.");
+        }
+    }
 
     async function loadExpensesClicked(forceFilter = false) {
         isExpensesLoaded = true;
@@ -1939,11 +2883,11 @@
             expenses = [];
             if (expData) {
                 expenses = Object.keys(expData).map(key => ({ id: key, ...expData[key] }));
-                expenses.sort((a,b) => b.date.localeCompare(a.date));
+                expenses.sort((a,b) => (b.dateTime || b.date).localeCompare(a.dateTime || a.date));
             }
             displayExpenses();
         } catch (error) {
-            console.error("Error loading expenses: ", error);
+            console.error("Error loading GRN expenses: ", error);
         }
     }
 
@@ -1954,7 +2898,7 @@
         tableBody.innerHTML = '';
 
         if (expenses.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No expenses found for selection.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No GRN records found for selected period.</td></tr>`;
             document.getElementById('expense-pagination').innerHTML = '';
             return;
         }
@@ -1968,18 +2912,21 @@
         const paginatedExpenses = expenses.slice(startIdx, endIdx);
 
         let tableHtml = '';
-        paginatedExpenses.forEach(expense => {
+        paginatedExpenses.forEach(exp => {
+            const invSupplier = exp.invoiceNo ? `#${exp.invoiceNo} - ${exp.supplier}` : (exp.desc || 'Expense');
+            const totalAmt = parseFloat(exp.totalAmount || exp.amount || 0);
+
             tableHtml += `
                 <tr>
-                    <td><strong>${expense.desc}</strong></td>
-                    <td><span class="badge bg-danger">${expense.category}</span></td>
-                    <td>${expense.date}</td>
-                    <td class="text-end">Rs. ${parseFloat(expense.amount).toFixed(2)}</td>
+                    <td><strong>${invSupplier}</strong></td>
+                    <td><span class="badge bg-danger">${exp.category}</span></td>
+                    <td><small class="fw-bold">${exp.dateTime || exp.date}</small></td>
+                    <td class="text-end text-danger fw-bold">Rs. ${totalAmt.toFixed(2)}</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editExpense('${expense.id}')">
-                            <i class="bi bi-pencil"></i>
+                        <button class="btn btn-sm btn-outline-info me-1 py-0 px-2" onclick="viewGrnDetails('${exp.id}')">
+                            <i class="bi bi-eye"></i> Details
                         </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteExpense('${expense.id}')">
+                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteExpense('${exp.id}')">
                             <i class="bi bi-trash"></i>
                         </button>
                     </td>
@@ -1996,93 +2943,408 @@
         displayExpenses();
     }
 
-    async function saveExpense(event) {
-        event.preventDefault();
+    function viewGrnDetails(id) {
+        const exp = expenses.find(e => e.id === id);
+        if (!exp) return;
 
-        const id = document.getElementById('expense-id').value;
-        const desc = document.getElementById('expense-desc').value;
-        const amount = parseFloat(document.getElementById('expense-amount').value);
-        const category = document.getElementById('expense-category').value;
-        const date = document.getElementById('expense-date').value;
+        const title = document.getElementById('grnModalTitle');
+        const body = document.getElementById('grn-modal-content');
 
-        try {
-            const updatesMap = {};
-            if (id) {
-                const oldExpense = expenses.find(e => e.id === id);
-                updatesMap[`expenses/${id}`] = { desc, amount, category, date };
-                
-                if (oldExpense) {
-                    if (oldExpense.date === date) {
-                        const diff = amount - oldExpense.amount;
-                        updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(diff);
-                    } else {
-                        updatesMap[`daily_summaries/${oldExpense.date}/expenses_total`] = firebase.database.ServerValue.increment(-oldExpense.amount);
-                        updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(amount);
-                    }
-                }
-            } else {
-                const newRef = rtdb.ref('expenses').push();
-                updatesMap[`expenses/${newRef.key}`] = { desc, amount, category, date };
-                updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(amount);
-            }
+        title.innerText = exp.invoiceNo ? `GRN Invoice: #${exp.invoiceNo}` : `Expense Details`;
 
-            await rtdb.ref().update(updatesMap);
-            
-            clearExpenseForm();
-            await loadExpensesClicked();
-            updateDashboardData();
-        } catch (error) {
-            console.error("Error saving expense: ", error);
+        let itemsHtml = '';
+        if (exp.items && Array.isArray(exp.items)) {
+            exp.items.forEach(item => {
+                itemsHtml += `
+                    <tr>
+                        <td>${item.name} <small class="text-muted">(${item.unit || 'Unit'})</small></td>
+                        <td class="text-center">${item.qty}</td>
+                        <td class="text-end">Rs. ${parseFloat(item.price).toFixed(2)}</td>
+                        <td class="text-end fw-bold">Rs. ${parseFloat(item.total).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        } else {
+            itemsHtml = `<tr><td colspan="4" class="text-center text-muted">${exp.desc || 'Single Expense Record'}</td></tr>`;
         }
-    }
 
-    function editExpense(id) {
-        const expense = expenses.find(e => e.id === id);
-        if (expense) {
-            document.getElementById('expense-id').value = expense.id;
-            document.getElementById('expense-desc').value = expense.desc;
-            document.getElementById('expense-amount').value = expense.amount;
-            document.getElementById('expense-category').value = expense.category;
-            document.getElementById('expense-date').value = expense.date;
+        body.innerHTML = `
+            <div class="mb-3 border-bottom pb-2">
+                <p class="mb-1"><strong>Supplier:</strong> ${exp.supplier || 'N/A'}</p>
+                <p class="mb-1"><strong>Category:</strong> <span class="badge bg-danger">${exp.category}</span></p>
+                <p class="mb-1"><strong>Date & Time:</strong> ${exp.dateTime || exp.date}</p>
+                <p class="mb-1"><strong>Remarks / Notes:</strong> ${exp.notes || 'N/A'}</p>
+            </div>
+            <h6 class="fw-bold">Itemized Line Items:</h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Raw Material Item</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-end">Unit Cost</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsHtml}
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-between fs-5 fw-bold text-danger border-top pt-2">
+                <span>NET TOTAL:</span>
+                <span>Rs. ${parseFloat(exp.totalAmount || exp.amount || 0).toFixed(2)}</span>
+            </div>
+        `;
 
-            document.getElementById('form-expense-title').innerText = "Edit Expense";
-            document.getElementById('btn-expense-submit').innerText = "Update Expense";
-            document.getElementById('btn-expense-cancel').classList.remove('d-none');
-        }
+        const modal = new bootstrap.Modal(document.getElementById('grnDetailsModal'));
+        modal.show();
     }
 
     async function deleteExpense(id) {
         const expense = expenses.find(e => e.id === id);
         if (!expense) return;
 
-        if (confirm("Are you sure you want to delete this expense record?")) {
+        if (confirm("Are you sure you want to delete this GRN / Expense record? This will adjust daily total summaries.")) {
             try {
+                const totalAmt = parseFloat(expense.totalAmount || expense.amount || 0);
                 const updatesMap = {};
                 updatesMap[`expenses/${id}`] = null;
-                updatesMap[`daily_summaries/${expense.date}/expenses_total`] = firebase.database.ServerValue.increment(-expense.amount);
+                updatesMap[`daily_summaries/${expense.date}/expenses_total`] = firebase.database.ServerValue.increment(-totalAmt);
 
                 await rtdb.ref().update(updatesMap);
-                await loadExpensesClicked();
+                await loadExpensesClicked(true);
                 updateDashboardData();
             } catch (error) {
-                console.error("Error deleting expense: ", error);
+                console.error("Error deleting GRN expense: ", error);
             }
         }
     }
 
-    function clearExpenseForm() {
-        document.getElementById('expense-id').value = '';
-        document.getElementById('expense-form').reset();
-        document.getElementById('expense-date').value = todayStr;
-
-        document.getElementById('form-expense-title').innerText = "Add New Expense";
-        document.getElementById('btn-expense-submit').innerText = "Save Expense";
-        document.getElementById('btn-expense-cancel').classList.add('d-none');
+    // =========================================================================
+    // PETTY CASH VOUCHER & FLOAT SYSTEM FUNCTIONS
+    // =========================================================================
+    async function loadPettyCashBalance() {
+        try {
+            const snapshot = await rtdb.ref('petty_cash_float/current_balance').once('value');
+            currentPettyCashBalance = parseFloat(snapshot.val() || 0);
+            
+            const display = document.getElementById('pc-current-balance-display');
+            if (display) {
+                display.innerText = `Rs. ${currentPettyCashBalance.toFixed(2)}`;
+            }
+        } catch (error) {
+            console.error("Error loading Petty Cash Balance: ", error);
+        }
     }
 
+    function openAddFloatModal() {
+        document.getElementById('pc-float-date').value = todayStr;
+        const modal = new bootstrap.Modal(document.getElementById('addFloatModal'));
+        modal.show();
+    }
+
+    async function savePettyCashFloat(event) {
+        event.preventDefault();
+
+        const amount = parseFloat(document.getElementById('pc-float-amount').value) || 0;
+        const reason = document.getElementById('pc-float-reason').value.trim();
+        const date = document.getElementById('pc-float-date').value;
+
+        if (amount <= 0 || !reason) {
+            alert("Please enter a valid top-up amount and source/reason!");
+            return;
+        }
+
+        const now = new Date();
+        const timeStr = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+        const dateTimeFormatted = `${date} ${timeStr}`;
+
+        const currentUser = auth.currentUser ? (auth.currentUser.email.split('@')[0]) : 'system';
+        const newBalance = currentPettyCashBalance + amount;
+
+        const logRecord = {
+            type: "FLOAT_IN",
+            amount: amount,
+            reason: reason,
+            category: "Float Deposit",
+            date: date,
+            dateTime: dateTimeFormatted,
+            issuedBy: currentUser,
+            balanceAfter: newBalance,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        try {
+            const newRef = rtdb.ref('petty_cash_logs').push();
+            const updatesMap = {};
+            updatesMap[`petty_cash_logs/${newRef.key}`] = logRecord;
+            updatesMap[`petty_cash_float/current_balance`] = firebase.database.ServerValue.increment(amount);
+
+            await rtdb.ref().update(updatesMap);
+
+            alert(`Rs. ${amount.toFixed(2)} added to Petty Cash Float successfully!`);
+
+            const modalEl = document.getElementById('addFloatModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+
+            document.getElementById('pc-float-form').reset();
+            loadPettyCashBalance();
+
+            if (isPettyCashLogsLoaded) {
+                await loadPettyCashLogsClicked(true);
+            }
+        } catch (error) {
+            console.error("Error depositing to Petty Cash: ", error);
+            alert("Failed to deposit to Petty Cash.");
+        }
+    }
+
+    function openIssueVoucherModal() {
+        populatePettyCashCategoryDropdown();
+        document.getElementById('pc-voucher-date').value = todayStr;
+        const modal = new bootstrap.Modal(document.getElementById('issueVoucherModal'));
+        modal.show();
+    }
+
+    async function savePettyCashVoucher(event) {
+        event.preventDefault();
+
+        const amount = parseFloat(document.getElementById('pc-voucher-amount').value) || 0;
+        const payee = document.getElementById('pc-voucher-payee').value.trim();
+        const reason = document.getElementById('pc-voucher-reason').value.trim();
+        const category = document.getElementById('pc-voucher-category').value;
+        const date = document.getElementById('pc-voucher-date').value;
+
+        if (amount <= 0 || !payee || !reason || !category) {
+            alert("Please complete all voucher details!");
+            return;
+        }
+
+        if (amount > currentPettyCashBalance) {
+            if (!confirm(`Warning: Voucher amount (Rs. ${amount.toFixed(2)}) exceeds current Petty Cash Balance (Rs. ${currentPettyCashBalance.toFixed(2)}). Continue anyway?`)) {
+                return;
+            }
+        }
+
+        const now = new Date();
+        const timeStr = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+        const dateTimeFormatted = `${date} ${timeStr}`;
+
+        const currentUser = auth.currentUser ? (auth.currentUser.email.split('@')[0]) : 'system';
+        const newBalance = currentPettyCashBalance - amount;
+
+        const voucherRecord = {
+            type: "EXPENSE_OUT",
+            amount: amount,
+            payee: payee,
+            reason: reason,
+            category: category,
+            date: date,
+            dateTime: dateTimeFormatted,
+            issuedBy: currentUser,
+            balanceAfter: newBalance,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        try {
+            const newRef = rtdb.ref('petty_cash_logs').push();
+            const updatesMap = {};
+            updatesMap[`petty_cash_logs/${newRef.key}`] = voucherRecord;
+            updatesMap[`petty_cash_float/current_balance`] = firebase.database.ServerValue.increment(-amount);
+            
+            // Also increment daily summaries for Dashboard Expenses Total
+            updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(amount);
+
+            await rtdb.ref().update(updatesMap);
+
+            alert(`Voucher for Rs. ${amount.toFixed(2)} issued successfully!`);
+
+            const modalEl = document.getElementById('issueVoucherModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+
+            document.getElementById('pc-voucher-form').reset();
+            loadPettyCashBalance();
+            updateDashboardData();
+
+            if (isPettyCashLogsLoaded) {
+                await loadPettyCashLogsClicked(true);
+            }
+        } catch (error) {
+            console.error("Error issuing Petty Cash Voucher: ", error);
+            alert("Failed to issue Petty Cash Voucher.");
+        }
+    }
+
+    async function loadPettyCashLogsClicked(forceFilter = false) {
+        isPettyCashLogsLoaded = true;
+        document.getElementById('pc-list-wrapper').classList.remove('d-none');
+        document.getElementById('pc-load-placeholder').classList.add('d-none');
+
+        const startFilter = document.getElementById('pc-filter-start').value;
+        const endFilter = document.getElementById('pc-filter-end').value;
+
+        try {
+            let queryRef;
+            if (forceFilter && startFilter && endFilter) {
+                queryRef = rtdb.ref('petty_cash_logs').orderByChild('date').startAt(startFilter).endAt(endFilter).limitToLast(200);
+            } else {
+                queryRef = rtdb.ref('petty_cash_logs').limitToLast(50);
+            }
+
+            const snapshot = await queryRef.once('value');
+            const data = snapshot.val();
+            pettyCashLogsList = [];
+            if (data) {
+                pettyCashLogsList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                pettyCashLogsList.sort((a,b) => (b.dateTime || b.date).localeCompare(a.dateTime || a.date));
+            }
+            displayPettyCashLogs();
+        } catch (error) {
+            console.error("Error loading Petty Cash logs: ", error);
+        }
+    }
+
+    function displayPettyCashLogs() {
+        if (!isPettyCashLogsLoaded) return;
+
+        const tableBody = document.getElementById('pc-table-body');
+        tableBody.innerHTML = '';
+
+        if (pettyCashLogsList.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-muted">No Petty Cash logs found for selected period.</td></tr>`;
+            document.getElementById('pc-pagination').innerHTML = '';
+            return;
+        }
+
+        const totalPages = Math.ceil(pettyCashLogsList.length / pettyCashPerPage);
+        if (currentPettyCashPage > totalPages) currentPettyCashPage = totalPages;
+        if (currentPettyCashPage < 1) currentPettyCashPage = 1;
+
+        const startIdx = (currentPettyCashPage - 1) * pettyCashPerPage;
+        const endIdx = startIdx + pettyCashPerPage;
+        const paginatedLogs = pettyCashLogsList.slice(startIdx, endIdx);
+
+        let tableHtml = '';
+        paginatedLogs.forEach(log => {
+            const isTopUp = log.type === 'FLOAT_IN';
+            const typeBadge = isTopUp 
+                ? `<span class="badge bg-success"><i class="bi bi-arrow-down-left-circle me-1"></i> Float In</span>` 
+                : `<span class="badge bg-danger"><i class="bi bi-arrow-up-right-circle me-1"></i> Voucher Out</span>`;
+
+            const payeeReason = isTopUp 
+                ? `<strong>Top-Up:</strong> ${log.reason}` 
+                : `<strong>${log.payee}</strong> <br><small class="text-muted">${log.reason}</small>`;
+
+            const amountClass = isTopUp ? 'text-success' : 'text-danger';
+            const amountPrefix = isTopUp ? '+' : '-';
+
+            tableHtml += `
+                <tr>
+                    <td>${typeBadge}</td>
+                    <td>${payeeReason}</td>
+                    <td><span class="badge bg-secondary">${log.category || 'General'}</span></td>
+                    <td><small class="fw-bold">${log.dateTime || log.date}</small></td>
+                    <td class="text-end fw-bold ${amountClass}">${amountPrefix}Rs. ${parseFloat(log.amount).toFixed(2)}</td>
+                    <td class="text-end fw-bold">Rs. ${parseFloat(log.balanceAfter || 0).toFixed(2)}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deletePettyCashLog('${log.id}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tableBody.innerHTML = tableHtml;
+        renderPagination('pc-pagination', totalPages, currentPettyCashPage, 'changePettyCashPage');
+    }
+
+    function changePettyCashPage(pageNumber) {
+        currentPettyCashPage = pageNumber;
+        displayPettyCashLogs();
+    }
+
+    async function deletePettyCashLog(logId) {
+        const log = pettyCashLogsList.find(l => l.id === logId);
+        if (!log) return;
+
+        if (confirm("Are you sure you want to delete/reverse this Petty Cash log? This will update live Petty Cash float balance.")) {
+            try {
+                const isTopUp = log.type === 'FLOAT_IN';
+                const amt = parseFloat(log.amount || 0);
+
+                // Reverse Float impact
+                const reverseFloatDiff = isTopUp ? -amt : amt;
+
+                const updatesMap = {};
+                updatesMap[`petty_cash_logs/${logId}`] = null;
+                updatesMap[`petty_cash_float/current_balance`] = firebase.database.ServerValue.increment(reverseFloatDiff);
+
+                // If it was a voucher outflow, also reverse the expense summary
+                if (!isTopUp) {
+                    updatesMap[`daily_summaries/${log.date}/expenses_total`] = firebase.database.ServerValue.increment(-amt);
+                }
+
+                await rtdb.ref().update(updatesMap);
+
+                alert("Petty Cash log deleted/reversed successfully.");
+                loadPettyCashBalance();
+                await loadPettyCashLogsClicked(true);
+                updateDashboardData();
+            } catch (error) {
+                console.error("Error deleting Petty Cash log: ", error);
+                alert("Failed to delete log.");
+            }
+        }
+    }
+
+    // =========================================================================
+    // WASTAGE TRACKER SYSTEM (LINKED WITH RAW MATERIALS & GRN UNIT COSTS)
+    // =========================================================================
     let isWastageLoaded = false;
     let currentWastagePage = 1;
     const wastagePerPage = 5;
+
+    function populateWastageRawMaterialsDropdown() {
+        const select = document.getElementById('wastage-item-select');
+        if (!select) return;
+
+        let html = '<option value="">-- Select Raw Material --</option>';
+        rawMaterials.sort((a,b) => a.name.localeCompare(b.name)).forEach(mat => {
+            const currentCostText = mat.unitCost ? ` (Rs.${parseFloat(mat.unitCost).toFixed(2)}/${mat.unit || 'Unit'})` : '';
+            html += `<option value="${mat.id}">${mat.name}${currentCostText}</option>`;
+        });
+
+        select.innerHTML = html;
+    }
+
+    function onWastageMaterialSelect() {
+        const materialId = document.getElementById('wastage-item-select').value;
+        const unitCostInput = document.getElementById('wastage-unit-cost');
+        const unitDisplay = document.getElementById('wastage-unit-display');
+
+        const mat = rawMaterials.find(m => m.id === materialId);
+        if (mat) {
+            unitCostInput.value = parseFloat(mat.unitCost || 0).toFixed(2);
+            unitDisplay.innerText = mat.unit || 'Qty';
+        } else {
+            unitCostInput.value = '0.00';
+            unitDisplay.innerText = 'Qty';
+        }
+
+        calculateWastageTotal();
+    }
+
+    function calculateWastageTotal() {
+        const qty = parseFloat(document.getElementById('wastage-qty').value) || 0;
+        const unitCost = parseFloat(document.getElementById('wastage-unit-cost').value) || 0;
+
+        const totalLoss = qty * unitCost;
+        document.getElementById('wastage-amount').value = totalLoss.toFixed(2);
+    }
 
     async function loadWastageClicked(forceFilter = false) {
         isWastageLoaded = true;
@@ -2120,7 +3382,7 @@
         tableBody.innerHTML = '';
 
         if (wastage.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No wastage tracker records found.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">No wastage tracker records found.</td></tr>`;
             document.getElementById('wastage-pagination').innerHTML = '';
             return;
         }
@@ -2135,16 +3397,20 @@
 
         let tableHtml = '';
         paginatedWastage.forEach(record => {
+            const itemName = record.item || 'Raw Material';
+            const qtyText = record.qty ? `${record.qty} ${record.unit || ''}` : 'N/A';
+            const unitCostText = record.unitCost ? `Rs. ${parseFloat(record.unitCost).toFixed(2)}` : 'N/A';
+            const totalLoss = parseFloat(record.amount || 0);
+
             tableHtml += `
                 <tr>
-                    <td><strong>${record.item}</strong></td>
-                    <td>${record.date}</td>
-                    <td class="text-end text-danger">Rs. ${parseFloat(record.amount).toFixed(2)}</td>
+                    <td><strong>${itemName}</strong></td>
+                    <td class="text-center fw-bold">${qtyText}</td>
+                    <td class="text-end text-secondary">${unitCostText}</td>
+                    <td class="text-end text-danger fw-bold">Rs. ${totalLoss.toFixed(2)}</td>
+                    <td><small class="fw-bold">${record.date}</small></td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editWastage('${record.id}')">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteWastage('${record.id}')">
+                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteWastage('${record.id}')">
                             <i class="bi bi-trash"></i>
                         </button>
                     </td>
@@ -2164,53 +3430,48 @@
     async function saveWastage(event) {
         event.preventDefault();
 
-        const id = document.getElementById('wastage-id').value;
-        const item = document.getElementById('wastage-item').value;
-        const amount = parseFloat(document.getElementById('wastage-amount').value);
+        const matId = document.getElementById('wastage-item-select').value;
+        const mat = rawMaterials.find(m => m.id === matId);
+
+        const qty = parseFloat(document.getElementById('wastage-qty').value) || 0;
+        const unitCost = parseFloat(document.getElementById('wastage-unit-cost').value) || 0;
+        const totalLoss = parseFloat(document.getElementById('wastage-amount').value) || 0;
         const date = document.getElementById('wastage-date').value;
 
+        if (!mat || qty <= 0 || totalLoss <= 0) {
+            alert("Please select a Raw Material and enter a valid Wasted Qty!");
+            return;
+        }
+
+        const wastageRecord = {
+            materialId: mat.id,
+            item: mat.name,
+            qty: qty,
+            unit: mat.unit || 'Unit',
+            unitCost: unitCost,
+            amount: totalLoss,
+            date: date,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
         try {
+            const newRef = rtdb.ref('wastage').push();
             const updatesMap = {};
-            if (id) {
-                const oldRecord = wastage.find(w => w.id === id);
-                updatesMap[`wastage/${id}`] = { item, amount, date };
-                
-                if (oldRecord) {
-                    if (oldRecord.date === date) {
-                        const diff = amount - oldRecord.amount;
-                        updatesMap[`daily_summaries/${date}/wastage_total`] = firebase.database.ServerValue.increment(diff);
-                    } else {
-                        updatesMap[`daily_summaries/${oldRecord.date}/wastage_total`] = firebase.database.ServerValue.increment(-oldRecord.amount);
-                        updatesMap[`daily_summaries/${date}/wastage_total`] = firebase.database.ServerValue.increment(amount);
-                    }
-                }
-            } else {
-                const newRef = rtdb.ref('wastage').push();
-                updatesMap[`wastage/${newRef.key}`] = { item, amount, date };
-                updatesMap[`daily_summaries/${date}/wastage_total`] = firebase.database.ServerValue.increment(amount);
-            }
+            updatesMap[`wastage/${newRef.key}`] = wastageRecord;
+            updatesMap[`daily_summaries/${date}/wastage_total`] = firebase.database.ServerValue.increment(totalLoss);
 
             await rtdb.ref().update(updatesMap);
             
+            alert("Kitchen Wastage log saved successfully!");
             clearWastageForm();
-            await loadWastageClicked();
+            
+            if (isWastageLoaded) {
+                await loadWastageClicked(true);
+            }
             updateDashboardData();
         } catch (error) {
             console.error("Error saving wastage: ", error);
-        }
-    }
-
-    function editWastage(id) {
-        const record = wastage.find(w => w.id === id);
-        if (record) {
-            document.getElementById('wastage-id').value = record.id;
-            document.getElementById('wastage-item').value = record.item;
-            document.getElementById('wastage-amount').value = record.amount;
-            document.getElementById('wastage-date').value = record.date;
-
-            document.getElementById('form-wastage-title').innerText = "Edit Wastage";
-            document.getElementById('btn-wastage-submit').innerText = "Update Wastage";
-            document.getElementById('btn-wastage-cancel').classList.remove('d-none');
+            alert("Failed to save wastage record.");
         }
     }
 
@@ -2225,7 +3486,7 @@
                 updatesMap[`daily_summaries/${record.date}/wastage_total`] = firebase.database.ServerValue.increment(-record.amount);
 
                 await rtdb.ref().update(updatesMap);
-                await loadWastageClicked();
+                await loadWastageClicked(true);
                 updateDashboardData();
             } catch (error) {
                 console.error("Error deleting wastage record: ", error);
@@ -2237,10 +3498,9 @@
         document.getElementById('wastage-id').value = '';
         document.getElementById('wastage-form').reset();
         document.getElementById('wastage-date').value = todayStr;
-
-        document.getElementById('form-wastage-title').innerText = "Add Wastage Record";
-        document.getElementById('btn-wastage-submit').innerText = "Save Wastage";
-        document.getElementById('btn-wastage-cancel').classList.add('d-none');
+        document.getElementById('wastage-unit-display').innerText = 'Qty';
+        document.getElementById('wastage-unit-cost').value = '0.00';
+        document.getElementById('wastage-amount').value = '0.00';
     }
 
     function displayUpdates() {
@@ -2913,7 +4173,7 @@
             let categoryWiseSummary = {};
 
             filteredExpenses.forEach(exp => {
-                const amount = parseFloat(exp.amount);
+                const amount = parseFloat(exp.totalAmount || exp.amount || 0);
                 overallTotal += amount;
 
                 if (categoryWiseSummary[exp.category]) {
@@ -2944,18 +4204,21 @@
 
             detailsBody.innerHTML = '';
             if (filteredExpenses.length === 0) {
-                detailsBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No expense transactions recorded in this period.</td></tr>`;
+                detailsBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No GRN / expense transactions recorded in this period.</td></tr>`;
                 return;
             }
 
             let detailsHtml = '';
-            filteredExpenses.sort((a,b) => b.date.localeCompare(a.date)).forEach(exp => {
+            filteredExpenses.sort((a,b) => (b.dateTime || b.date).localeCompare(a.dateTime || a.date)).forEach(exp => {
+                const label = exp.invoiceNo ? `#${exp.invoiceNo} - ${exp.supplier}` : (exp.desc || 'Expense');
+                const amt = parseFloat(exp.totalAmount || exp.amount || 0);
+
                 detailsHtml += `
                     <tr>
-                        <td><strong>${exp.desc}</strong></td>
+                        <td><strong>${label}</strong></td>
                         <td><span class="badge bg-danger">${exp.category}</span></td>
-                        <td>${exp.date}</td>
-                        <td class="text-end fw-bold">Rs. ${parseFloat(exp.amount).toFixed(2)}</td>
+                        <td>${exp.dateTime || exp.date}</td>
+                        <td class="text-end fw-bold">Rs. ${amt.toFixed(2)}</td>
                     </tr>
                 `;
             });
@@ -3104,6 +4367,7 @@
             document.getElementById('print-z-variance-total').innerText = `Rs. ${totalVariance.toFixed(2)}`;
             document.getElementById('print-z-notes').innerText = notes || "N/A";
 
+            document.body.classList.add('print-zreport');
             document.body.classList.add('print-zreport');
             document.body.classList.remove('print-receipt');
 
