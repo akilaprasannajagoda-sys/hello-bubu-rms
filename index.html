@@ -6,6 +6,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello Bubu - Restaurant Management System</title>
+    
+    <!-- Meta Tags for Copyright & Branding -->
+    <meta name="author" content="Systems.LK">
+    <meta name="copyright" content="Copyright © 2026 Systems.LK. All Rights Reserved.">
+    <meta name="description" content="Hello Bubu Restaurant Management System developed by Systems.LK (Tel: 0760672029)">
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -174,7 +180,6 @@
                 overflow: hidden !important;
             }
             
-            /* Prevent hidden elements from adding height to print layout */
             #main-app-container, #login-screen, .no-print,
             body:not(.print-receipt) #receipt-print-area,
             body:not(.print-zreport) #zreport-print-area {
@@ -191,7 +196,7 @@
                 display: block !important;
                 position: relative !important;
                 left: 0 !important;
-                width: 68mm !important; /* Perfect printable width for 80mm roll without edge clipping */
+                width: 68mm !important;
                 margin: 0 auto !important;
                 padding: 2mm 0mm 3mm 0mm !important;
                 font-family: Arial, Helvetica, sans-serif !important;
@@ -270,7 +275,7 @@
     </div>
     <div style="text-align: center; margin-top: 6px;">
         <p style="margin: 0; font-size: 10px; font-weight: bold;">Thank You! Come Again.</p>
-        <small style="font-size: 8px; display: block; margin-top: 2px;">Software by Systems.LK</small>
+        <small style="font-size: 8px; display: block; margin-top: 2px;">Software Copyright © 2026 Systems.LK | Tel: 0760672029</small>
     </div>
 </div>
 
@@ -345,7 +350,7 @@
     <div style="text-align: center; margin-top: 15px;">
         <p style="margin: 0; font-size: 9px;">................................</p>
         <p style="margin: 0; font-size: 9px;">Cashier Signature</p>
-        <p style="margin: 6px 0 0 0; font-size: 8px;">Printed via Hello Bubu RMS</p>
+        <p style="margin: 6px 0 0 0; font-size: 8px;">Software Copyright © 2026 Systems.LK (0760672029)</p>
     </div>
 </div>
 
@@ -377,6 +382,12 @@
             </button>
             <div class="text-danger small text-center mt-3 d-none" id="login-error-msg"></div>
         </form>
+
+        <!-- Login Footer Branding -->
+        <div class="text-center mt-4 pt-3 border-top text-muted" style="font-size: 0.75rem;">
+            <p class="mb-0 fw-semibold">Hello Bubu RMS v1.4.0</p>
+            <small>© 2026 <strong>Systems.LK</strong>. All Rights Reserved.<br>Hotline: 0760672029</small>
+        </div>
     </div>
 </div>
 
@@ -442,10 +453,16 @@
                     </ul>
                 </div>
                 
-                <div class="pt-3 border-top border-secondary mt-auto mb-3">
-                    <button class="btn btn-outline-danger w-100" onclick="handleLogout()">
+                <div class="pt-3 border-top border-secondary mt-auto mb-2">
+                    <button class="btn btn-outline-danger w-100 mb-3" onclick="handleLogout()">
                         <i class="bi bi-box-arrow-right me-2"></i> Sign Out
                     </button>
+                    <!-- Sidebar Footer Copyright -->
+                    <div class="text-center text-white-50" style="font-size: 0.72rem;">
+                        <small>Developed by <strong>Systems.LK</strong></small><br>
+                        <small><i class="bi bi-telephone me-1"></i>0760672029</small><br>
+                        <small>© 2026 All Rights Reserved</small>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -457,9 +474,8 @@
                 <span class="badge bg-primary p-2 fs-6 shadow-sm" id="current-date">Date</span>
             </div>
 
-            <!-- 1. DASHBOARD PAGE (UPGRADED PREMIUM UI) -->
+            <!-- 1. DASHBOARD PAGE -->
             <div id="page-dashboard" class="page-section active-page">
-                <!-- Welcome Banner -->
                 <div class="card card-custom bg-white p-4 mb-4 border-start border-5 border-primary">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <div>
@@ -477,7 +493,6 @@
                     </div>
                 </div>
 
-                <!-- 4 Key Stat Metric Cards with Vibrant Gradients -->
                 <div class="row g-3 mb-4">
                     <div class="col-lg-3 col-md-6">
                         <div class="card dash-card-stat bg-grad-sales p-3">
@@ -532,7 +547,6 @@
                     </div>
                 </div>
 
-                <!-- Secondary Row: Financial Health Summary & System Connection Status -->
                 <div class="row g-3">
                     <div class="col-lg-8 col-md-12">
                         <div class="card card-custom bg-white p-4 h-100">
@@ -677,10 +691,9 @@
                 </div>
             </div>
 
-            <!-- 3. PRODUCTS MANAGEMENT PAGE (WITH RECIPE & PROFIT MARGINS) -->
+            <!-- 3. PRODUCTS MANAGEMENT PAGE -->
             <div id="page-products" class="page-section">
                 <div class="row">
-                    <!-- Left Side: Product Form with Recipe Builder -->
                     <div class="col-lg-5 col-md-12 mb-4">
                         <div class="card card-custom bg-white p-4 mb-4">
                             <h5 class="mb-3 border-bottom pb-2 fw-bold" id="form-product-title"><i class="bi bi-plus-circle me-1"></i> Add New Product</h5>
@@ -705,7 +718,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Recipe Builder Section -->
                                 <div class="bg-light p-3 rounded mb-3 border">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <h6 class="fw-bold mb-0 small text-secondary"><i class="bi bi-journals me-1"></i> Recipe / Portion Ingredients</h6>
@@ -748,7 +760,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Recipe Cost & Margin Summary Badge -->
                                 <div class="p-2 bg-dark text-white rounded mb-3">
                                     <div class="d-flex justify-content-between small">
                                         <span>Calculated Cost Price:</span>
@@ -778,7 +789,6 @@
                         </div>
                     </div>
 
-                    <!-- Right Side: Product List with Cost & Margins -->
                     <div class="col-lg-7 col-md-12">
                         <div class="card card-custom bg-white p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -815,9 +825,8 @@
                 </div>
             </div>
 
-            <!-- 4. EXPENSES, GRN & PETTY CASH PAGE (SUB-TABBED) -->
+            <!-- 4. EXPENSES, GRN & PETTY CASH PAGE -->
             <div id="page-expenses" class="page-section">
-                <!-- Navigation Sub-Tabs for GRN vs Petty Cash -->
                 <ul class="nav nav-pills mb-3 bg-white p-2 rounded card-custom" id="expenseSubTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active fw-bold" id="grn-subtab" data-bs-toggle="pill" data-bs-target="#grn-subpanel" type="button" role="tab">
@@ -832,10 +841,8 @@
                 </ul>
 
                 <div class="tab-content" id="expenseSubTabsContent">
-                    <!-- SUB-PANEL 1: GRN (RAW MATERIALS & SUPPLIER INVOICES) -->
                     <div class="tab-pane fade show active" id="grn-subpanel" role="tabpanel">
                         <div class="row">
-                            <!-- Left Side: Create GRN Note Form -->
                             <div class="col-lg-5 col-md-12 mb-4">
                                 <div class="card card-custom bg-white p-4 mb-4">
                                     <h5 class="mb-3 border-bottom pb-2 text-danger fw-bold"><i class="bi bi-file-earmark-plus me-1"></i> Create Goods Received Note (GRN)</h5>
@@ -864,7 +871,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- Multi-Item Input Section with Raw Materials Master Dropdown -->
                                         <div class="bg-light p-3 rounded mb-3 border">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <h6 class="fw-bold mb-0 small text-secondary"><i class="bi bi-cart-plus me-1"></i> Add Raw Material Items</h6>
@@ -926,7 +932,6 @@
                                     </form>
                                 </div>
 
-                                <!-- Expense Category Management -->
                                 <div class="card card-custom bg-white p-4">
                                     <h6 class="mb-3 fw-bold">Manage Expense Categories</h6>
                                     <form id="expense-category-form" onsubmit="saveExpenseCategory(event)">
@@ -940,7 +945,6 @@
                                 </div>
                             </div>
 
-                            <!-- Right Side: GRN Notes History & On-Demand Filter -->
                             <div class="col-lg-7 col-md-12">
                                 <div class="card card-custom bg-white p-4">
                                     <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
@@ -992,9 +996,7 @@
                         </div>
                     </div>
 
-                    <!-- SUB-PANEL 2: PETTY CASH MANAGEMENT -->
                     <div class="tab-pane fade" id="pettycash-subpanel" role="tabpanel">
-                        <!-- Top Petty Cash Summary Cards -->
                         <div class="row mb-4">
                             <div class="col-md-6 mb-3">
                                 <div class="card card-custom bg-white p-3 border-start border-4 border-success">
@@ -1025,7 +1027,6 @@
                             </div>
                         </div>
 
-                        <!-- Petty Cash Transactions History -->
                         <div class="card card-custom bg-white p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
                                 <h5 class="mb-0 fw-bold"><i class="bi bi-journals me-1"></i> Petty Cash Voucher & Allocation Logs</h5>
@@ -1079,7 +1080,7 @@
                 </div>
             </div>
 
-            <!-- Modal for Adding Petty Cash Float (Top-Up) -->
+            <!-- Modals -->
             <div class="modal fade" id="addFloatModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -1111,7 +1112,6 @@
                 </div>
             </div>
 
-            <!-- Modal for Issuing Petty Cash Voucher -->
             <div class="modal fade" id="issueVoucherModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -1155,7 +1155,6 @@
                 </div>
             </div>
 
-            <!-- Modal for GRN View Details -->
             <div class="modal fade" id="grnDetailsModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -1173,7 +1172,6 @@
                 </div>
             </div>
 
-            <!-- Modal for Creating New Raw Material On-the-Fly -->
             <div class="modal fade" id="newRawMaterialModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -1213,7 +1211,7 @@
                 </div>
             </div>
 
-            <!-- 5. WASTAGE PAGE (UPGRADED WITH RAW MATERIAL DROPDOWN & GRN AUTO-COST) -->
+            <!-- 5. WASTAGE PAGE -->
             <div id="page-wastage" class="page-section">
                 <div class="row">
                     <div class="col-lg-4 col-md-12 mb-4">
@@ -1326,7 +1324,6 @@
                 </ul>
 
                 <div class="tab-content" id="reportTabsContent">
-                    <!-- A. ITEM-WISE SALES REPORT TAB -->
                     <div class="tab-pane fade show active" id="sales-report-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
                             <h5 class="mb-3">Item-Wise Sales Report</h5>
@@ -1381,7 +1378,6 @@
                         </div>
                     </div>
 
-                    <!-- B. INVOICE HISTORY & LOOKUP TAB -->
                     <div class="tab-pane fade" id="invoice-history-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
                             <h5 class="mb-3 border-bottom pb-2">Search Invoice / Transaction History</h5>
@@ -1424,7 +1420,6 @@
                         </div>
                     </div>
 
-                    <!-- C. EXPENSES REPORT TAB -->
                     <div class="tab-pane fade" id="expenses-report-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
                             <h5 class="mb-3">Expenses & GRN Summary Report</h5>
@@ -1655,7 +1650,7 @@
                 </div>
             </div>
 
-            <!-- 9. DAY END (Z-REPORT / RECONCILIATION) PAGE -->
+            <!-- 9. DAY END PAGE -->
             <div id="page-dayend" class="page-section">
                 <div class="row">
                     <div class="col-md-5 mb-4">
@@ -1771,6 +1766,61 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
 <script>
+    /*
+     * ============================================================================
+     * HELLO BUBU - RESTAURANT MANAGEMENT SYSTEM (RMS)
+     * Copyright (c) 2026 Systems.LK. All Rights Reserved.
+     * Technical Support / License Inquiries: 0760672029
+     * ============================================================================
+     */
+
+    // SOFTWARE LICENSE & DOMAIN SECURITY GUARD
+    (function verifySoftwareLicense() {
+        const LICENSE_CONFIG = {
+            owner: "Systems.LK",
+            contactPhone: "0760672029",
+            client: "Hello Bubu Restaurant",
+            active: true,
+            expiryDate: new Date(2030, 11, 31), // Set License Expiry Date
+            allowedDomains: ["localhost", "127.0.0.1", "hellobubu.web.app", "supermarket-57b42.web.app"]
+        };
+
+        const today = new Date();
+        const currentHost = window.location.hostname;
+
+        // 1. Expiry Date Check
+        if (today > LICENSE_CONFIG.expiryDate) {
+            document.body.innerHTML = `
+                <div style="height:100vh; display:flex; align-items:center; justify-content:center; background:#111; color:#ff4d4d; font-family:sans-serif; text-align:center; padding:20px;">
+                    <div>
+                        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">⚠️ SOFTWARE LICENSE EXPIRED</h1>
+                        <p style="color:#ccc; font-size: 1.1rem;">Your software license for Hello Bubu RMS has expired.</p>
+                        <p style="color:#fff; font-size:1.1rem; margin-top:20px; padding: 15px; background: #222; border-radius: 8px;">
+                            Please contact <strong>Systems.LK</strong> at <strong>0760672029</strong> to renew your license.
+                        </p>
+                    </div>
+                </div>`;
+            throw new Error("Systems.LK License Guard: Software License Expired.");
+        }
+
+        // 2. Domain Lock Check
+        const isDomainAllowed = LICENSE_CONFIG.allowedDomains.some(domain => currentHost.includes(domain));
+        if (!isDomainAllowed && currentHost !== "") {
+            document.body.innerHTML = `
+                <div style="height:100vh; display:flex; align-items:center; justify-content:center; background:#111; color:#ff4d4d; font-family:sans-serif; text-align:center; padding:20px;">
+                    <div>
+                        <h1 style="font-size: 2.2rem; margin-bottom: 10px;">⛔ UNAUTHORIZED DOMAIN / COPY DETECTED</h1>
+                        <p style="color:#ccc; font-size: 1.1rem;">This software copy is registered exclusively for <strong>Hello Bubu RMS</strong> by <strong>Systems.LK</strong>.</p>
+                        <p style="color:#aaa; font-size:14px; margin-top: 10px;">Unauthorized Domain: <code>${currentHost}</code></p>
+                        <p style="color:#fff; font-size:1.1rem; margin-top:20px; padding: 15px; background: #222; border-radius: 8px;">
+                            For official licensing contact <strong>Systems.LK</strong>: <strong>0760672029</strong>
+                        </p>
+                    </div>
+                </div>`;
+            throw new Error("Systems.LK License Guard: Unauthorized Domain Deployment.");
+        }
+    })();
+
     const firebaseConfig = {
         apiKey: "AIzaSyBjZacRIpQ6YEjMxt2HjRw7xIsDvjmUDA0",
         authDomain: "supermarket-57b42.firebaseapp.com",
@@ -1795,7 +1845,7 @@
 
     let categories = [];
     let products = [];
-    let rawMaterials = []; // Raw Materials Master List
+    let rawMaterials = [];
     let expenseCategories = [];
     let expenses = []; 
     let wastage = [];
@@ -1805,24 +1855,19 @@
     let currentUserPermissions = null;
     let todayExpectedSales = { cash: 0, card: 0, online: 0 };
     
-    // Petty Cash Global State
     let currentPettyCashBalance = 0;
     let pettyCashLogsList = [];
     let isPettyCashLogsLoaded = false;
     let currentPettyCashPage = 1;
     const pettyCashPerPage = 10;
 
-    // Recipe Builder Temporary In-Memory List for Active Product Form
     let recipeBuilderList = [];
-
     let serialPort = null;
     let serialWriter = null;
     
     let fetchedInvoicesList = [];
     let currentHistoryPage = 1;
     const historyPerPage = 10;
-
-    // Temporary Array for GRN Multi-Item Entry
     let grnItemsList = [];
 
     const todayStr = new Date().toISOString().split('T')[0];
@@ -1831,7 +1876,6 @@
     document.getElementById('wastage-date').value = todayStr;
     document.getElementById('update-date').value = todayStr;
 
-    // Default Date Range Filters
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
@@ -2068,7 +2112,6 @@
                 products = Object.keys(prodData).map(key => ({ id: key, ...prodData[key] }));
             }
 
-            // Load Raw Materials Master List
             const rawMatSnapshot = await rtdb.ref('raw_materials').once('value');
             const rawMatData = rawMatSnapshot.val();
             rawMaterials = [];
@@ -2173,7 +2216,6 @@
             document.getElementById('dash-today-wastage').innerText = `Rs. ${wastageTotal.toFixed(2)}`;
             document.getElementById('dash-today-orders').innerText = ordersCount;
 
-            // Updated Estimated Net Position Calculator
             const netPosition = salesTotal - expensesTotal;
             const netPosEl = document.getElementById('dash-net-position-val');
             if (netPosEl) {
@@ -2280,9 +2322,6 @@
         }
     }
 
-    // =========================================================================
-    // PRODUCTS MANAGEMENT WITH RECIPE & AUTO-COSTING
-    // =========================================================================
     let isProductsLoaded = false;
     let currentProductPage = 1;
     const productsPerPage = 5;
@@ -2323,7 +2362,6 @@
             return;
         }
 
-        // Check if ingredient already in list
         const existing = recipeBuilderList.find(i => i.materialId === matId);
         if (existing) {
             existing.qty += qty;
@@ -2643,9 +2681,6 @@
         }
     }
 
-    // =========================================================================
-    // RAW MATERIALS MASTER & GRN SYSTEM FUNCTIONS
-    // =========================================================================
     let isExpensesLoaded = false;
     let currentExpensePage = 1;
     const expensesPerPage = 5;
@@ -2701,7 +2736,6 @@
 
             populateRawMaterialsDropdown();
 
-            // Auto-select newly created material in GRN
             document.getElementById('grn-item-select').value = newRef.key;
             onRawMaterialSelect();
 
@@ -2825,13 +2859,11 @@
             updatesMap[`expenses/${newRef.key}`] = grnRecord;
             updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(netTotal);
 
-            // Auto-update Raw Material Unit Cost in Database
             grnItemsList.forEach(item => {
                 if (item.materialId) {
                     updatesMap[`raw_materials/${item.materialId}/unitCost`] = item.price;
                     updatesMap[`raw_materials/${item.materialId}/lastUpdated`] = dateTimeFormatted;
 
-                    // Update local in-memory array too
                     const matLocal = rawMaterials.find(m => m.id === item.materialId);
                     if (matLocal) {
                         matLocal.unitCost = item.price;
@@ -2844,7 +2876,6 @@
 
             alert("GRN Note saved successfully & Raw Material Unit Costs updated! Products Costing will auto-adjust.");
 
-            // Reset GRN Form
             document.getElementById('grn-form').reset();
             document.getElementById('expense-date').value = todayStr;
             grnItemsList = [];
@@ -3021,9 +3052,6 @@
         }
     }
 
-    // =========================================================================
-    // PETTY CASH VOUCHER & FLOAT SYSTEM FUNCTIONS
-    // =========================================================================
     async function loadPettyCashBalance() {
         try {
             const snapshot = await rtdb.ref('petty_cash_float/current_balance').once('value');
@@ -3154,7 +3182,6 @@
             updatesMap[`petty_cash_logs/${newRef.key}`] = voucherRecord;
             updatesMap[`petty_cash_float/current_balance`] = firebase.database.ServerValue.increment(-amount);
             
-            // Also increment daily summaries for Dashboard Expenses Total
             updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(amount);
 
             await rtdb.ref().update(updatesMap);
@@ -3276,14 +3303,12 @@
                 const isTopUp = log.type === 'FLOAT_IN';
                 const amt = parseFloat(log.amount || 0);
 
-                // Reverse Float impact
                 const reverseFloatDiff = isTopUp ? -amt : amt;
 
                 const updatesMap = {};
                 updatesMap[`petty_cash_logs/${logId}`] = null;
                 updatesMap[`petty_cash_float/current_balance`] = firebase.database.ServerValue.increment(reverseFloatDiff);
 
-                // If it was a voucher outflow, also reverse the expense summary
                 if (!isTopUp) {
                     updatesMap[`daily_summaries/${log.date}/expenses_total`] = firebase.database.ServerValue.increment(-amt);
                 }
@@ -3301,9 +3326,6 @@
         }
     }
 
-    // =========================================================================
-    // WASTAGE TRACKER SYSTEM (LINKED WITH RAW MATERIALS & GRN UNIT COSTS)
-    // =========================================================================
     let isWastageLoaded = false;
     let currentWastagePage = 1;
     const wastagePerPage = 5;
@@ -4367,7 +4389,6 @@
             document.getElementById('print-z-variance-total').innerText = `Rs. ${totalVariance.toFixed(2)}`;
             document.getElementById('print-z-notes').innerText = notes || "N/A";
 
-            document.body.classList.add('print-zreport');
             document.body.classList.add('print-zreport');
             document.body.classList.remove('print-receipt');
 
