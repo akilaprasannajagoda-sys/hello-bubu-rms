@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +15,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- html2pdf CDN for Fast Client-Side PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -143,6 +146,33 @@
         
         #receipt-print-area, #zreport-print-area {
             display: none;
+        }
+
+        /* PDF Master Statement Styling */
+        #pdf-statement-wrapper {
+            background-color: #ffffff;
+            color: #000000;
+            padding: 25px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .pdf-header {
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .pdf-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            margin-bottom: 15px;
+        }
+        .pdf-table th, .pdf-table td {
+            border: 1px solid #ddd;
+            padding: 6px 8px;
+        }
+        .pdf-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
         }
 
         @media (max-width: 767.98px) {
@@ -430,7 +460,7 @@
                         </li>
                         <li class="nav-item" id="nav-btn-reports">
                             <a class="nav-link" onclick="switchPage('reports', 'Reports')">
-                                <i class="bi bi-graph-up me-2"></i> Reports
+                                <i class="bi bi-graph-up me-2"></i> Reports & PDF
                             </a>
                         </li>
                         <li class="nav-item" id="nav-btn-dayend">
@@ -1372,7 +1402,12 @@
             <div id="page-reports" class="page-section">
                 <ul class="nav nav-tabs mb-4" id="reportTabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="sales-report-tab" data-bs-toggle="tab" data-bs-target="#sales-report-panel" type="button" role="tab">Item-Wise Sales Report</button>
+                        <button class="nav-link active fw-bold" id="master-pdf-tab" data-bs-toggle="tab" data-bs-target="#master-pdf-panel" type="button" role="tab">
+                            <i class="bi bi-file-earmark-pdf me-1 text-danger"></i> Master PDF Statement & Cash Book
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="sales-report-tab" data-bs-toggle="tab" data-bs-target="#sales-report-panel" type="button" role="tab">Item-Wise Sales Report</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="invoice-lookup-tab" data-bs-toggle="tab" data-bs-target="#invoice-history-panel" type="button" role="tab" onclick="loadRecentSales()">Invoice History & Lookup</button>
@@ -1383,7 +1418,49 @@
                 </ul>
 
                 <div class="tab-content" id="reportTabsContent">
-                    <div class="tab-pane fade show active" id="sales-report-panel" role="tabpanel">
+                    
+                    <!-- MASTER PDF STATEMENT & FINANCIAL CASH BOOK TAB -->
+                    <div class="tab-pane fade show active" id="master-pdf-panel" role="tabpanel">
+                        <div class="card card-custom bg-white p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-calculator me-2 text-primary"></i> Master Statement & Complete Financial Cash Book</h5>
+                                <span class="badge bg-success p-2"><i class="bi bi-lightning-charge me-1"></i> Non-Blocking Asynchronous Processing</span>
+                            </div>
+
+                            <div class="row g-3 align-items-end mb-4 bg-light p-3 rounded border">
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold text-dark">From Date</label>
+                                    <input type="date" class="form-control" id="pdf-start-date">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold text-dark">To Date</label>
+                                    <input type="date" class="form-control" id="pdf-end-date">
+                                </div>
+                                <div class="col-md-4 d-flex gap-2">
+                                    <button class="btn btn-primary fw-bold w-100 py-2" id="btn-generate-pdf-preview" onclick="generateMasterFinancialSummary()">
+                                        <i class="bi bi-eye me-1"></i> Preview Report
+                                    </button>
+                                    <button class="btn btn-danger fw-bold w-100 py-2 d-none" id="btn-download-pdf-file" onclick="downloadMasterStatementPDF()">
+                                        <i class="bi bi-download me-1"></i> Download PDF
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- PDF PREVIEW AREA -->
+                            <div id="pdf-preview-container" class="border rounded p-3 bg-white d-none">
+                                <div id="pdf-statement-wrapper">
+                                    <!-- Dynamic PDF Report Generated Here -->
+                                </div>
+                            </div>
+
+                            <div id="pdf-load-placeholder" class="text-center py-5 text-muted">
+                                <i class="bi bi-file-pdf fs-1 d-block mb-2 text-secondary"></i>
+                                Select date range and click "Preview Report" to generate the full Financial Statement, Summaries, and Cash Book.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="sales-report-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
                             <h5 class="mb-3">Item-Wise Sales Report</h5>
                             <div class="row g-3 align-items-end mb-4">
@@ -1984,6 +2061,11 @@
     document.getElementById('expense-filter-end').value = todayStr;
     document.getElementById('wastage-filter-start').value = sevenDaysAgoStr;
     document.getElementById('wastage-filter-end').value = todayStr;
+
+    if (document.getElementById('pdf-start-date')) {
+        document.getElementById('pdf-start-date').value = sevenDaysAgoStr;
+        document.getElementById('pdf-end-date').value = todayStr;
+    }
 
     if (document.getElementById('de-shift-date')) {
         document.getElementById('de-shift-date').value = todayStr;
@@ -4027,7 +4109,6 @@
             subtotal += item.product.price * item.qty;
         });
 
-        // SANITIZE & VALIDATE DISCOUNT
         const discountInputVal = parseFloat(document.getElementById('pos-discount').value) || 0;
         const discountVal = Math.max(0, discountInputVal);
         const discountType = document.getElementById('pos-discount-type').value;
@@ -4097,7 +4178,6 @@
     async function triggerCashDrawerPulse() {
         if (drawerWriter) {
             try {
-                // Pin 2 Signal (ESC p 0 25 250) & Pin 5 Signal (ESC p 1 25 250)
                 const pulsePin2 = new Uint8Array([0x1B, 0x70, 0x00, 0x19, 0xFA]);
                 const pulsePin5 = new Uint8Array([0x1B, 0x70, 0x01, 0x19, 0xFA]);
                 
@@ -4280,7 +4360,7 @@
             `;
         });
 
-        tbody.innerHTML = tableHtml;
+        tableBody.innerHTML = tableHtml;
         renderPagination('pos-history-pagination', totalPages, currentHistoryPage, 'changeHistoryPage');
     }
 
@@ -4606,6 +4686,227 @@
             catBody.innerHTML = `<tr><td colspan="2" class="text-center text-danger">Failed to load summary.</td></tr>`;
             detailsBody.innerHTML = `<tr><td colspan="4" class="text-center text-danger">Failed to load report data.</td></tr>`;
         }
+    }
+
+    /* ============================================================================
+       MASTER FINANCIAL STATEMENT & PDF GENERATOR (NON-BLOCKING ASYNC)
+       ============================================================================ */
+    async function generateMasterFinancialSummary() {
+        const startDate = document.getElementById('pdf-start-date').value;
+        const endDate = document.getElementById('pdf-end-date').value;
+
+        if (!startDate || !endDate) {
+            alert("Please select both From Date and To Date!");
+            return;
+        }
+
+        const btnPreview = document.getElementById('btn-generate-pdf-preview');
+        const btnDownload = document.getElementById('btn-download-pdf-file');
+        const container = document.getElementById('pdf-preview-container');
+        const placeholder = document.getElementById('pdf-load-placeholder');
+        const wrapper = document.getElementById('pdf-statement-wrapper');
+
+        btnPreview.disabled = true;
+        btnPreview.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Processing...`;
+
+        try {
+            // NON-BLOCKING PARALLEL PROMISE FETCHING
+            const [salesSnap, grnSnap, pcSnap, wastageSnap] = await Promise.all([
+                rtdb.ref('sales').orderByChild('date').startAt(startDate).endAt(endDate).once('value'),
+                rtdb.ref('expenses').orderByChild('date').startAt(startDate).endAt(endDate).once('value'),
+                rtdb.ref('petty_cash_logs').orderByChild('date').startAt(startDate).endAt(endDate).once('value'),
+                rtdb.ref('wastage').orderByChild('date').startAt(startDate).endAt(endDate).once('value')
+            ]);
+
+            const salesData = salesSnap.val() || {};
+            const grnData = grnSnap.val() || {};
+            const pcData = pcSnap.val() || {};
+            const wastageData = wastageSnap.val() || {};
+
+            // 1. PROCESS SALES
+            const activeSales = Object.values(salesData).filter(s => s.status !== 'Reversed');
+            let totalSalesGross = 0;
+            let salesCash = 0;
+            let salesCard = 0;
+            let salesOnline = 0;
+
+            activeSales.forEach(s => {
+                const amt = parseFloat(s.total || 0);
+                totalSalesGross += amt;
+                if (s.payMethod === 'Cash') salesCash += amt;
+                else if (s.payMethod === 'Card') salesCard += amt;
+                else if (s.payMethod === 'Online Transfer') salesOnline += amt;
+            });
+
+            // 2. PROCESS GRN EXPENSES
+            const grnList = Object.values(grnData);
+            let totalGrnOutflow = 0;
+            grnList.forEach(g => {
+                totalGrnOutflow += parseFloat(g.totalAmount || g.amount || 0);
+            });
+
+            // 3. PROCESS PETTY CASH
+            const pcList = Object.values(pcData);
+            let totalPcInflow = 0;
+            let totalPcVoucherOut = 0;
+            pcList.forEach(p => {
+                const amt = parseFloat(p.amount || 0);
+                if (p.type === 'FLOAT_IN') totalPcInflow += amt;
+                else totalPcVoucherOut += amt;
+            });
+
+            // 4. PROCESS WASTAGE
+            const wastageList = Object.values(wastageData);
+            let totalWastageLoss = 0;
+            wastageList.forEach(w => {
+                totalWastageLoss += parseFloat(w.amount || 0);
+            });
+
+            // 5. CALCULATE MASTER CASH BOOK
+            const totalCashInflows = salesCash + totalPcInflow;
+            const totalCashOutflows = totalGrnOutflow + totalPcVoucherOut;
+            const netCashPosition = totalCashInflows - totalCashOutflows;
+
+            // RENDER HTML FOR PDF / PREVIEW
+            wrapper.innerHTML = `
+                <div class="pdf-header text-center">
+                    <h3 style="margin:0; font-weight:bold; color:#1a2a6c;">HELLO BUBU RESTAURANT</h3>
+                    <p style="margin:2px 0; font-size:12px;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                    <h5 style="margin:8px 0 0 0; font-weight:bold; text-transform:uppercase; color:#d9534f;">Complete Financial Statement & Cash Book</h5>
+                    <small style="color:#555;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong> | Generated On: ${new Date().toLocaleString()}</small>
+                </div>
+
+                <h6 style="font-weight:bold; border-bottom:2px solid #000; padding-bottom:3px; margin-top:15px;">1. FINANCIAL OVERVIEW STATEMENT</h6>
+                <table class="pdf-table">
+                    <thead>
+                        <tr>
+                            <th>Category Description</th>
+                            <th class="text-end">Inflow (+)</th>
+                            <th class="text-end">Outflow (-)</th>
+                            <th class="text-end">Net Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Total Gross Sales Revenue</strong> (Active Invoices: ${activeSales.length})</td>
+                            <td class="text-end text-success fw-bold">Rs. ${totalSalesGross.toFixed(2)}</td>
+                            <td class="text-end">-</td>
+                            <td class="text-end fw-bold">Rs. ${totalSalesGross.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Goods Received Notes (GRN) Expenses</strong> (Invoices: ${grnList.length})</td>
+                            <td class="text-end">-</td>
+                            <td class="text-end text-danger fw-bold">Rs. ${totalGrnOutflow.toFixed(2)}</td>
+                            <td class="text-end text-danger fw-bold">- Rs. ${totalGrnOutflow.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Petty Cash Float Top-Ups (Deposits)</strong></td>
+                            <td class="text-end text-success fw-bold">Rs. ${totalPcInflow.toFixed(2)}</td>
+                            <td class="text-end">-</td>
+                            <td class="text-end fw-bold">Rs. ${totalPcInflow.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Petty Cash Vouchers / Out-of-Pocket Expenses</strong></td>
+                            <td class="text-end">-</td>
+                            <td class="text-end text-danger fw-bold">Rs. ${totalPcVoucherOut.toFixed(2)}</td>
+                            <td class="text-end text-danger fw-bold">- Rs. ${totalPcVoucherOut.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kitchen Raw Material Wastage (Non-Cash Loss Value)</strong></td>
+                            <td class="text-end">-</td>
+                            <td class="text-end text-warning fw-bold">Rs. ${totalWastageLoss.toFixed(2)}</td>
+                            <td class="text-end text-warning fw-bold">- Rs. ${totalWastageLoss.toFixed(2)}</td>
+                        </tr>
+                        <tr style="background-color:#f9f9f9; font-size:12px; font-weight:bold;">
+                            <td>NET ESTIMATED FINANCIAL POSITION (Sales - Total Outflows)</td>
+                            <td class="text-end text-success">Rs. ${totalSalesGross.toFixed(2)}</td>
+                            <td class="text-end text-danger">Rs. ${(totalGrnOutflow + totalPcVoucherOut + totalWastageLoss).toFixed(2)}</td>
+                            <td class="text-end ${netCashPosition >= 0 ? 'text-success' : 'text-danger'}">Rs. ${(totalSalesGross - (totalGrnOutflow + totalPcVoucherOut + totalWastageLoss)).toFixed(2)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h6 style="font-weight:bold; border-bottom:2px solid #000; padding-bottom:3px; margin-top:20px;">2. REVENUE BREAKDOWN BY PAYMENT METHOD</h6>
+                <table class="pdf-table">
+                    <thead>
+                        <tr>
+                            <th>Payment Channel</th>
+                            <th class="text-end">Total Revenue Received</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cash Sales (Counter Cash)</td>
+                            <td class="text-end fw-bold">Rs. ${salesCash.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td>Card Terminal Sales</td>
+                            <td class="text-end fw-bold">Rs. ${salesCard.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td>Online Transfers / Bank Payments</td>
+                            <td class="text-end fw-bold">Rs. ${salesOnline.toFixed(2)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h6 style="font-weight:bold; border-bottom:2px solid #000; padding-bottom:3px; margin-top:20px;">3. MASTER CASH BOOK SUMMARY (Liquidity Position)</h6>
+                <table class="pdf-table">
+                    <tbody>
+                        <tr>
+                            <td><strong>Total Physical Cash Received (Cash Sales + Float Top-Ups)</strong></td>
+                            <td class="text-end fw-bold text-success">Rs. ${totalCashInflows.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total Physical Cash Expenses Paid (GRN + Vouchers Out)</strong></td>
+                            <td class="text-end fw-bold text-danger">Rs. ${totalCashOutflows.toFixed(2)}</td>
+                        </tr>
+                        <tr style="background-color:#e8f5e9; font-size:12px; font-weight:bold;">
+                            <td>NET CASH BOOK BALANCE (Cash Inflows - Cash Outflows)</td>
+                            <td class="text-end ${netCashPosition >= 0 ? 'text-success' : 'text-danger'}">Rs. ${netCashPosition.toFixed(2)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top:40px; display:flex; justify-content:space-between; font-size:10px;">
+                    <div>
+                        <p style="margin:0;">................................................</p>
+                        <p style="margin:0;">Prepared By (Manager/Cashier)</p>
+                    </div>
+                    <div>
+                        <p style="margin:0;">................................................</p>
+                        <p style="margin:0;">Authorized Signature / Systems.LK</p>
+                    </div>
+                </div>
+            `;
+
+            container.classList.remove('d-none');
+            placeholder.classList.add('d-none');
+            btnDownload.classList.remove('d-none');
+
+        } catch (error) {
+            console.error("Error generating master summary: ", error);
+            alert("Failed to generate master financial summary.");
+        } finally {
+            btnPreview.disabled = false;
+            btnPreview.innerHTML = `<i class="bi bi-eye me-1"></i> Preview Report`;
+        }
+    }
+
+    function downloadMasterStatementPDF() {
+        const element = document.getElementById('pdf-statement-wrapper');
+        const startDate = document.getElementById('pdf-start-date').value;
+        const endDate = document.getElementById('pdf-end-date').value;
+
+        const opt = {
+            margin:       10,
+            filename:     `Financial_Statement_${startDate}_to_${endDate}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save();
     }
 
     async function fetchTodaySalesForDayEnd() {
