@@ -645,9 +645,14 @@
                         <div class="card card-custom bg-white p-4 d-flex flex-column" style="min-height: 580px;">
                             <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
                                 <h5 class="mb-0"><i class="bi bi-cart3"></i> Customer Cart</h5>
-                                <button class="btn btn-sm btn-outline-dark" id="btn-connect-display" onclick="connectCustomerDisplay()">
-                                    <i class="bi bi-display me-1"></i> Connect Display
-                                </button>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary me-1" id="btn-connect-drawer" onclick="connectCashDrawer()">
+                                        <i class="bi bi-safe me-1"></i> Connect Drawer
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-dark" id="btn-connect-display" onclick="connectCustomerDisplay()">
+                                        <i class="bi bi-display me-1"></i> Connect Display
+                                    </button>
+                                </div>
                             </div>
                             
                             <div class="flex-grow-1" style="max-height: 250px; overflow-y: auto;">
@@ -1940,6 +1945,8 @@
     let recipeBuilderList = [];
     let serialPort = null;
     let serialWriter = null;
+    let drawerPort = null;
+    let drawerWriter = null;
     
     let fetchedInvoicesList = [];
     let currentHistoryPage = 1;
@@ -4020,7 +4027,7 @@
             subtotal += item.product.price * item.qty;
         });
 
-        // SANITIZE & VALIDATE DISCOUNT (Prevent Negative discount numbers)
+        // SANITIZE & VALIDATE DISCOUNT
         const discountInputVal = parseFloat(document.getElementById('pos-discount').value) || 0;
         const discountVal = Math.max(0, discountInputVal);
         const discountType = document.getElementById('pos-discount-type').value;
@@ -4063,8 +4070,46 @@
         sendAmountToLED8N(grandTotal, "total");
     }
 
+    // CONNECT CASH DRAWER / PRINTER PORT
+    async function connectCashDrawer() {
+        if ('serial' in navigator) {
+            try {
+                drawerPort = await navigator.serial.requestPort();
+                await drawerPort.open({ baudRate: 9600 });
+                drawerWriter = drawerPort.writable.getWriter();
+                
+                const btn = document.getElementById('btn-connect-drawer');
+                if (btn) {
+                    btn.className = "btn btn-sm btn-success me-1";
+                    btn.innerHTML = `<i class="bi bi-safe-fill me-1"></i> Drawer Connected`;
+                }
+                alert("Cash Drawer / Printer port successfully connected!");
+            } catch (error) {
+                console.error("Cash Drawer connection error:", error);
+                alert("Failed to connect Cash Drawer: " + error.message);
+            }
+        } else {
+            alert("Web Serial API is not supported in this browser. Please use Google Chrome or MS Edge.");
+        }
+    }
+
+    // TRIGGER CASH DRAWER OPEN PULSE (Pin 2 and Pin 5)
+    async function triggerCashDrawerPulse() {
+        if (drawerWriter) {
+            try {
+                // Pin 2 Signal (ESC p 0 25 250) & Pin 5 Signal (ESC p 1 25 250)
+                const pulsePin2 = new Uint8Array([0x1B, 0x70, 0x00, 0x19, 0xFA]);
+                const pulsePin5 = new Uint8Array([0x1B, 0x70, 0x01, 0x19, 0xFA]);
+                
+                await drawerWriter.write(pulsePin2);
+                await drawerWriter.write(pulsePin5);
+            } catch (e) {
+                console.error("Cash drawer open pulse failed:", e);
+            }
+        }
+    }
+
     async function checkoutAndPrintReceipt() {
-        // ENFORCE SHIFT START BEFORE CHECKOUT (Point #2 Fix)
         if (!isDayStarted) {
             alert("⚠️ SECURITY BLOCK: POS Shift is NOT started! Please enter Opening Cash Float and Start Shift before processing sales.");
             checkDayStartStatus(true);
@@ -4113,6 +4158,10 @@
         document.body.classList.add('print-receipt');
         document.body.classList.remove('print-zreport');
 
+        // Trigger Cash Drawer Pulse
+        await triggerCashDrawerPulse();
+
+        // Print Receipt via Thermal Printer
         window.print();
 
         const saleRecord = {
@@ -4182,7 +4231,8 @@
             currentHistoryPage = 1;
             displayHistorySales();
         } catch (error) {
-            console.error("Error loading recent sales: ", error);tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Failed to fetch transactions history.</td></tr>`;
+            console.error("Error loading recent sales: ", error);
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Failed to fetch transactions history.</td></tr>`;
         }
     }
 
@@ -4311,6 +4361,9 @@
             document.body.classList.add('print-receipt');
             document.body.classList.remove('print-zreport');
 
+            // Trigger Cash Drawer Pulse on Reprint
+            await triggerCashDrawerPulse();
+
             window.print();
         } catch (error) {
             console.error("Failed to reprint receipt: ", error);
@@ -4358,7 +4411,6 @@
 
             alert(`Invoice #${billNo} has been successfully reversed.`);
             
-            // Auto Update Dashboard & History Tables
             updateDashboardData();
             
             if (document.getElementById('invoice-history-panel').classList.contains('show')) {
@@ -4370,7 +4422,6 @@
                 }
             }
 
-            // AUTO REFRESH SALES REPORT IF DATES ARE SELECTED
             const reportStart = document.getElementById('sales-start-date').value;
             const reportEnd = document.getElementById('sales-end-date').value;
             if (reportStart && reportEnd) {
@@ -4406,7 +4457,6 @@
             const snapshot = await rtdb.ref('sales').orderByChild('date').startAt(startDate).endAt(endDate).once('value');
             const data = snapshot.val() || {};
             
-            // EXCLUDE REVERSED INVOICES FROM REPORT
             const filteredSales = Object.values(data).filter(sale => sale.status !== 'Reversed');
 
             let overallTotal = 0;
@@ -4890,7 +4940,6 @@
 
         try {
             if (manageUid) {
-                // EDIT EXISTING USER (POINT #4 FIX - Support Password Reset/Update in UI)
                 const userUpdateObj = {
                     username: username,
                     email: emailInput,
@@ -4898,7 +4947,6 @@
                     permissions: permissions
                 };
 
-                // If admin entered a new password during edit, store/update it
                 if (password && password.length >= 6) {
                     userUpdateObj.lastPasswordResetObj = password;
                 }
@@ -4906,7 +4954,6 @@
                 await rtdb.ref(`users/${manageUid}`).update(userUpdateObj);
                 alert("User profile updated successfully!");
             } else {
-                // CREATE NEW USER
                 if (!password || password.length < 6) {
                     alert("Password must be at least 6 characters long.");
                     return;
@@ -4942,7 +4989,6 @@
         document.getElementById('manage-username').value = userObj.username;
         document.getElementById('manage-email').value = userObj.email;
 
-        // POINT #4 FIX: UNHIDE PASSWORD FIELD FOR ADMIN RESET
         document.getElementById('manage-password').required = false;
         document.getElementById('manage-password').value = '';
         document.getElementById('password-field-container').classList.remove('d-none');
