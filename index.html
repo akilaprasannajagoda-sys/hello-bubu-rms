@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -232,7 +230,7 @@
     <div style="text-align: center;">
         <h3 style="margin: 0; padding: 0; font-size: 15px; font-weight: bold;">HELLO BUBU</h3>
         <p style="margin: 2px 0; font-size: 10px;">No.02,Rajakeeya Mawatha, Colombo</p>
-        <p style="margin: 2px 0; font-size: 10px;">Tel: 011-2345678</p>
+        <p style="margin: 2px 0; font-size: 10px;">Tel: 076-7112424</p>
         <div class="receipt-divider"></div>
         <h4 style="margin: 2px 0; font-size: 13px; font-weight: bold;">INVOICE</h4>
         <p style="margin: 2px 0; text-align: left; white-space: pre-line; font-size: 10px;" id="print-bill-details">Date: - | Bill No: -</p>
@@ -476,7 +474,7 @@
 
             <!-- 1. DASHBOARD PAGE -->
             <div id="page-dashboard" class="page-section active-page">
-                <div class="card card-custom bg-white p-4 mb-4 border-start border-5 border-primary">
+                <div class="card card-custom bg-white p-4 mb-3 border-start border-5 border-primary">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <div>
                             <h4 class="fw-bold mb-1 text-dark" id="dash-welcome-text">Welcome back, Hello Bubu RMS 👋</h4>
@@ -490,6 +488,19 @@
                                 <i class="bi bi-file-earmark-plus me-1"></i> Create GRN
                             </button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- LIVE DASHBOARD NOTIFICATION & ALERT CENTER -->
+                <div class="card card-custom bg-white p-3 mb-4 border" id="dash-notification-card">
+                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                        <h6 class="fw-bold text-dark mb-0">
+                            <i class="bi bi-bell-fill me-1 text-warning"></i> System Notifications & Live Alerts
+                        </h6>
+                        <span class="badge bg-secondary small" id="notif-count-badge">0 Alerts</span>
+                    </div>
+                    <div id="dash-notification-list" class="d-flex flex-column gap-2" style="max-height: 200px; overflow-y: auto;">
+                        <small class="text-muted text-center py-2"><i class="bi bi-check-circle text-success me-1"></i> No critical alerts. All systems running smoothly.</small>
                     </div>
                 </div>
 
@@ -599,6 +610,17 @@
 
             <!-- 2. BILLING (POS) PAGE -->
             <div id="page-billing" class="page-section">
+                <!-- Day Start Status Banner inside POS Header -->
+                <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded card-custom mb-3 border">
+                    <div>
+                        <h6 class="mb-0 fw-bold"><i class="bi bi-receipt me-1 text-primary"></i> POS Billing Counter</h6>
+                        <small class="text-muted">Take orders, calculate totals and print receipts</small>
+                    </div>
+                    <div>
+                        <span id="pos-shift-status-badge" class="badge bg-secondary p-2">Checking Shift Status...</span>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-md-7 mb-4">
                         <div class="card card-custom bg-white p-4">
@@ -1081,6 +1103,38 @@
             </div>
 
             <!-- Modals -->
+            <!-- DAY START MODAL -->
+            <div class="modal fade" id="dayStartModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content shadow-lg border-0">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title fw-bold"><i class="bi bi-play-circle me-2"></i> POS Day Start / Open Shift</h5>
+                        </div>
+                        <form id="day-start-form" onsubmit="submitDayStart(event)">
+                            <div class="modal-body p-4 text-center">
+                                <i class="bi bi-cash-stack text-primary display-3 mb-3 d-block"></i>
+                                <h5 class="fw-bold mb-1">Enter Today's Opening Cash Float</h5>
+                                <p class="text-muted small mb-4">Please count the cash drawer starting amount before taking orders today.</p>
+                                
+                                <div class="mb-3 text-start">
+                                    <label class="form-label small fw-bold text-dark">Opening Cash Float (Rs.)</label>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text bg-light fw-bold">Rs.</span>
+                                        <input type="number" step="0.01" class="form-control fw-bold text-primary" id="ds-opening-float" placeholder="0.00" required min="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-light justify-content-between">
+                                <button type="button" class="btn btn-outline-secondary" onclick="switchPage('dashboard', 'Dashboard')" data-bs-dismiss="modal">Go to Dashboard</button>
+                                <button type="submit" class="btn btn-primary fw-bold px-4" id="btn-submit-daystart">
+                                    <i class="bi bi-check-circle me-1"></i> Start POS Shift
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal fade" id="addFloatModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -1655,11 +1709,22 @@
                 <div class="row">
                     <div class="col-md-5 mb-4">
                         <div class="card card-custom bg-white p-4">
-                            <h5 class="mb-3">Submit Shift Closure (Z-Report)</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">Submit Shift Closure (Z-Report)</h5>
+                                <span class="badge bg-secondary">Multi-Date Closure</span>
+                            </div>
+                            
                             <form id="dayend-form" onsubmit="submitDayEnd(event)">
+                                <div class="mb-3 bg-light p-3 rounded border">
+                                    <label class="form-label text-dark small fw-bold"><i class="bi bi-calendar-event me-1 text-primary"></i> Select Reconciliation Date</label>
+                                    <input type="date" class="form-control" id="de-shift-date" onchange="fetchTodaySalesForDayEnd()" required>
+                                    <small class="text-muted style-08">Select previous date if reconciling an unclosed shift retroactively.</small>
+                                </div>
+
                                 <div class="mb-3">
                                     <label class="form-label text-dark small fw-bold">Opening Float / Starting Cash (Rs.)</label>
-                                    <input type="number" step="0.01" class="form-control" id="de-opening-float" value="0" oninput="calculateLiveDayEndReconciliation()" required>
+                                    <input type="number" step="0.01" class="form-control bg-light" id="de-opening-float" value="0" oninput="calculateLiveDayEndReconciliation()" required readonly>
+                                    <small class="text-muted" style="font-size: 0.75rem;">Opening Float set at Day Start cannot be edited manually.</small>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label text-dark small fw-bold">Actual Cash Collected in Hand (Rs.)</label>
@@ -1783,13 +1848,13 @@
             active: true,
             expiryDate: new Date(2030, 11, 31), // Set License Expiry Date
             allowedDomains: [
-    "localhost",
-    "127.0.0.1",
-    "hellobubu.web.app",
-    "supermarket-57b42.web.app",
-    "akilaprasannajagoda-sys.github.io", // <-- මෙන්න මේ Domain එක එකතු කරන්න
-    "github.io" // <-- GitHub Pages සියල්ල සඳහා අවසර දීමට මෙයද තබන්න
-]
+                "localhost",
+                "127.0.0.1",
+                "hellobubu.web.app",
+                "supermarket-57b42.web.app",
+                "akilaprasannajagoda-sys.github.io",
+                "github.io"
+            ]
         };
 
         const today = new Date();
@@ -1862,6 +1927,11 @@
     let currentUserPermissions = null;
     let todayExpectedSales = { cash: 0, card: 0, online: 0 };
     
+    let isDayStarted = false;
+    let todayOpeningFloat = 0;
+    let isYesterdayShiftUnclosed = false;
+    let yesterdayDateStr = "";
+
     let currentPettyCashBalance = 0;
     let pettyCashLogsList = [];
     let isPettyCashLogsLoaded = false;
@@ -1883,6 +1953,10 @@
     document.getElementById('wastage-date').value = todayStr;
     document.getElementById('update-date').value = todayStr;
 
+    const yesterdayObj = new Date();
+    yesterdayObj.setDate(yesterdayObj.getDate() - 1);
+    yesterdayDateStr = yesterdayObj.toISOString().split('T')[0];
+
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
@@ -1896,6 +1970,10 @@
     document.getElementById('expense-filter-end').value = todayStr;
     document.getElementById('wastage-filter-start').value = sevenDaysAgoStr;
     document.getElementById('wastage-filter-end').value = todayStr;
+
+    if (document.getElementById('de-shift-date')) {
+        document.getElementById('de-shift-date').value = todayStr;
+    }
 
     if (document.getElementById('pc-filter-start')) {
         document.getElementById('pc-filter-start').value = sevenDaysAgoStr;
@@ -2054,6 +2132,8 @@
                 currentPettyCashBalance = 0;
                 pettyCashLogsList = [];
                 recipeBuilderList = [];
+                isDayStarted = false;
+                todayOpeningFloat = 0;
             } catch (error) {
                 console.error("Logout failed: ", error);
             }
@@ -2096,6 +2176,27 @@
             statusBadge.className = "badge bg-dark text-white px-3 py-2 fs-6";
             statusBadge.innerText = "Offline/Error";
             latencyText.innerText = "-- ms";
+        }
+    }
+
+    async function checkUnclosedShiftStatus() {
+        try {
+            const yesterdaySummarySnap = await rtdb.ref(`daily_summaries/${yesterdayDateStr}`).once('value');
+            const yesterdaySummary = yesterdaySummarySnap.val();
+
+            if (yesterdaySummary) {
+                const yesterdayDayEndSnap = await rtdb.ref(`day_ends/${yesterdayDateStr}`).once('value');
+                if (!yesterdayDayEndSnap.exists()) {
+                    isYesterdayShiftUnclosed = true;
+                } else {
+                    isYesterdayShiftUnclosed = false;
+                }
+            } else {
+                isYesterdayShiftUnclosed = false;
+            }
+        } catch (e) {
+            console.error("Unclosed shift check failed:", e);
+            isYesterdayShiftUnclosed = false;
         }
     }
 
@@ -2150,6 +2251,7 @@
             populateWastageRawMaterialsDropdown();
             populateRecipeRawMaterialsDropdown();
             populatePettyCashCategoryDropdown();
+            checkUnclosedShiftStatus();
             updateDashboardData();
             displayUpdates();
             checkSystemLatency();
@@ -2161,6 +2263,76 @@
 
         } catch (error) {
             console.error("Firebase data load error: ", error);
+        }
+    }
+
+    /* ============================================================================
+       DAY START / SHIFT OPEN LOGIC
+       ============================================================================ */
+    async function checkDayStartStatus(autoShowModal = true) {
+        try {
+            const snapshot = await rtdb.ref(`daily_summaries/${todayStr}/openingFloat`).once('value');
+            const val = snapshot.val();
+            
+            const statusBadge = document.getElementById('pos-shift-status-badge');
+            
+            if (val !== null && val !== undefined) {
+                isDayStarted = true;
+                todayOpeningFloat = parseFloat(val) || 0;
+                if (statusBadge) {
+                    statusBadge.className = "badge bg-success-subtle text-success border border-success p-2";
+                    statusBadge.innerHTML = `<i class="bi bi-check-circle-fill me-1"></i> Shift Active (Float: Rs. ${todayOpeningFloat.toFixed(2)})`;
+                }
+                return true;
+            } else {
+                isDayStarted = false;
+                todayOpeningFloat = 0;
+                if (statusBadge) {
+                    statusBadge.className = "badge bg-warning-subtle text-warning-emphasis border border-warning p-2";
+                    statusBadge.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-1"></i> Shift Not Started`;
+                }
+                if (autoShowModal) {
+                    const modalEl = document.getElementById('dayStartModal');
+                    if (modalEl) {
+                        const modal = new bootstrap.Modal(modalEl);
+                        modal.show();
+                    }
+                }
+                return false;
+            }
+        } catch (e) {
+            console.error("Error checking day start status:", e);
+            return false;
+        }
+    }
+
+    async function submitDayStart(event) {
+        event.preventDefault();
+        const floatVal = parseFloat(document.getElementById('ds-opening-float').value) || 0;
+        const userStr = auth.currentUser ? (auth.currentUser.email.split('@')[0]) : 'system';
+
+        try {
+            const updatesMap = {};
+            updatesMap[`daily_summaries/${todayStr}/openingFloat`] = floatVal;
+            updatesMap[`daily_summaries/${todayStr}/dayStartedBy`] = userStr;
+            updatesMap[`daily_summaries/${todayStr}/dayStartedAt`] = firebase.database.ServerValue.TIMESTAMP;
+
+            await rtdb.ref().update(updatesMap);
+
+            isDayStarted = true;
+            todayOpeningFloat = floatVal;
+
+            const modalEl = document.getElementById('dayStartModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+
+            alert(`POS Shift Started successfully with Opening Float: Rs. ${floatVal.toFixed(2)}`);
+            checkDayStartStatus(false);
+            renderDashboardNotifications();
+
+        } catch (error) {
+            console.error("Failed to start day:", error);
+            alert("Error starting shift: " + error.message);
         }
     }
 
@@ -2191,6 +2363,7 @@
         } else if (pageId === 'billing') {
             displayPOSCategories();
             displayPOSProducts();
+            checkDayStartStatus(true);
         } else if (pageId === 'products') {
             populateRecipeRawMaterialsDropdown();
             if (isProductsLoaded) displayProducts();
@@ -2206,6 +2379,98 @@
         } else if (pageId === 'dayend') {
             fetchTodaySalesForDayEnd();
         }
+    }
+
+    function jumpToDayEndForUnclosedShift(dateStr) {
+        const dateInput = document.getElementById('de-shift-date');
+        if (dateInput) {
+            dateInput.value = dateStr;
+        }
+        switchPage('dayend', 'Day End (Reconcile)');
+    }
+
+    function renderDashboardNotifications() {
+        const listEl = document.getElementById('dash-notification-list');
+        const badgeEl = document.getElementById('notif-count-badge');
+        if (!listEl) return;
+
+        let itemsHtml = '';
+        let count = 0;
+
+        if (isYesterdayShiftUnclosed) {
+            count++;
+            itemsHtml += `
+                <div class="alert alert-danger mb-0 p-2 d-flex justify-content-between align-items-center rounded small">
+                    <div>
+                        <strong class="d-block"><i class="bi bi-exclamation-triangle-fill me-1"></i> Unclosed Shift Alert!</strong>
+                        <span>Yesterday's shift (${yesterdayDateStr}) was not reconciled / closed.</span>
+                    </div>
+                    <button class="btn btn-sm btn-danger fw-bold ms-2 py-1 text-nowrap" onclick="jumpToDayEndForUnclosedShift('${yesterdayDateStr}')">
+                        Close Shift Now
+                    </button>
+                </div>
+            `;
+        }
+
+        if (currentPettyCashBalance < 1000) {
+            count++;
+            itemsHtml += `
+                <div class="alert alert-warning mb-0 p-2 d-flex justify-content-between align-items-center rounded small">
+                    <div>
+                        <strong class="d-block"><i class="bi bi-wallet2 me-1"></i> Low Petty Cash Balance!</strong>
+                        <span>Current float is <strong>Rs. ${currentPettyCashBalance.toFixed(2)}</strong> (Below Rs. 1,000 limit).</span>
+                    </div>
+                    <button class="btn btn-sm btn-outline-dark fw-bold ms-2 py-1 text-nowrap" onclick="switchPage('expenses', 'Expenses & GRN')">
+                        Top Up
+                    </button>
+                </div>
+            `;
+        }
+
+        if (isDayStarted) {
+            itemsHtml += `
+                <div class="alert alert-success mb-0 p-2 d-flex justify-content-between align-items-center rounded small">
+                    <div>
+                        <strong><i class="bi bi-check-circle-fill me-1"></i> Today's POS Shift Active</strong>
+                        <span class="ms-2">Opening Float: <strong>Rs. ${todayOpeningFloat.toFixed(2)}</strong></span>
+                    </div>
+                    <span class="badge bg-success">Active</span>
+                </div>
+            `;
+        } else {
+            count++;
+            itemsHtml += `
+                <div class="alert alert-secondary mb-0 p-2 d-flex justify-content-between align-items-center rounded small">
+                    <div>
+                        <strong><i class="bi bi-play-circle me-1"></i> Today's Shift Not Started</strong>
+                        <span class="ms-2">Please start shift before billing in POS.</span>
+                    </div>
+                    <button class="btn btn-sm btn-primary fw-bold ms-2 py-1 text-nowrap" onclick="switchPage('billing', 'Billing (POS)')">
+                        Start Shift
+                    </button>
+                </div>
+            `;
+        }
+
+        if (updates && updates.length > 0) {
+            const latest = updates[0];
+            itemsHtml += `
+                <div class="alert alert-info mb-0 p-2 d-flex justify-content-between align-items-center rounded small">
+                    <div>
+                        <strong><i class="bi bi-arrow-up-circle me-1"></i> Latest Update Logged (${latest.date}):</strong>
+                        <span class="ms-1">${latest.version} - ${latest.type}</span>
+                    </div>
+                    <button class="btn btn-sm btn-link text-info p-0 ms-2 text-nowrap" onclick="switchPage('updates', 'System Updates')">Details</button>
+                </div>
+            `;
+        }
+
+        if (badgeEl) {
+            badgeEl.innerText = `${count} Alert${count !== 1 ? 's' : ''}`;
+            badgeEl.className = count > 0 ? "badge bg-danger p-2" : "badge bg-secondary p-2";
+        }
+
+        listEl.innerHTML = itemsHtml;
     }
 
     async function updateDashboardData() {
@@ -2237,6 +2502,8 @@
             document.getElementById('dash-net-sales-summary').innerText = `Rs. ${salesTotal.toFixed(2)}`;
             document.getElementById('dash-net-expense-summary').innerText = `Rs. ${expensesTotal.toFixed(2)}`;
             document.getElementById('dash-net-wastage-summary').innerText = `Rs. ${wastageTotal.toFixed(2)}`;
+
+            renderDashboardNotifications();
 
         } catch (error) {
             console.error("Dashboard Loading Error: ", error);
@@ -3068,6 +3335,7 @@
             if (display) {
                 display.innerText = `Rs. ${currentPettyCashBalance.toFixed(2)}`;
             }
+            renderDashboardNotifications();
         } catch (error) {
             console.error("Error loading Petty Cash Balance: ", error);
         }
@@ -3583,6 +3851,7 @@
             document.getElementById('update-form').reset();
             document.getElementById('update-date').value = todayStr;
             displayUpdates();
+            renderDashboardNotifications();
         } catch (error) {
             console.error("Error saving update log: ", error);
         }
@@ -3594,6 +3863,7 @@
                 await rtdb.ref('updates/' + id).remove();
                 updates = updates.filter(up => up.id !== id);
                 displayUpdates();
+                renderDashboardNotifications();
             } catch (error) {
                 console.error("Error deleting update log: ", error);
             }
@@ -4261,15 +4531,22 @@
     }
 
     async function fetchTodaySalesForDayEnd() {
+        const selectedDate = (document.getElementById('de-shift-date') && document.getElementById('de-shift-date').value) ? document.getElementById('de-shift-date').value : todayStr;
         try {
-            const snapshot = await rtdb.ref(`daily_summaries/${todayStr}`).once('value');
-            const data = snapshot.val() || { cash_sales: 0, card_sales: 0, online_sales: 0 };
+            const snapshot = await rtdb.ref(`daily_summaries/${selectedDate}`).once('value');
+            const data = snapshot.val() || { cash_sales: 0, card_sales: 0, online_sales: 0, openingFloat: 0 };
             
             todayExpectedSales = {
                 cash: parseFloat(data.cash_sales || 0),
                 card: parseFloat(data.card_sales || 0),
                 online: parseFloat(data.online_sales || 0)
             };
+
+            const floatVal = parseFloat(data.openingFloat || 0);
+            const floatInput = document.getElementById('de-opening-float');
+            if (floatInput) {
+                floatInput.value = floatVal.toFixed(2);
+            }
             
             calculateLiveDayEndReconciliation();
             loadDayEndHistory();
@@ -4319,6 +4596,7 @@
 
     function setVarianceClass(elementId, value) {
         const el = document.getElementById(elementId);
+        if (!el) return;
         el.className = "text-end fw-bold";
         if (value < 0) {
             el.classList.add("text-danger");
@@ -4332,6 +4610,7 @@
     async function submitDayEnd(event) {
         event.preventDefault();
 
+        const selectedDate = (document.getElementById('de-shift-date') && document.getElementById('de-shift-date').value) ? document.getElementById('de-shift-date').value : todayStr;
         const openingFloat = parseFloat(document.getElementById('de-opening-float').value) || 0;
         const actualCash = parseFloat(document.getElementById('de-actual-cash').value) || 0;
         const actualCard = parseFloat(document.getElementById('de-actual-card').value) || 0;
@@ -4353,7 +4632,7 @@
         const currentUserName = auth.currentUser ? (auth.currentUser.email.split('@')[0]) : "system";
 
         const dayEndRecord = {
-            date: todayStr,
+            date: selectedDate,
             closedBy: currentUserName,
             openingFloat: openingFloat,
             expectedCash: expectedCashTotal,
@@ -4373,10 +4652,10 @@
         };
 
         try {
-            await rtdb.ref(`day_ends/${todayStr}`).set(dayEndRecord);
-            alert("POS Shift closed & reconciled successfully!");
+            await rtdb.ref(`day_ends/${selectedDate}`).set(dayEndRecord);
+            alert(`POS Shift for ${selectedDate} closed & reconciled successfully!`);
 
-            document.getElementById('print-z-meta').innerText = `Date: ${new Date().toLocaleString()} | User: ${currentUserName}`;
+            document.getElementById('print-z-meta').innerText = `Date: ${selectedDate} | Closed By: ${currentUserName}`;
             document.getElementById('print-z-float').innerText = `Rs. ${openingFloat.toFixed(2)}`;
             
             document.getElementById('print-z-exp-cash').innerText = `Rs. ${expectedCashTotal.toFixed(2)}`;
@@ -4401,6 +4680,8 @@
 
             window.print();
 
+            await checkUnclosedShiftStatus();
+            renderDashboardNotifications();
             loadDayEndHistory();
         } catch (error) {
             console.error("Z-Report save error: ", error);
