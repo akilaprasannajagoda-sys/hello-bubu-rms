@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -151,9 +153,7 @@
             }
         }
         
-        /* ==========================================================================
-           PERFECT 80MM THERMAL PRINT CSS (FIXED RIGHT CUT-OFF & AUTO CUT)
-           ========================================================================== */
+        /* PERFECT 80MM THERMAL PRINT CSS */
         @media print {
             @page {
                 size: 80mm auto;
@@ -1146,7 +1146,7 @@
                             <div class="modal-body p-4">
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-dark">Top-Up Amount (Rs.)</label>
-                                    <input type="number" step="0.01" class="form-control form-control-lg text-success fw-bold" id="pc-float-amount" placeholder="e.g. 10000.00" required>
+                                    <input type="number" step="0.01" class="form-control form-control-lg text-success fw-bold" id="pc-float-amount" placeholder="e.g. 10000.00" required min="0.01">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-dark">Source / Reason</label>
@@ -1177,7 +1177,7 @@
                             <div class="modal-body p-4">
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-dark">Voucher Amount (Rs.)</label>
-                                    <input type="number" step="0.01" class="form-control form-control-lg text-danger fw-bold" id="pc-voucher-amount" placeholder="e.g. 1200.00" required>
+                                    <input type="number" step="0.01" class="form-control form-control-lg text-danger fw-bold" id="pc-voucher-amount" placeholder="e.g. 1200.00" required min="0.01">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-dark">Payee / Person Paid To</label>
@@ -1252,7 +1252,7 @@
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label small fw-bold text-dark">Initial Cost Price (Rs.)</label>
-                                        <input type="number" step="0.01" class="form-control" id="new-mat-cost" value="0" placeholder="0.00">
+                                        <input type="number" step="0.01" class="form-control" id="new-mat-cost" value="0" placeholder="0.00" min="0">
                                     </div>
                                 </div>
                             </div>
@@ -1285,7 +1285,7 @@
                                     <div class="col-6">
                                         <label class="form-label small fw-bold text-dark">Wasted Qty</label>
                                         <div class="input-group input-group-sm">
-                                            <input type="number" step="0.001" class="form-control" id="wastage-qty" placeholder="0.00" oninput="calculateWastageTotal()" required>
+                                            <input type="number" step="0.001" class="form-control" id="wastage-qty" placeholder="0.00" oninput="calculateWastageTotal()" required min="0.001">
                                             <span class="input-group-text" id="wastage-unit-display">Qty</span>
                                         </div>
                                     </div>
@@ -1601,8 +1601,9 @@
                                     <input type="email" class="form-control" id="manage-email" required placeholder="e.g. sunil@hellobubu.com">
                                 </div>
                                 <div class="mb-3" id="password-field-container">
-                                    <label class="form-label">Password</label>
+                                    <label class="form-label" id="password-field-label">Password</label>
                                     <input type="password" class="form-control" id="manage-password" required placeholder="Min 6 characters">
+                                    <small class="text-muted d-none" id="password-edit-help">Leave blank to keep existing password, or enter new password to reset.</small>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Default Template Role</label>
@@ -1846,7 +1847,7 @@
             contactPhone: "0760672029",
             client: "Hello Bubu Restaurant",
             active: true,
-            expiryDate: new Date(2030, 11, 31), // Set License Expiry Date
+            expiryDate: new Date(2030, 11, 31),
             allowedDomains: [
                 "localhost",
                 "127.0.0.1",
@@ -1860,7 +1861,6 @@
         const today = new Date();
         const currentHost = window.location.hostname;
 
-        // 1. Expiry Date Check
         if (today > LICENSE_CONFIG.expiryDate) {
             document.body.innerHTML = `
                 <div style="height:100vh; display:flex; align-items:center; justify-content:center; background:#111; color:#ff4d4d; font-family:sans-serif; text-align:center; padding:20px;">
@@ -1875,7 +1875,6 @@
             throw new Error("Systems.LK License Guard: Software License Expired.");
         }
 
-        // 2. Domain Lock Check
         const isDomainAllowed = LICENSE_CONFIG.allowedDomains.some(domain => currentHost.includes(domain));
         if (!isDomainAllowed && currentHost !== "") {
             document.body.innerHTML = `
@@ -1947,7 +1946,15 @@
     const historyPerPage = 10;
     let grnItemsList = [];
 
-    const todayStr = new Date().toISOString().split('T')[0];
+    // ACCURATE LOCAL TIMEZONE DATE FORMATTER (Fixes GMT/UTC Midnight bug around 00:00 - 05:30 AM)
+    function getLocalDateString(d = new Date()) {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    const todayStr = getLocalDateString();
     document.getElementById('current-date').innerText = new Date().toDateString();
     document.getElementById('expense-date').value = todayStr;
     document.getElementById('wastage-date').value = todayStr;
@@ -1955,11 +1962,11 @@
 
     const yesterdayObj = new Date();
     yesterdayObj.setDate(yesterdayObj.getDate() - 1);
-    yesterdayDateStr = yesterdayObj.toISOString().split('T')[0];
+    yesterdayDateStr = getLocalDateString(yesterdayObj);
 
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+    const sevenDaysAgoStr = getLocalDateString(sevenDaysAgo);
 
     document.getElementById('sales-start-date').value = sevenDaysAgoStr;
     document.getElementById('sales-end-date').value = todayStr;
@@ -2996,7 +3003,7 @@
 
         const name = document.getElementById('new-mat-name').value.trim();
         const unit = document.getElementById('new-mat-unit').value;
-        const cost = parseFloat(document.getElementById('new-mat-cost').value) || 0;
+        const cost = Math.max(0, parseFloat(document.getElementById('new-mat-cost').value) || 0);
 
         if (!name) return;
 
@@ -3350,7 +3357,7 @@
     async function savePettyCashFloat(event) {
         event.preventDefault();
 
-        const amount = parseFloat(document.getElementById('pc-float-amount').value) || 0;
+        const amount = Math.max(0, parseFloat(document.getElementById('pc-float-amount').value) || 0);
         const reason = document.getElementById('pc-float-reason').value.trim();
         const date = document.getElementById('pc-float-date').value;
 
@@ -3414,7 +3421,7 @@
     async function savePettyCashVoucher(event) {
         event.preventDefault();
 
-        const amount = parseFloat(document.getElementById('pc-voucher-amount').value) || 0;
+        const amount = Math.max(0, parseFloat(document.getElementById('pc-voucher-amount').value) || 0);
         const payee = document.getElementById('pc-voucher-payee').value.trim();
         const reason = document.getElementById('pc-voucher-reason').value.trim();
         const category = document.getElementById('pc-voucher-category').value;
@@ -4013,7 +4020,9 @@
             subtotal += item.product.price * item.qty;
         });
 
-        const discountVal = parseFloat(document.getElementById('pos-discount').value) || 0;
+        // SANITIZE & VALIDATE DISCOUNT (Prevent Negative discount numbers)
+        const discountInputVal = parseFloat(document.getElementById('pos-discount').value) || 0;
+        const discountVal = Math.max(0, discountInputVal);
         const discountType = document.getElementById('pos-discount-type').value;
         let discountAmount = 0;
 
@@ -4055,6 +4064,13 @@
     }
 
     async function checkoutAndPrintReceipt() {
+        // ENFORCE SHIFT START BEFORE CHECKOUT (Point #2 Fix)
+        if (!isDayStarted) {
+            alert("⚠️ SECURITY BLOCK: POS Shift is NOT started! Please enter Opening Cash Float and Start Shift before processing sales.");
+            checkDayStartStatus(true);
+            return;
+        }
+
         if (cart.length === 0) {
             alert("Your checkout cart is empty!");
             return;
@@ -4166,8 +4182,7 @@
             currentHistoryPage = 1;
             displayHistorySales();
         } catch (error) {
-            console.error("Error loading recent sales: ", error);
-            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Failed to fetch transactions history.</td></tr>`;
+            console.error("Error loading recent sales: ", error);tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Failed to fetch transactions history.</td></tr>`;
         }
     }
 
@@ -4343,6 +4358,7 @@
 
             alert(`Invoice #${billNo} has been successfully reversed.`);
             
+            // Auto Update Dashboard & History Tables
             updateDashboardData();
             
             if (document.getElementById('invoice-history-panel').classList.contains('show')) {
@@ -4353,6 +4369,14 @@
                     loadRecentSales();
                 }
             }
+
+            // AUTO REFRESH SALES REPORT IF DATES ARE SELECTED
+            const reportStart = document.getElementById('sales-start-date').value;
+            const reportEnd = document.getElementById('sales-end-date').value;
+            if (reportStart && reportEnd) {
+                generateSalesReport();
+            }
+
         } catch (error) {
             console.error("Failed to reverse sale invoice: ", error);
             alert("Database reversal process failed.");
@@ -4381,6 +4405,8 @@
         try {
             const snapshot = await rtdb.ref('sales').orderByChild('date').startAt(startDate).endAt(endDate).once('value');
             const data = snapshot.val() || {};
+            
+            // EXCLUDE REVERSED INVOICES FROM REPORT
             const filteredSales = Object.values(data).filter(sale => sale.status !== 'Reversed');
 
             let overallTotal = 0;
@@ -4388,27 +4414,29 @@
             let itemWiseReport = {};
 
             filteredSales.forEach(sale => {
-                overallTotal += parseFloat(sale.total);
+                overallTotal += parseFloat(sale.total || 0);
                 
-                sale.items.forEach(cartItem => {
-                    const itemID = cartItem.product.id;
-                    const itemName = cartItem.product.name;
-                    const itemCat = cartItem.product.category;
-                    const itemPrice = parseFloat(cartItem.product.price);
-                    const itemQty = parseInt(cartItem.qty);
+                if (sale.items && Array.isArray(sale.items)) {
+                    sale.items.forEach(cartItem => {
+                        const itemID = cartItem.product.id;
+                        const itemName = cartItem.product.name;
+                        const itemCat = cartItem.product.category;
+                        const itemPrice = parseFloat(cartItem.product.price || 0);
+                        const itemQty = parseInt(cartItem.qty || 0);
 
-                    if (itemWiseReport[itemID]) {
-                        itemWiseReport[itemID].qtySold += itemQty;
-                        itemWiseReport[itemID].revenue += itemPrice * itemQty;
-                    } else {
-                        itemWiseReport[itemID] = {
-                            name: itemName,
-                            category: itemCat,
-                            qtySold: itemQty,
-                            revenue: itemPrice * itemQty
-                        };
-                    }
-                });
+                        if (itemWiseReport[itemID]) {
+                            itemWiseReport[itemID].qtySold += itemQty;
+                            itemWiseReport[itemID].revenue += itemPrice * itemQty;
+                        } else {
+                            itemWiseReport[itemID] = {
+                                name: itemName,
+                                category: itemCat,
+                                qtySold: itemQty,
+                                revenue: itemPrice * itemQty
+                            };
+                        }
+                    });
+                }
             });
 
             document.getElementById('report-sales-total').innerText = `Rs. ${overallTotal.toFixed(2)}`;
@@ -4417,7 +4445,7 @@
             tbody.innerHTML = '';
             const itemKeys = Object.keys(itemWiseReport);
             if (itemKeys.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No itemized sales found in this period.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No active itemized sales found in this period.</td></tr>`;
                 return;
             }
 
@@ -4862,14 +4890,23 @@
 
         try {
             if (manageUid) {
-                await rtdb.ref(`users/${manageUid}`).update({
+                // EDIT EXISTING USER (POINT #4 FIX - Support Password Reset/Update in UI)
+                const userUpdateObj = {
                     username: username,
                     email: emailInput,
                     role: role,
                     permissions: permissions
-                });
-                alert("User record updated successfully!");
+                };
+
+                // If admin entered a new password during edit, store/update it
+                if (password && password.length >= 6) {
+                    userUpdateObj.lastPasswordResetObj = password;
+                }
+
+                await rtdb.ref(`users/${manageUid}`).update(userUpdateObj);
+                alert("User profile updated successfully!");
             } else {
+                // CREATE NEW USER
                 if (!password || password.length < 6) {
                     alert("Password must be at least 6 characters long.");
                     return;
@@ -4905,8 +4942,11 @@
         document.getElementById('manage-username').value = userObj.username;
         document.getElementById('manage-email').value = userObj.email;
 
+        // POINT #4 FIX: UNHIDE PASSWORD FIELD FOR ADMIN RESET
         document.getElementById('manage-password').required = false;
-        document.getElementById('password-field-container').classList.add('d-none');
+        document.getElementById('manage-password').value = '';
+        document.getElementById('password-field-container').classList.remove('d-none');
+        document.getElementById('password-edit-help').classList.remove('d-none');
 
         document.getElementById('manage-role').value = userObj.role;
 
@@ -4918,7 +4958,7 @@
             }
         });
 
-        document.getElementById('form-user-title').innerText = "Edit User Settings";
+        document.getElementById('form-user-title').innerText = "Edit User Settings & Reset Password";
         document.getElementById('btn-user-submit').innerText = "Update User Profile";
         document.getElementById('btn-user-cancel').classList.remove('d-none');
     }
@@ -4947,6 +4987,7 @@
         
         document.getElementById('manage-password').required = true;
         document.getElementById('password-field-container').classList.remove('d-none');
+        document.getElementById('password-edit-help').classList.add('d-none');
 
         document.getElementById('form-user-title').innerText = "Create New User";
         document.getElementById('btn-user-submit').innerText = "Create User";
