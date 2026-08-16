@@ -3981,43 +3981,43 @@
             filterSelect.value = selectedValue;
         }
     }
-
-    function displayPOSProducts() {
-        const grid = document.getElementById('pos-products-grid');
-        const searchVal = document.getElementById('pos-search').value.toLowerCase();
-        const categoryVal = document.getElementById('pos-category-filter').value;
-
-        grid.innerHTML = '';
-
-        const filteredProducts = products.filter(p => {
-            const matchesSearch = p.name.toLowerCase().includes(searchVal);
-            const matchesCategory = (categoryVal === 'All' || p.category === categoryVal);
-            return matchesSearch && matchesCategory;
-        });
-
-        if (filteredProducts.length === 0) {
-            grid.innerHTML = `<div class="w-100 text-center py-5 text-muted">No items match your search filter.</div>`;
-            return;
-        }
-
-        let gridHtml = '';
-        filteredProducts.forEach(product => {
-            gridHtml += `
+function displayPOSProducts() {
+    const grid = document.getElementById('pos-products-grid');
+    const searchVal = document.getElementById('pos-search').value.toLowerCase();
+    const categoryVal = document.getElementById('pos-category-filter').value;
+    
+    grid.innerHTML = '';
+    
+    const filteredProducts = products.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(searchVal);
+        const matchesCategory = (categoryVal === 'All' || p.category === categoryVal);
+        return matchesSearch && matchesCategory;
+    });
+    
+    if (filteredProducts.length === 0) {
+        grid.innerHTML = `<div class="w-100 text-center py-5 text-muted">No items match your search filter.</div>`;
+        return;
+    }
+    
+    let gridHtml = '';
+    filteredProducts.forEach(product => {
+        gridHtml += `
                 <div class="col">
                     <div class="card h-100 pos-product-card text-center p-2 bg-light" onclick="addToCart('${product.id}')">
-                        <div class="card-body p-1">
-                            <span class="badge bg-secondary mb-1 small">${product.category}</span>
-                            <h6 class="card-title text-truncate" style="font-size: 0.95rem; font-weight: 600;">${product.name}</h6>
-                            <p class="card-text text-success mb-0" style="font-weight: 700; font-size: 0.9rem;">Rs.${parseFloat(product.price).toFixed(2)}</p>
+                        <div class="card-body p-1 d-flex flex-column justify-content-between">
+                            <div>
+                                <span class="badge bg-secondary mb-1 small" style="font-size: 0.65rem;">${product.category}</span>
+                                <h6 class="card-title mb-2" style="font-size: 0.78rem; font-weight: 600; line-height: 1.25; word-break: break-word; white-space: normal;">${product.name}</h6>
+                            </div>
+                            <p class="card-text text-success mb-0" style="font-weight: 700; font-size: 0.85rem;">Rs.${parseFloat(product.price).toFixed(2)}</p>
                         </div>
                     </div>
                 </div>
             `;
-        });
-
-        grid.innerHTML = gridHtml;
-    }
-
+    });
+    
+    grid.innerHTML = gridHtml;
+}
     function addToCart(productId) {
         const product = products.find(p => p.id === productId);
         if (!product) return;
