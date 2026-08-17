@@ -41,7 +41,7 @@
             max-width: 400px;
         }
         
-        /* Updated Sidebar Styles */
+        /* Sidebar Styles */
         .sidebar {
             height: 100vh;
             background-color: #343a40;
@@ -88,7 +88,6 @@
             font-size: 0.65em;
             margin-left: 5px;
         }
-        /* Timeline style */
         .timeline-item {
             border-left: 3px solid #6c757d;
             padding-left: 20px;
@@ -116,7 +115,7 @@
             box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         }
 
-        /* Modern Premium Dashboard Styles */
+        /* Dashboard Styles */
         .dash-card-stat {
             border: none;
             border-radius: 16px;
@@ -135,7 +134,6 @@
         .bg-grad-expense { background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%); }
         .bg-grad-wastage { background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); color: #212529 !important; }
         .bg-grad-orders { background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%); }
-        .bg-grad-net { background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%); }
 
         .dash-icon-bg {
             font-size: 3.5rem;
@@ -235,8 +233,6 @@
                 color: #000000 !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
-                page-break-after: avoid !important;
-                break-after: avoid !important;
             }
 
             #receipt-print-area *, #zreport-print-area * {
@@ -256,10 +252,10 @@
 </head>
 <body>
 
-<!-- Hidden Print Template for Thermal Receipt -->
+<!-- Thermal Print Template for Receipts -->
 <div id="receipt-print-area">
     <div style="text-align: center;">
-        <h3 style="margin: 0; padding: 0; font-size: 15px; font-weight: bold;">HELLO BUBU</h3>
+        <h3 style="margin: 0; font-size: 15px; font-weight: bold;">HELLO BUBU</h3>
         <p style="margin: 2px 0; font-size: 10px;">No.02,Rajakeeya Mawatha, Colombo</p>
         <p style="margin: 2px 0; font-size: 10px;">Tel: 076-7112424</p>
         <div class="receipt-divider"></div>
@@ -308,10 +304,10 @@
     </div>
 </div>
 
-<!-- Thermal Print Template for Day End (Z-Report) -->
+<!-- Thermal Print Template for Z-Report -->
 <div id="zreport-print-area">
     <div style="text-align: center;">
-        <h3 style="margin: 0; padding: 0; font-size: 15px; font-weight: bold;">HELLO BUBU</h3>
+        <h3 style="margin: 0; font-size: 15px; font-weight: bold;">HELLO BUBU</h3>
         <h4 style="margin: 2px 0; font-size: 11px; font-weight: bold;">POS DAY END REPORT (Z-REPORT)</h4>
         <p style="margin: 2px 0; font-size: 9px;" id="print-z-meta">Date: - | User: -</p>
         <div class="receipt-divider"></div>
@@ -412,7 +408,6 @@
             <div class="text-danger small text-center mt-3 d-none" id="login-error-msg"></div>
         </form>
 
-        <!-- Login Footer Branding -->
         <div class="text-center mt-4 pt-3 border-top text-muted" style="font-size: 0.75rem;">
             <p class="mb-0 fw-semibold">Hello Bubu RMS v1.4.0</p>
             <small>© 2026 <strong>Systems.LK</strong>. All Rights Reserved.<br>Hotline: 0760672029</small>
@@ -486,7 +481,6 @@
                     <button class="btn btn-outline-danger w-100 mb-3" onclick="handleLogout()">
                         <i class="bi bi-box-arrow-right me-2"></i> Sign Out
                     </button>
-                    <!-- Sidebar Footer Copyright -->
                     <div class="text-center text-white-50" style="font-size: 0.72rem;">
                         <small>Developed by <strong>Systems.LK</strong></small><br>
                         <small><i class="bi bi-telephone me-1"></i>0760672029</small><br>
@@ -522,7 +516,6 @@
                     </div>
                 </div>
 
-                <!-- LIVE DASHBOARD NOTIFICATION & ALERT CENTER -->
                 <div class="card card-custom bg-white p-3 mb-4 border" id="dash-notification-card">
                     <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
                         <h6 class="fw-bold text-dark mb-0">
@@ -641,7 +634,6 @@
 
             <!-- 2. BILLING (POS) PAGE -->
             <div id="page-billing" class="page-section">
-                <!-- Day Start Status Banner inside POS Header -->
                 <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded card-custom mb-3 border">
                     <div>
                         <h6 class="mb-0 fw-bold"><i class="bi bi-receipt me-1 text-primary"></i> POS Billing Counter</h6>
@@ -1091,7 +1083,6 @@
                                 <span class="badge bg-secondary">On-Demand Querying</span>
                             </div>
 
-                            <!-- UPDATED PETTY CASH FILTER & PDF DOWNLOAD ROW -->
                             <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded border">
                                 <div class="col-md-3 col-6">
                                     <label class="small text-muted fw-bold">From Date</label>
@@ -1425,8 +1416,6 @@
                 </ul>
 
                 <div class="tab-content" id="reportTabsContent">
-                    
-                    <!-- MASTER PDF STATEMENT & FINANCIAL CASH BOOK TAB -->
                     <div class="tab-pane fade show active" id="master-pdf-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
@@ -1453,11 +1442,8 @@
                                 </div>
                             </div>
 
-                            <!-- PDF PREVIEW AREA -->
                             <div id="pdf-preview-container" class="border rounded p-3 bg-white d-none">
-                                <div id="pdf-statement-wrapper">
-                                    <!-- Dynamic PDF Report Generated Here -->
-                                </div>
+                                <div id="pdf-statement-wrapper"></div>
                             </div>
 
                             <div id="pdf-load-placeholder" class="text-center py-5 text-muted">
@@ -2037,7 +2023,6 @@
     const historyPerPage = 10;
     let grnItemsList = [];
 
-    // ACCURATE LOCAL TIMEZONE DATE FORMATTER (Fixes GMT/UTC Midnight bug around 00:00 - 05:30 AM)
     function getLocalDateString(d = new Date()) {
         const year = d.getFullYear();
         const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -2110,23 +2095,13 @@
                         email: user.email,
                         role: "Admin",
                         permissions: {
-                            dashboard: true,
-                            billing: true,
-                            products: true,
-                            expenses: true,
-                            wastage: true,
-                            reports: true,
-                            updates: true,
-                            users: true,
-                            dayend: true
+                            dashboard: true, billing: true, products: true, expenses: true, wastage: true, reports: true, updates: true, users: true, dayend: true
                         }
                     };
                     await rtdb.ref(`users/${user.uid}`).set(userData);
                 }
 
-                if (!userData.permissions) {
-                    userData.permissions = {};
-                }
+                if (!userData.permissions) userData.permissions = {};
                 if (userData.role === "Admin") {
                     const modules = ['dashboard', 'billing', 'products', 'expenses', 'wastage', 'reports', 'dayend', 'updates', 'users'];
                     let needUpdate = false;
@@ -2145,9 +2120,7 @@
                 document.getElementById('user-role-badge').innerText = `Role: ${userData.role} (${userData.username})`;
 
                 const welcomeEl = document.getElementById('dash-welcome-text');
-                if (welcomeEl) {
-                    welcomeEl.innerText = `Welcome back, ${userData.username} 👋`;
-                }
+                if (welcomeEl) welcomeEl.innerText = `Welcome back, ${userData.username} 👋`;
 
                 enforceNavigationPermissions(userData.permissions);
 
@@ -2163,7 +2136,7 @@
 
             } catch (error) {
                 console.error("Auth routing failure: ", error);
-                alert("Error Detail: " + error.message + " (Code: " + error.code + ")");
+                alert("Error Detail: " + error.message);
                 auth.signOut();
             }
         } else {
@@ -2181,18 +2154,14 @@
         modules.forEach(mod => {
             const navBtn = document.getElementById(`nav-btn-${mod}`);
             if (navBtn) {
-                if (perms[mod] === true) {
-                    navBtn.classList.remove('d-none');
-                } else {
-                    navBtn.classList.add('d-none');
-                }
+                if (perms[mod] === true) navBtn.classList.remove('d-none');
+                else navBtn.classList.add('d-none');
             }
         });
     }
 
     async function handleLogin(event) {
         event.preventDefault();
-        
         const usernameInput = document.getElementById('login-username').value.trim();
         const passwordInput = document.getElementById('login-password').value;
         const spinner = document.getElementById('login-spinner');
@@ -2201,10 +2170,7 @@
         spinner.classList.remove('d-none');
         errorMsg.classList.add('d-none');
 
-        let email = usernameInput;
-        if (!usernameInput.includes('@')) {
-            email = `${usernameInput}@hellobubu.com`;
-        }
+        let email = usernameInput.includes('@') ? usernameInput : `${usernameInput}@hellobubu.com`;
 
         try {
             await auth.signInWithEmailAndPassword(email, passwordInput);
@@ -2221,22 +2187,11 @@
         if (confirm("Are you sure you want to sign out?")) {
             try {
                 await auth.signOut();
-                categories = [];
-                products = [];
-                rawMaterials = [];
-                expenseCategories = [];
-                expenses = []; 
-                wastage = [];
-                updates = [];
-                cart = [];
-                userAccountsList = [];
-                currentUserPermissions = null;
-                todayExpectedSales = { cash: 0, card: 0, online: 0 };
-                currentPettyCashBalance = 0;
-                pettyCashLogsList = [];
-                recipeBuilderList = [];
-                isDayStarted = false;
-                todayOpeningFloat = 0;
+                categories = []; products = []; rawMaterials = []; expenseCategories = [];
+                expenses = []; wastage = []; updates = []; cart = []; userAccountsList = [];
+                currentUserPermissions = null; todayExpectedSales = { cash: 0, card: 0, online: 0 };
+                currentPettyCashBalance = 0; pettyCashLogsList = []; recipeBuilderList = [];
+                isDayStarted = false; todayOpeningFloat = 0;
             } catch (error) {
                 console.error("Logout failed: ", error);
             }
@@ -2256,9 +2211,7 @@
         const startTime = performance.now();
         try {
             await rtdb.ref('categories').once('value');
-            const endTime = performance.now();
-            const latency = Math.round(endTime - startTime);
-
+            const latency = Math.round(performance.now() - startTime);
             latencyText.innerText = `${latency} ms`;
 
             if (latency < 150) {
@@ -2285,15 +2238,9 @@
     async function checkUnclosedShiftStatus() {
         try {
             const yesterdaySummarySnap = await rtdb.ref(`daily_summaries/${yesterdayDateStr}`).once('value');
-            const yesterdaySummary = yesterdaySummarySnap.val();
-
-            if (yesterdaySummary) {
+            if (yesterdaySummarySnap.val()) {
                 const yesterdayDayEndSnap = await rtdb.ref(`day_ends/${yesterdayDateStr}`).once('value');
-                if (!yesterdayDayEndSnap.exists()) {
-                    isYesterdayShiftUnclosed = true;
-                } else {
-                    isYesterdayShiftUnclosed = false;
-                }
+                isYesterdayShiftUnclosed = !yesterdayDayEndSnap.exists();
             } else {
                 isYesterdayShiftUnclosed = false;
             }
@@ -2307,46 +2254,31 @@
         try {
             const catSnapshot = await rtdb.ref('categories').once('value');
             const catData = catSnapshot.val();
-            if (catData) {
-                categories = Object.keys(catData);
-            } else {
+            if (catData) categories = Object.keys(catData);
+            else {
                 categories = ['Rice', 'Kottu', 'Beverages', 'Desserts'];
-                for (let cat of categories) {
-                    await rtdb.ref('categories/' + cat).set(true);
-                }
+                for (let cat of categories) await rtdb.ref('categories/' + cat).set(true);
             }
 
             const prodSnapshot = await rtdb.ref('products').once('value');
             const prodData = prodSnapshot.val();
-            products = [];
-            if (prodData) {
-                products = Object.keys(prodData).map(key => ({ id: key, ...prodData[key] }));
-            }
+            products = prodData ? Object.keys(prodData).map(key => ({ id: key, ...prodData[key] })) : [];
 
             const rawMatSnapshot = await rtdb.ref('raw_materials').once('value');
             const rawMatData = rawMatSnapshot.val();
-            rawMaterials = [];
-            if (rawMatData) {
-                rawMaterials = Object.keys(rawMatData).map(key => ({ id: key, ...rawMatData[key] }));
-            }
+            rawMaterials = rawMatData ? Object.keys(rawMatData).map(key => ({ id: key, ...rawMatData[key] })) : [];
 
             const expCatSnapshot = await rtdb.ref('expenseCategories').once('value');
             const expCatData = expCatSnapshot.val();
-            if (expCatData) {
-                expenseCategories = Object.keys(expCatData);
-            } else {
+            if (expCatData) expenseCategories = Object.keys(expCatData);
+            else {
                 expenseCategories = ['Raw Materials', 'Transport', 'Utilities', 'Rent', 'Salaries', 'Refreshments', 'Maintenance'];
-                for (let cat of expenseCategories) {
-                    await rtdb.ref('expenseCategories/' + cat).set(true);
-                }
+                for (let cat of expenseCategories) await rtdb.ref('expenseCategories/' + cat).set(true);
             }
 
             const updatesSnapshot = await rtdb.ref('updates').limitToLast(30).once('value');
             const updatesData = updatesSnapshot.val();
-            updates = [];
-            if (updatesData) {
-                updates = Object.keys(updatesData).map(key => ({ id: key, ...updatesData[key] }));
-            }
+            updates = updatesData ? Object.keys(updatesData).map(key => ({ id: key, ...updatesData[key] })) : [];
 
             displayCategories();
             displayExpenseCategories();
@@ -2360,23 +2292,18 @@
             checkSystemLatency();
             loadPettyCashBalance();
 
-            if (currentUserPermissions && currentUserPermissions.users === true) {
-                loadAllUsers();
-            }
+            if (currentUserPermissions && currentUserPermissions.users === true) loadAllUsers();
 
         } catch (error) {
             console.error("Firebase data load error: ", error);
         }
     }
 
-    /* ============================================================================
-       DAY START / SHIFT OPEN LOGIC
-       ============================================================================ */
+    /* DAY START / SHIFT OPEN LOGIC */
     async function checkDayStartStatus(autoShowModal = true) {
         try {
             const snapshot = await rtdb.ref(`daily_summaries/${todayStr}/openingFloat`).once('value');
             const val = snapshot.val();
-            
             const statusBadge = document.getElementById('pos-shift-status-badge');
             
             if (val !== null && val !== undefined) {
@@ -2396,10 +2323,7 @@
                 }
                 if (autoShowModal) {
                     const modalEl = document.getElementById('dayStartModal');
-                    if (modalEl) {
-                        const modal = new bootstrap.Modal(modalEl);
-                        modal.show();
-                    }
+                    if (modalEl) new bootstrap.Modal(modalEl).show();
                 }
                 return false;
             }
@@ -2447,16 +2371,13 @@
 
         const pages = document.querySelectorAll('.page-section');
         pages.forEach(page => page.classList.remove('active-page'));
-
         document.getElementById('page-' + pageId).classList.add('active-page');
 
         const navLinks = document.querySelectorAll('.sidebar .nav-link');
         navLinks.forEach(link => link.classList.remove('active'));
         
         const activeNavBtn = document.querySelector(`#nav-btn-${pageId} .nav-link`);
-        if (activeNavBtn) {
-            activeNavBtn.classList.add('active');
-        }
+        if (activeNavBtn) activeNavBtn.classList.add('active');
 
         document.getElementById('page-title').innerText = pageTitle;
 
@@ -2486,9 +2407,7 @@
 
     function jumpToDayEndForUnclosedShift(dateStr) {
         const dateInput = document.getElementById('de-shift-date');
-        if (dateInput) {
-            dateInput.value = dateStr;
-        }
+        if (dateInput) dateInput.value = dateStr;
         switchPage('dayend', 'Day End (Reconcile)');
     }
 
@@ -2595,11 +2514,7 @@
             const netPosEl = document.getElementById('dash-net-position-val');
             if (netPosEl) {
                 netPosEl.innerText = `Rs. ${netPosition.toFixed(2)}`;
-                if (netPosition >= 0) {
-                    netPosEl.className = "fw-bold mb-0 text-success";
-                } else {
-                    netPosEl.className = "fw-bold mb-0 text-danger";
-                }
+                netPosEl.className = netPosition >= 0 ? "fw-bold mb-0 text-success" : "fw-bold mb-0 text-danger";
             }
 
             document.getElementById('dash-net-sales-summary').innerText = `Rs. ${salesTotal.toFixed(2)}`;
@@ -2607,7 +2522,6 @@
             document.getElementById('dash-net-wastage-summary').innerText = `Rs. ${wastageTotal.toFixed(2)}`;
 
             renderDashboardNotifications();
-
         } catch (error) {
             console.error("Dashboard Loading Error: ", error);
         }
@@ -2616,7 +2530,6 @@
     function renderPagination(elementId, totalPages, currentPage, callbackName) {
         const container = document.getElementById(elementId);
         container.innerHTML = '';
-
         if (totalPages <= 1) return;
 
         let paginationHtml = `
@@ -2662,10 +2575,7 @@
 
         dropdown.innerHTML = dropdownHtml;
         badgeContainer.innerHTML = badgesHtml;
-
-        if (categories.includes(selectedValue)) {
-            dropdown.value = selectedValue;
-        }
+        if (categories.includes(selectedValue)) dropdown.value = selectedValue;
     }
 
     async function saveCategory(event) {
@@ -2715,14 +2625,10 @@
         });
 
         select.innerHTML = html;
-        
         select.onchange = function() {
-            const matId = this.value;
-            const mat = rawMaterials.find(m => m.id === matId);
+            const mat = rawMaterials.find(m => m.id === this.value);
             const unitDisplay = document.getElementById('recipe-mat-unit-display');
-            if (unitDisplay) {
-                unitDisplay.innerText = mat ? (mat.unit || 'Qty') : 'Qty';
-            }
+            if (unitDisplay) unitDisplay.innerText = mat ? (mat.unit || 'Qty') : 'Qty';
         };
     }
 
@@ -2731,7 +2637,6 @@
         const matId = selectEl.value;
         const qtyInput = document.getElementById('recipe-mat-qty');
         const qty = parseFloat(qtyInput.value) || 0;
-
         const mat = rawMaterials.find(m => m.id === matId);
 
         if (!mat || qty <= 0) {
@@ -2740,21 +2645,12 @@
         }
 
         const existing = recipeBuilderList.find(i => i.materialId === matId);
-        if (existing) {
-            existing.qty += qty;
-        } else {
-            recipeBuilderList.push({
-                materialId: mat.id,
-                materialName: mat.name,
-                unit: mat.unit || 'Unit',
-                qty: qty
-            });
-        }
+        if (existing) existing.qty += qty;
+        else recipeBuilderList.push({ materialId: mat.id, materialName: mat.name, unit: mat.unit || 'Unit', qty: qty });
 
         selectEl.value = '';
         qtyInput.value = '';
         document.getElementById('recipe-mat-unit-display').innerText = 'Qty';
-
         displayRecipeBuilderTable();
     }
 
@@ -2764,24 +2660,19 @@
     }
 
     function calculateProductCostFromRecipe(recipeList) {
-        if (!recipeList || !Array.isArray(recipeList) || recipeList.length === 0) {
-            return 0;
-        }
-
+        if (!recipeList || !Array.isArray(recipeList) || recipeList.length === 0) return 0;
         let totalCost = 0;
         recipeList.forEach(item => {
             const mat = rawMaterials.find(m => m.id === item.materialId);
             const latestUnitCost = mat ? (parseFloat(mat.unitCost) || 0) : (parseFloat(item.unitCost) || 0);
             totalCost += item.qty * latestUnitCost;
         });
-
         return totalCost;
     }
 
     function displayRecipeBuilderTable() {
         const tbody = document.getElementById('recipe-builder-table-body');
         if (!tbody) return;
-
         tbody.innerHTML = '';
 
         if (recipeBuilderList.length === 0) {
@@ -2818,21 +2709,13 @@
 
         document.getElementById('recipe-total-cost-display').innerText = `Rs. ${totalCost.toFixed(2)}`;
 
-        let marginPct = 0;
-        if (sellingPrice > 0) {
-            marginPct = ((sellingPrice - totalCost) / sellingPrice) * 100;
-        }
-
+        let marginPct = sellingPrice > 0 ? ((sellingPrice - totalCost) / sellingPrice) * 100 : 0;
         const marginEl = document.getElementById('recipe-profit-margin-display');
         marginEl.innerText = `${marginPct.toFixed(2)} %`;
         
-        if (marginPct < 20) {
-            marginEl.className = "text-danger fw-bold";
-        } else if (marginPct < 40) {
-            marginEl.className = "text-warning fw-bold";
-        } else {
-            marginEl.className = "text-success fw-bold";
-        }
+        if (marginPct < 20) marginEl.className = "text-danger fw-bold";
+        else if (marginPct < 40) marginEl.className = "text-warning fw-bold";
+        else marginEl.className = "text-success fw-bold";
     }
 
     function loadProductsClicked() {
@@ -2844,7 +2727,6 @@
 
     function displayProducts() {
         if (!isProductsLoaded) return;
-
         const tableBody = document.getElementById('product-table-body');
         tableBody.innerHTML = '';
 
@@ -2859,18 +2741,13 @@
         if (currentProductPage < 1) currentProductPage = 1;
 
         const startIdx = (currentProductPage - 1) * productsPerPage;
-        const endIdx = startIdx + productsPerPage;
-        const paginatedProducts = products.slice(startIdx, endIdx);
+        const paginatedProducts = products.slice(startIdx, startIdx + productsPerPage);
 
         let tableHtml = '';
         paginatedProducts.forEach(product => {
             const calculatedCost = calculateProductCostFromRecipe(product.recipe);
             const sellingPrice = parseFloat(product.price) || 0;
-
-            let marginPct = 0;
-            if (sellingPrice > 0) {
-                marginPct = ((sellingPrice - calculatedCost) / sellingPrice) * 100;
-            }
+            let marginPct = sellingPrice > 0 ? ((sellingPrice - calculatedCost) / sellingPrice) * 100 : 0;
 
             let marginBadge = 'bg-success';
             if (marginPct < 20) marginBadge = 'bg-danger';
@@ -2884,16 +2761,10 @@
                     </td>
                     <td class="text-end text-secondary fw-bold">Rs. ${calculatedCost.toFixed(2)}</td>
                     <td class="text-end text-success fw-bold">Rs. ${sellingPrice.toFixed(2)}</td>
+                    <td class="text-center"><span class="badge ${marginBadge}">${marginPct.toFixed(1)} %</span></td>
                     <td class="text-center">
-                        <span class="badge ${marginBadge}">${marginPct.toFixed(1)} %</span>
-                    </td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editProduct('${product.id}')">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct('${product.id}')">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editProduct('${product.id}')"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct('${product.id}')"><i class="bi bi-trash"></i></button>
                     </td>
                 </tr>
             `;
@@ -2910,29 +2781,21 @@
 
     async function saveProduct(event) {
         event.preventDefault();
-
         const id = document.getElementById('product-id').value;
         const name = document.getElementById('product-name').value.trim();
         const price = parseFloat(document.getElementById('product-price').value) || 0;
         const category = document.getElementById('product-category').value;
-
         const calculatedCost = calculateProductCostFromRecipe(recipeBuilderList);
 
         const productData = {
-            name: name,
-            price: price,
-            category: category,
-            recipe: JSON.parse(JSON.stringify(recipeBuilderList)),
-            costPrice: calculatedCost
+            name, price, category, recipe: JSON.parse(JSON.stringify(recipeBuilderList)), costPrice: calculatedCost
         };
 
         try {
             if (id) {
                 await rtdb.ref('products/' + id).update(productData);
                 const index = products.findIndex(p => p.id === id);
-                if (index !== -1) {
-                    products[index] = { id, ...productData };
-                }
+                if (index !== -1) products[index] = { id, ...productData };
             } else {
                 const newRef = rtdb.ref('products').push();
                 await newRef.set(productData);
@@ -3008,10 +2871,7 @@
 
         if (dropdown) dropdown.innerHTML = dropdownHtml;
         if (badgeContainer) badgeContainer.innerHTML = badgesHtml;
-
-        if (dropdown && expenseCategories.includes(selectedValue)) {
-            dropdown.value = selectedValue;
-        }
+        if (dropdown && expenseCategories.includes(selectedValue)) dropdown.value = selectedValue;
 
         populatePettyCashCategoryDropdown();
     }
@@ -3019,11 +2879,8 @@
     function populatePettyCashCategoryDropdown() {
         const dropdown = document.getElementById('pc-voucher-category');
         if (!dropdown) return;
-
         let html = '<option value="">Select Category</option>';
-        expenseCategories.sort().forEach(cat => {
-            html += `<option value="${cat}">${cat}</option>`;
-        });
+        expenseCategories.sort().forEach(cat => { html += `<option value="${cat}">${cat}</option>`; });
         dropdown.innerHTML = html;
     }
 
@@ -3047,7 +2904,7 @@
     }
 
     async function deleteExpenseCategory(categoryToDelete) {
-        if (confirm(`Are you sure you want to delete the category "${categoryToDelete}"?`)) {
+        if (confirm(`Are you sure you want to delete category "${categoryToDelete}"?`)) {
             try {
                 await rtdb.ref('expenseCategories/' + categoryToDelete).remove();
                 expenseCategories = expenseCategories.filter(cat => cat !== categoryToDelete);
@@ -3080,23 +2937,16 @@
     function onRawMaterialSelect() {
         const materialId = document.getElementById('grn-item-select').value;
         const priceInput = document.getElementById('grn-item-unitprice');
-        
         const mat = rawMaterials.find(m => m.id === materialId);
-        if (mat) {
-            priceInput.value = mat.unitCost || '';
-        } else {
-            priceInput.value = '';
-        }
+        priceInput.value = mat ? (mat.unitCost || '') : '';
     }
 
     function openNewRawMaterialModal() {
-        const modal = new bootstrap.Modal(document.getElementById('newRawMaterialModal'));
-        modal.show();
+        new bootstrap.Modal(document.getElementById('newRawMaterialModal')).show();
     }
 
     async function saveNewRawMaterial(event) {
         event.preventDefault();
-
         const name = document.getElementById('new-mat-name').value.trim();
         const unit = document.getElementById('new-mat-unit').value;
         const cost = Math.max(0, parseFloat(document.getElementById('new-mat-cost').value) || 0);
@@ -3110,7 +2960,6 @@
 
             matObj.id = newRef.key;
             rawMaterials.push(matObj);
-
             populateRawMaterialsDropdown();
 
             document.getElementById('grn-item-select').value = newRef.key;
@@ -3139,24 +2988,15 @@
         const price = parseFloat(priceInput.value) || 0;
 
         if (!mat || qty <= 0 || price <= 0) {
-            alert("Please select a Raw Material from the dropdown and enter valid Qty & Unit Price!");
+            alert("Please select a Raw Material and enter valid Qty & Unit Price!");
             return;
         }
 
-        const total = qty * price;
         grnItemsList.push({
-            materialId: mat.id,
-            name: mat.name,
-            unit: mat.unit || 'Unit',
-            qty: qty,
-            price: price,
-            total: total
+            materialId: mat.id, name: mat.name, unit: mat.unit || 'Unit', qty, price, total: qty * price
         });
 
-        selectEl.value = '';
-        qtyInput.value = '';
-        priceInput.value = '';
-
+        selectEl.value = ''; qtyInput.value = ''; priceInput.value = '';
         displayGrnItemsTable();
     }
 
@@ -3199,7 +3039,6 @@
 
     async function saveGrn(event) {
         event.preventDefault();
-
         if (grnItemsList.length === 0) {
             alert("Please add at least one item to the GRN before submitting!");
             return;
@@ -3219,15 +3058,7 @@
         const dateTimeFormatted = `${date} ${timeStr}`;
 
         const grnRecord = {
-            invoiceNo: invoiceNo,
-            supplier: supplier,
-            category: category,
-            date: date,
-            dateTime: dateTimeFormatted,
-            totalAmount: netTotal,
-            items: JSON.parse(JSON.stringify(grnItemsList)),
-            notes: notes || "N/A",
-            timestamp: firebase.database.ServerValue.TIMESTAMP
+            invoiceNo, supplier, category, date, dateTime: dateTimeFormatted, totalAmount: netTotal, items: JSON.parse(JSON.stringify(grnItemsList)), notes: notes || "N/A", timestamp: firebase.database.ServerValue.TIMESTAMP
         };
 
         try {
@@ -3251,22 +3082,18 @@
 
             await rtdb.ref().update(updatesMap);
 
-            alert("GRN Note saved successfully & Raw Material Unit Costs updated! Products Costing will auto-adjust.");
-
+            alert("GRN Note saved successfully & Raw Material Unit Costs updated!");
             document.getElementById('grn-form').reset();
             document.getElementById('expense-date').value = todayStr;
             grnItemsList = [];
             displayGrnItemsTable();
             populateRawMaterialsDropdown();
 
-            if (isExpensesLoaded) {
-                await loadExpensesClicked(true);
-            }
+            if (isExpensesLoaded) await loadExpensesClicked(true);
             updateDashboardData();
-
         } catch (error) {
             console.error("Error saving GRN: ", error);
-            alert("Failed to save GRN to database.");
+            alert("Failed to save GRN.");
         }
     }
 
@@ -3279,20 +3106,14 @@
         const endFilter = document.getElementById('expense-filter-end').value;
 
         try {
-            let queryRef;
-            if (forceFilter && startFilter && endFilter) {
-                queryRef = rtdb.ref('expenses').orderByChild('date').startAt(startFilter).endAt(endFilter).limitToLast(200);
-            } else {
-                queryRef = rtdb.ref('expenses').limitToLast(50);
-            }
+            let queryRef = (forceFilter && startFilter && endFilter)
+                ? rtdb.ref('expenses').orderByChild('date').startAt(startFilter).endAt(endFilter).limitToLast(200)
+                : rtdb.ref('expenses').limitToLast(50);
 
             const snapshot = await queryRef.once('value');
             const expData = snapshot.val();
-            expenses = [];
-            if (expData) {
-                expenses = Object.keys(expData).map(key => ({ id: key, ...expData[key] }));
-                expenses.sort((a,b) => (b.dateTime || b.date).localeCompare(a.dateTime || a.date));
-            }
+            expenses = expData ? Object.keys(expData).map(key => ({ id: key, ...expData[key] })) : [];
+            expenses.sort((a,b) => (b.dateTime || b.date).localeCompare(a.dateTime || a.date));
             displayExpenses();
         } catch (error) {
             console.error("Error loading GRN expenses: ", error);
@@ -3301,7 +3122,6 @@
 
     function displayExpenses() {
         if (!isExpensesLoaded) return;
-
         const tableBody = document.getElementById('expense-table-body');
         tableBody.innerHTML = '';
 
@@ -3316,8 +3136,7 @@
         if (currentExpensePage < 1) currentExpensePage = 1;
 
         const startIdx = (currentExpensePage - 1) * expensesPerPage;
-        const endIdx = startIdx + expensesPerPage;
-        const paginatedExpenses = expenses.slice(startIdx, endIdx);
+        const paginatedExpenses = expenses.slice(startIdx, startIdx + expensesPerPage);
 
         let tableHtml = '';
         paginatedExpenses.forEach(exp => {
@@ -3331,12 +3150,8 @@
                     <td><small class="fw-bold">${exp.dateTime || exp.date}</small></td>
                     <td class="text-end text-danger fw-bold">Rs. ${totalAmt.toFixed(2)}</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-outline-info me-1 py-0 px-2" onclick="viewGrnDetails('${exp.id}')">
-                            <i class="bi bi-eye"></i> Details
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteExpense('${exp.id}')">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <button class="btn btn-sm btn-outline-info me-1 py-0 px-2" onclick="viewGrnDetails('${exp.id}')"><i class="bi bi-eye"></i> Details</button>
+                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteExpense('${exp.id}')"><i class="bi bi-trash"></i></button>
                     </td>
                 </tr>
             `;
@@ -3357,7 +3172,6 @@
 
         const title = document.getElementById('grnModalTitle');
         const body = document.getElementById('grn-modal-content');
-
         title.innerText = exp.invoiceNo ? `GRN Invoice: #${exp.invoiceNo}` : `Expense Details`;
 
         let itemsHtml = '';
@@ -3387,16 +3201,9 @@
             <div class="table-responsive">
                 <table class="table table-sm table-bordered align-middle">
                     <thead class="table-light">
-                        <tr>
-                            <th>Raw Material Item</th>
-                            <th class="text-center">Qty</th>
-                            <th class="text-end">Unit Cost</th>
-                            <th class="text-end">Total</th>
-                        </tr>
+                        <tr><th>Raw Material Item</th><th class="text-center">Qty</th><th class="text-end">Unit Cost</th><th class="text-end">Total</th></tr>
                     </thead>
-                    <tbody>
-                        ${itemsHtml}
-                    </tbody>
+                    <tbody>${itemsHtml}</tbody>
                 </table>
             </div>
             <div class="d-flex justify-content-between fs-5 fw-bold text-danger border-top pt-2">
@@ -3405,15 +3212,14 @@
             </div>
         `;
 
-        const modal = new bootstrap.Modal(document.getElementById('grnDetailsModal'));
-        modal.show();
+        new bootstrap.Modal(document.getElementById('grnDetailsModal')).show();
     }
 
     async function deleteExpense(id) {
         const expense = expenses.find(e => e.id === id);
         if (!expense) return;
 
-        if (confirm("Are you sure you want to delete this GRN / Expense record? This will adjust daily total summaries.")) {
+        if (confirm("Are you sure you want to delete this GRN / Expense record?")) {
             try {
                 const totalAmt = parseFloat(expense.totalAmount || expense.amount || 0);
                 const updatesMap = {};
@@ -3435,9 +3241,7 @@
             currentPettyCashBalance = parseFloat(snapshot.val() || 0);
             
             const display = document.getElementById('pc-current-balance-display');
-            if (display) {
-                display.innerText = `Rs. ${currentPettyCashBalance.toFixed(2)}`;
-            }
+            if (display) display.innerText = `Rs. ${currentPettyCashBalance.toFixed(2)}`;
             renderDashboardNotifications();
         } catch (error) {
             console.error("Error loading Petty Cash Balance: ", error);
@@ -3446,19 +3250,17 @@
 
     function openAddFloatModal() {
         document.getElementById('pc-float-date').value = todayStr;
-        const modal = new bootstrap.Modal(document.getElementById('addFloatModal'));
-        modal.show();
+        new bootstrap.Modal(document.getElementById('addFloatModal')).show();
     }
 
     async function savePettyCashFloat(event) {
         event.preventDefault();
-
         const amount = Math.max(0, parseFloat(document.getElementById('pc-float-amount').value) || 0);
         const reason = document.getElementById('pc-float-reason').value.trim();
         const date = document.getElementById('pc-float-date').value;
 
         if (amount <= 0 || !reason) {
-            alert("Please enter a valid top-up amount and source/reason!");
+            alert("Please enter a valid top-up amount and reason!");
             return;
         }
 
@@ -3470,15 +3272,7 @@
         const newBalance = currentPettyCashBalance + amount;
 
         const logRecord = {
-            type: "FLOAT_IN",
-            amount: amount,
-            reason: reason,
-            category: "Float Deposit",
-            date: date,
-            dateTime: dateTimeFormatted,
-            issuedBy: currentUser,
-            balanceAfter: newBalance,
-            timestamp: firebase.database.ServerValue.TIMESTAMP
+            type: "FLOAT_IN", amount, reason, category: "Float Deposit", date, dateTime: dateTimeFormatted, issuedBy: currentUser, balanceAfter: newBalance, timestamp: firebase.database.ServerValue.TIMESTAMP
         };
 
         try {
@@ -3498,9 +3292,7 @@
             document.getElementById('pc-float-form').reset();
             loadPettyCashBalance();
 
-            if (isPettyCashLogsLoaded) {
-                await loadPettyCashLogsClicked(true);
-            }
+            if (isPettyCashLogsLoaded) await loadPettyCashLogsClicked(true);
         } catch (error) {
             console.error("Error depositing to Petty Cash: ", error);
             alert("Failed to deposit to Petty Cash.");
@@ -3510,13 +3302,11 @@
     function openIssueVoucherModal() {
         populatePettyCashCategoryDropdown();
         document.getElementById('pc-voucher-date').value = todayStr;
-        const modal = new bootstrap.Modal(document.getElementById('issueVoucherModal'));
-        modal.show();
+        new bootstrap.Modal(document.getElementById('issueVoucherModal')).show();
     }
 
     async function savePettyCashVoucher(event) {
         event.preventDefault();
-
         const amount = Math.max(0, parseFloat(document.getElementById('pc-voucher-amount').value) || 0);
         const payee = document.getElementById('pc-voucher-payee').value.trim();
         const reason = document.getElementById('pc-voucher-reason').value.trim();
@@ -3529,9 +3319,7 @@
         }
 
         if (amount > currentPettyCashBalance) {
-            if (!confirm(`Warning: Voucher amount (Rs. ${amount.toFixed(2)}) exceeds current Petty Cash Balance (Rs. ${currentPettyCashBalance.toFixed(2)}). Continue anyway?`)) {
-                return;
-            }
+            if (!confirm(`Warning: Voucher amount (Rs. ${amount.toFixed(2)}) exceeds current Petty Cash Balance (Rs. ${currentPettyCashBalance.toFixed(2)}). Continue anyway?`)) return;
         }
 
         const now = new Date();
@@ -3542,16 +3330,7 @@
         const newBalance = currentPettyCashBalance - amount;
 
         const voucherRecord = {
-            type: "EXPENSE_OUT",
-            amount: amount,
-            payee: payee,
-            reason: reason,
-            category: category,
-            date: date,
-            dateTime: dateTimeFormatted,
-            issuedBy: currentUser,
-            balanceAfter: newBalance,
-            timestamp: firebase.database.ServerValue.TIMESTAMP
+            type: "EXPENSE_OUT", amount, payee, reason, category, date, dateTime: dateTimeFormatted, issuedBy: currentUser, balanceAfter: newBalance, timestamp: firebase.database.ServerValue.TIMESTAMP
         };
 
         try {
@@ -3559,7 +3338,6 @@
             const updatesMap = {};
             updatesMap[`petty_cash_logs/${newRef.key}`] = voucherRecord;
             updatesMap[`petty_cash_float/current_balance`] = firebase.database.ServerValue.increment(-amount);
-            
             updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(amount);
 
             await rtdb.ref().update(updatesMap);
@@ -3574,9 +3352,7 @@
             loadPettyCashBalance();
             updateDashboardData();
 
-            if (isPettyCashLogsLoaded) {
-                await loadPettyCashLogsClicked(true);
-            }
+            if (isPettyCashLogsLoaded) await loadPettyCashLogsClicked(true);
         } catch (error) {
             console.error("Error issuing Petty Cash Voucher: ", error);
             alert("Failed to issue Petty Cash Voucher.");
@@ -3592,20 +3368,14 @@
         const endFilter = document.getElementById('pc-filter-end').value;
 
         try {
-            let queryRef;
-            if (forceFilter && startFilter && endFilter) {
-                queryRef = rtdb.ref('petty_cash_logs').orderByChild('date').startAt(startFilter).endAt(endFilter).limitToLast(200);
-            } else {
-                queryRef = rtdb.ref('petty_cash_logs').limitToLast(50);
-            }
+            let queryRef = (forceFilter && startFilter && endFilter)
+                ? rtdb.ref('petty_cash_logs').orderByChild('date').startAt(startFilter).endAt(endFilter).limitToLast(200)
+                : rtdb.ref('petty_cash_logs').limitToLast(50);
 
             const snapshot = await queryRef.once('value');
             const data = snapshot.val();
-            pettyCashLogsList = [];
-            if (data) {
-                pettyCashLogsList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-                pettyCashLogsList.sort((a,b) => (b.dateTime || b.date).localeCompare(a.dateTime || a.date));
-            }
+            pettyCashLogsList = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
+            pettyCashLogsList.sort((a,b) => (b.dateTime || b.date).localeCompare(a.dateTime || a.date));
             displayPettyCashLogs();
         } catch (error) {
             console.error("Error loading Petty Cash logs: ", error);
@@ -3629,8 +3399,7 @@
         if (currentPettyCashPage < 1) currentPettyCashPage = 1;
 
         const startIdx = (currentPettyCashPage - 1) * pettyCashPerPage;
-        const endIdx = startIdx + pettyCashPerPage;
-        const paginatedLogs = pettyCashLogsList.slice(startIdx, endIdx);
+        const paginatedLogs = pettyCashLogsList.slice(startIdx, startIdx + pettyCashPerPage);
 
         let tableHtml = '';
         paginatedLogs.forEach(log => {
@@ -3643,21 +3412,16 @@
                 ? `<strong>Top-Up:</strong> ${log.reason}` 
                 : `<strong>${log.payee}</strong> <br><small class="text-muted">${log.reason}</small>`;
 
-            const amountClass = isTopUp ? 'text-success' : 'text-danger';
-            const amountPrefix = isTopUp ? '+' : '-';
-
             tableHtml += `
                 <tr>
                     <td>${typeBadge}</td>
                     <td>${payeeReason}</td>
                     <td><span class="badge bg-secondary">${log.category || 'General'}</span></td>
                     <td><small class="fw-bold">${log.dateTime || log.date}</small></td>
-                    <td class="text-end fw-bold ${amountClass}">${amountPrefix}Rs. ${parseFloat(log.amount).toFixed(2)}</td>
+                    <td class="text-end fw-bold ${isTopUp ? 'text-success' : 'text-danger'}">${isTopUp ? '+' : '-'}Rs. ${parseFloat(log.amount).toFixed(2)}</td>
                     <td class="text-end fw-bold">Rs. ${parseFloat(log.balanceAfter || 0).toFixed(2)}</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deletePettyCashLog('${log.id}')">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deletePettyCashLog('${log.id}')"><i class="bi bi-trash"></i></button>
                     </td>
                 </tr>
             `;
@@ -3676,11 +3440,10 @@
         const log = pettyCashLogsList.find(l => l.id === logId);
         if (!log) return;
 
-        if (confirm("Are you sure you want to delete/reverse this Petty Cash log? This will update live Petty Cash float balance.")) {
+        if (confirm("Are you sure you want to delete/reverse this Petty Cash log?")) {
             try {
                 const isTopUp = log.type === 'FLOAT_IN';
                 const amt = parseFloat(log.amount || 0);
-
                 const reverseFloatDiff = isTopUp ? -amt : amt;
 
                 const updatesMap = {};
@@ -3693,20 +3456,17 @@
 
                 await rtdb.ref().update(updatesMap);
 
-                alert("Petty Cash log deleted/reversed successfully.");
+                alert("Petty Cash log deleted successfully.");
                 loadPettyCashBalance();
                 await loadPettyCashLogsClicked(true);
                 updateDashboardData();
             } catch (error) {
                 console.error("Error deleting Petty Cash log: ", error);
-                alert("Failed to delete log.");
             }
         }
     }
 
-    /* ============================================================================
-       PETTY CASH PDF SUMMARY REPORT GENERATOR (NEW FEATURE)
-       ============================================================================ */
+    /* COMPLETE PETTY CASH PDF SUMMARY REPORT GENERATOR */
     async function generatePettyCashPDF() {
         const startDate = document.getElementById('pc-filter-start').value;
         const endDate = document.getElementById('pc-filter-end').value;
@@ -3719,124 +3479,165 @@
         try {
             const snapshot = await rtdb.ref('petty_cash_logs')
                 .orderByChild('date')
-                .startAt(startDate)
                 .endAt(endDate)
                 .once('value');
             
             const data = snapshot.val() || {};
-            const logs = Object.keys(data).map(k => ({ id: k, ...data[k] }));
-            logs.sort((a,b) => (a.dateTime || a.date).localeCompare(b.dateTime || b.date));
+            const allLogs = Object.keys(data).map(k => ({ id: k, ...data[k] }));
 
-            if (logs.length === 0) {
+            let openingBalance = 0;
+            const priorLogs = allLogs.filter(log => log.date < startDate);
+            priorLogs.forEach(log => {
+                const amt = parseFloat(log.amount || 0);
+                if (log.type === 'FLOAT_IN') openingBalance += amt;
+                else openingBalance -= amt;
+            });
+
+            const periodLogs = allLogs.filter(log => log.date >= startDate && log.date <= endDate);
+            periodLogs.sort((a,b) => (a.dateTime || a.date).localeCompare(b.dateTime || b.date));
+
+            if (periodLogs.length === 0 && openingBalance === 0) {
                 alert("No Petty Cash records found for the selected period!");
                 return;
             }
 
-            let totalInflow = 0;
-            let totalOutflow = 0;
+            let periodInflows = 0;
+            let periodOutflows = 0;
+            let voucherCount = 0;
+            let topUpCount = 0;
             const categoryBreakdown = {};
 
             let tableRowsHtml = '';
-            logs.forEach(log => {
+            periodLogs.forEach(log => {
                 const isTopUp = log.type === 'FLOAT_IN';
                 const amt = parseFloat(log.amount || 0);
+                
                 if (isTopUp) {
-                    totalInflow += amt;
+                    periodInflows += amt;
+                    topUpCount++;
                 } else {
-                    totalOutflow += amt;
+                    periodOutflows += amt;
+                    voucherCount++;
                     const cat = log.category || 'General';
                     categoryBreakdown[cat] = (categoryBreakdown[cat] || 0) + amt;
                 }
 
                 tableRowsHtml += `
                     <tr>
-                        <td>${log.dateTime || log.date}</td>
-                        <td>${isTopUp ? 'Float Top-Up' : 'Voucher Expense'}</td>
-                        <td>${log.payee || log.issuedBy || 'N/A'}</td>
-                        <td>${log.category || 'General'}</td>
-                        <td>${log.reason || '-'}</td>
-                        <td style="text-align:right; color: ${isTopUp ? 'green' : 'red'}; font-weight:bold;">
+                        <td style="white-space:nowrap; padding:5px 6px; border:1px solid #ddd;">${log.dateTime || log.date}</td>
+                        <td style="padding:5px 6px; border:1px solid #ddd;"><span style="font-weight:bold; color:${isTopUp ? '#2e7d32' : '#c62828'};">${isTopUp ? 'Float Deposit' : 'Voucher Expense'}</span></td>
+                        <td style="padding:5px 6px; border:1px solid #ddd; word-break:break-word;">${log.payee || log.issuedBy || 'N/A'}</td>
+                        <td style="padding:5px 6px; border:1px solid #ddd; word-break:break-word;">${log.category || 'General'}</td>
+                        <td style="padding:5px 6px; border:1px solid #ddd; word-break:break-word;">${log.reason || '-'}</td>
+                        <td style="text-align:right; color: ${isTopUp ? '#2e7d32' : '#c62828'}; font-weight:bold; white-space:nowrap; padding:5px 6px; border:1px solid #ddd;">
                             ${isTopUp ? '+' : '-'}Rs. ${amt.toFixed(2)}
                         </td>
-                        <td style="text-align:right;">Rs. ${parseFloat(log.balanceAfter || 0).toFixed(2)}</td>
+                        <td style="text-align:right; font-weight:bold; white-space:nowrap; padding:5px 6px; border:1px solid #ddd;">
+                            Rs. ${parseFloat(log.balanceAfter || 0).toFixed(2)}
+                        </td>
                     </tr>
                 `;
             });
+
+            const totalAvailableCash = openingBalance + periodInflows;
+            const closingBalance = totalAvailableCash - periodOutflows;
+            const netMovement = periodInflows - periodOutflows;
 
             let catSummaryHtml = '';
             Object.keys(categoryBreakdown).forEach(cat => {
                 catSummaryHtml += `
                     <tr>
-                        <td>${cat}</td>
-                        <td style="text-align:right; font-weight:bold; color:red;">Rs. ${categoryBreakdown[cat].toFixed(2)}</td>
+                        <td style="padding:6px 8px; border:1px solid #ddd;"><strong>${cat}</strong></td>
+                        <td style="text-align:right; font-weight:bold; color:#c62828; padding:6px 8px; border:1px solid #ddd;">Rs. ${categoryBreakdown[cat].toFixed(2)}</td>
                     </tr>
                 `;
             });
 
             const printElement = document.createElement('div');
-            printElement.style.padding = '20px';
+            printElement.style.padding = '15px';
             printElement.style.fontFamily = 'Arial, sans-serif';
+            printElement.style.color = '#333';
             printElement.innerHTML = `
-                <div style="text-align:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:15px;">
-                    <h2 style="margin:0; color:#1a2a6c; font-weight:bold;">HELLO BUBU RESTAURANT</h2>
-                    <p style="margin:2px 0; font-size:12px;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
-                    <h4 style="margin:8px 0 0 0; color:#d9534f; text-transform:uppercase; font-weight:bold;">PETTY CASH STATEMENT REPORT</h4>
-                    <p style="margin:3px 0; font-size:11px; color:#555;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong> | Exported On: ${new Date().toLocaleString()}</p>
+                <div style="text-align:center; border-bottom:2px solid #1a2a6c; padding-bottom:10px; margin-bottom:15px;">
+                    <h2 style="margin:0; color:#1a2a6c; font-weight:bold; letter-spacing:0.5px;">HELLO BUBU RESTAURANT</h2>
+                    <p style="margin:2px 0; font-size:11px; color:#555;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                    <h4 style="margin:8px 0 0 0; color:#b21f1f; text-transform:uppercase; font-weight:bold; letter-spacing:0.5px;">PETTY CASH STATEMENT REPORT</h4>
+                    <p style="margin:3px 0; font-size:10px; color:#666;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong> | Exported On: ${new Date().toLocaleString()}</p>
                 </div>
 
-                <h5 style="margin-bottom:5px; font-weight:bold;">1. SUMMARY OVERVIEW</h5>
-                <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;" border="1" cellpadding="5">
-                    <tr style="background:#f2f2f2;">
-                        <th>Total Float Deposits (Inflows)</th>
-                        <th>Total Voucher Expenses (Outflows)</th>
-                        <th>Net Cash Movement</th>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center; font-weight:bold; color:green;">Rs. ${totalInflow.toFixed(2)}</td>
-                        <td style="text-align:center; font-weight:bold; color:red;">Rs. ${totalOutflow.toFixed(2)}</td>
-                        <td style="text-align:center; font-weight:bold; color:${(totalInflow - totalOutflow) >= 0 ? 'green' : 'red'};">
-                            Rs. ${(totalInflow - totalOutflow).toFixed(2)}
-                        </td>
-                    </tr>
-                </table>
-
-                ${Object.keys(categoryBreakdown).length > 0 ? `
-                    <h5 style="margin-bottom:5px; font-weight:bold;">2. EXPENSE CATEGORY BREAKDOWN</h5>
-                    <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;" border="1" cellpadding="5">
-                        <tr style="background:#f2f2f2;">
-                            <th>Expense Category</th>
-                            <th style="text-align:right;">Total Spent</th>
-                        </tr>
-                        ${catSummaryHtml}
-                    </table>
-                ` : ''}
-
-                <h5 style="margin-bottom:5px; font-weight:bold;">3. ITEMIZED TRANSACTION LOGS</h5>
-                <table style="width:100%; border-collapse:collapse; font-size:10px;" border="1" cellpadding="4">
-                    <thead>
-                        <tr style="background:#f2f2f2;">
-                            <th>Date & Time</th>
-                            <th>Type</th>
-                            <th>Payee / User</th>
-                            <th>Category</th>
-                            <th>Reason / Description</th>
-                            <th style="text-align:right;">Amount</th>
-                            <th style="text-align:right;">Balance After</th>
-                        </tr>
-                    </thead>
+                <h5 style="margin:12px 0 6px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">1. FINANCIAL SUMMARY OVERVIEW</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px; border:1px solid #ccc;" cellpadding="6">
                     <tbody>
-                        ${tableRowsHtml}
+                        <tr style="background:#f9f9f9;">
+                            <td style="border:1px solid #ccc; width:60%;"><strong>Opening Petty Cash Balance (ආරම්භක ශේෂය)</strong></td>
+                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold;">Rs. ${openingBalance.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #ccc;">(+) Total Float Deposits / Top-Ups (කාලසීමාව තුළ එකතු කළ මුදල්) <small style="color:#666;">(${topUpCount} Deposits)</small></td>
+                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold; color:#2e7d32;">+ Rs. ${periodInflows.toFixed(2)}</td>
+                        </tr>
+                        <tr style="background:#e8f5e9;">
+                            <td style="border:1px solid #ccc;"><strong>(=) Total Cash Available in Petty Cash (තිබූ මුළු මුදල)</strong></td>
+                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold; color:#2e7d32; font-size:12px;">Rs. ${totalAvailableCash.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #ccc;">(-) Total Voucher Expenses / Outflows (නිකුත් කළ මුළු වවුචර් වියදම්) <small style="color:#666;">(${voucherCount} Vouchers)</small></td>
+                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold; color:#c62828;">- Rs. ${periodOutflows.toFixed(2)}</td>
+                        </tr>
+                        <tr style="background:#fff3e0;">
+                            <td style="border:1px solid #ccc;"><strong>Net Cash Movement during Period (ශුද්ධ වෙනස)</strong></td>
+                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold; color:${netMovement >= 0 ? '#2e7d32' : '#c62828'};">
+                                ${netMovement >= 0 ? '+' : ''}Rs. ${netMovement.toFixed(2)}
+                            </td>
+                        </tr>
+                        <tr style="background:#1a2a6c; color:#ffffff; font-size:12px;">
+                            <td style="border:1px solid #1a2a6c;"><strong>(=) CLOSING PETTY CASH BALANCE (අවසාන ඉතිරි ශේෂය)</strong></td>
+                            <td style="border:1px solid #1a2a6c; text-align:right; font-weight:bold;">Rs. ${closingBalance.toFixed(2)}</td>
+                        </tr>
                     </tbody>
                 </table>
 
-                <div style="margin-top:40px; display:flex; justify-content:space-between; font-size:10px;">
+                ${Object.keys(categoryBreakdown).length > 0 ? `
+                    <h5 style="margin:12px 0 6px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">2. EXPENSE CATEGORY BREAKDOWN</h5>
+                    <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px; border:1px solid #ccc;" cellpadding="6">
+                        <thead>
+                            <tr style="background:#f0f4f8; color:#1a2a6c;">
+                                <th style="border:1px solid #ccc; text-align:left;">Expense Category</th>
+                                <th style="border:1px solid #ccc; text-align:right;">Total Spent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${catSummaryHtml}
+                        </tbody>
+                    </table>
+                ` : ''}
+
+                <h5 style="margin:12px 0 6px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">3. ITEMIZED TRANSACTION LOGS (${periodLogs.length} Records)</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:10px; border:1px solid #ccc; table-layout:fixed;" cellpadding="5">
+                    <thead>
+                        <tr style="background:#1a2a6c; color:#ffffff;">
+                            <th style="border:1px solid #1a2a6c; text-align:left; width:15%;">Date & Time</th>
+                            <th style="border:1px solid #1a2a6c; text-align:left; width:12%;">Type</th>
+                            <th style="border:1px solid #1a2a6c; text-align:left; width:13%;">Payee / User</th>
+                            <th style="border:1px solid #1a2a6c; text-align:left; width:14%;">Category</th>
+                            <th style="border:1px solid #1a2a6c; text-align:left; width:22%;">Reason / Description</th>
+                            <th style="border:1px solid #1a2a6c; text-align:right; width:12%;">Amount</th>
+                            <th style="border:1px solid #1a2a6c; text-align:right; width:12%;">Balance After</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRowsHtml.length > 0 ? tableRowsHtml : `<tr><td colspan="7" style="text-align:center; padding:10px;">No transactions recorded during this period.</td></tr>`}
+                    </tbody>
+                </table>
+
+                <div style="margin-top:40px; display:flex; justify-content:space-between; font-size:10px; color:#444;">
                     <div>
                         <p style="margin:0;">................................................</p>
-                        <p style="margin:0;">Prepared By</p>
+                        <p style="margin:3px 0 0 0; font-weight:bold;">Prepared By</p>
                     </div>
                     <div>
                         <p style="margin:0;">................................................</p>
-                        <p style="margin:0;">Approved By Manager</p>
+                        <p style="margin:3px 0 0 0; font-weight:bold;">Approved By Manager</p>
                     </div>
                 </div>
             `;
@@ -3894,9 +3695,7 @@
     function calculateWastageTotal() {
         const qty = parseFloat(document.getElementById('wastage-qty').value) || 0;
         const unitCost = parseFloat(document.getElementById('wastage-unit-cost').value) || 0;
-
-        const totalLoss = qty * unitCost;
-        document.getElementById('wastage-amount').value = totalLoss.toFixed(2);
+        document.getElementById('wastage-amount').value = (qty * unitCost).toFixed(2);
     }
 
     async function loadWastageClicked(forceFilter = false) {
@@ -3908,20 +3707,14 @@
         const endFilter = document.getElementById('wastage-filter-end').value;
         
         try {
-            let queryRef;
-            if (forceFilter && startFilter && endFilter) {
-                queryRef = rtdb.ref('wastage').orderByChild('date').startAt(startFilter).endAt(endFilter).limitToLast(200);
-            } else {
-                queryRef = rtdb.ref('wastage').limitToLast(50);
-            }
+            let queryRef = (forceFilter && startFilter && endFilter)
+                ? rtdb.ref('wastage').orderByChild('date').startAt(startFilter).endAt(endFilter).limitToLast(200)
+                : rtdb.ref('wastage').limitToLast(50);
 
             const snapshot = await queryRef.once('value');
             const data = snapshot.val();
-            wastage = [];
-            if (data) {
-                wastage = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-                wastage.sort((a,b) => b.date.localeCompare(a.date));
-            }
+            wastage = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
+            wastage.sort((a,b) => b.date.localeCompare(a.date));
             displayWastage();
         } catch (error) {
             console.error("Error loading wastage records: ", error);
@@ -3930,7 +3723,6 @@
 
     function displayWastage() {
         if (!isWastageLoaded) return;
-
         const tableBody = document.getElementById('wastage-table-body');
         tableBody.innerHTML = '';
 
@@ -3945,27 +3737,23 @@
         if (currentWastagePage < 1) currentWastagePage = 1;
 
         const startIdx = (currentWastagePage - 1) * wastagePerPage;
-        const endIdx = startIdx + wastagePerPage;
-        const paginatedWastage = wastage.slice(startIdx, endIdx);
+        const paginatedWastage = wastage.slice(startIdx, startIdx + wastagePerPage);
 
         let tableHtml = '';
         paginatedWastage.forEach(record => {
             const itemName = record.item || 'Raw Material';
             const qtyText = record.qty ? `${record.qty} ${record.unit || ''}` : 'N/A';
             const unitCostText = record.unitCost ? `Rs. ${parseFloat(record.unitCost).toFixed(2)}` : 'N/A';
-            const totalLoss = parseFloat(record.amount || 0);
 
             tableHtml += `
                 <tr>
                     <td><strong>${itemName}</strong></td>
                     <td class="text-center fw-bold">${qtyText}</td>
                     <td class="text-end text-secondary">${unitCostText}</td>
-                    <td class="text-end text-danger fw-bold">Rs. ${totalLoss.toFixed(2)}</td>
+                    <td class="text-end text-danger fw-bold">Rs. ${parseFloat(record.amount || 0).toFixed(2)}</td>
                     <td><small class="fw-bold">${record.date}</small></td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteWastage('${record.id}')">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteWastage('${record.id}')"><i class="bi bi-trash"></i></button>
                     </td>
                 </tr>
             `;
@@ -3982,10 +3770,8 @@
 
     async function saveWastage(event) {
         event.preventDefault();
-
         const matId = document.getElementById('wastage-item-select').value;
         const mat = rawMaterials.find(m => m.id === matId);
-
         const qty = parseFloat(document.getElementById('wastage-qty').value) || 0;
         const unitCost = parseFloat(document.getElementById('wastage-unit-cost').value) || 0;
         const totalLoss = parseFloat(document.getElementById('wastage-amount').value) || 0;
@@ -3997,14 +3783,7 @@
         }
 
         const wastageRecord = {
-            materialId: mat.id,
-            item: mat.name,
-            qty: qty,
-            unit: mat.unit || 'Unit',
-            unitCost: unitCost,
-            amount: totalLoss,
-            date: date,
-            timestamp: firebase.database.ServerValue.TIMESTAMP
+            materialId: mat.id, item: mat.name, qty, unit: mat.unit || 'Unit', unitCost, amount: totalLoss, date, timestamp: firebase.database.ServerValue.TIMESTAMP
         };
 
         try {
@@ -4014,13 +3793,9 @@
             updatesMap[`daily_summaries/${date}/wastage_total`] = firebase.database.ServerValue.increment(totalLoss);
 
             await rtdb.ref().update(updatesMap);
-            
             alert("Kitchen Wastage log saved successfully!");
             clearWastageForm();
-            
-            if (isWastageLoaded) {
-                await loadWastageClicked(true);
-            }
+            if (isWastageLoaded) await loadWastageClicked(true);
             updateDashboardData();
         } catch (error) {
             console.error("Error saving wastage: ", error);
@@ -4101,9 +3876,7 @@
         try {
             const newRef = rtdb.ref('updates').push();
             await newRef.set({ version, type, desc, date });
-            const newLog = { id: newRef.key, version, type, desc, date };
-            updates.unshift(newLog);
-
+            updates.unshift({ id: newRef.key, version, type, desc, date });
             document.getElementById('update-form').reset();
             document.getElementById('update-date').value = todayStr;
             displayUpdates();
@@ -4136,17 +3909,13 @@
         });
 
         filterSelect.innerHTML = dropdownHtml;
-
-        if (categories.includes(selectedValue)) {
-            filterSelect.value = selectedValue;
-        }
+        if (categories.includes(selectedValue)) filterSelect.value = selectedValue;
     }
 
     function displayPOSProducts() {
         const grid = document.getElementById('pos-products-grid');
         const searchVal = document.getElementById('pos-search').value.toLowerCase();
         const categoryVal = document.getElementById('pos-category-filter').value;
-        
         grid.innerHTML = '';
         
         const filteredProducts = products.filter(p => {
@@ -4185,11 +3954,8 @@
         if (!product) return;
 
         const cartItem = cart.find(item => item.product.id === productId);
-        if (cartItem) {
-            cartItem.qty += 1;
-        } else {
-            cart.push({ product, qty: 1 });
-        }
+        if (cartItem) cartItem.qty += 1;
+        else cart.push({ product, qty: 1 });
         displayCart();
     }
 
@@ -4235,11 +4001,8 @@
         const cartItem = cart.find(item => item.product.id === productId);
         if (cartItem) {
             cartItem.qty += delta;
-            if (cartItem.qty <= 0) {
-                removeFromCart(productId);
-            } else {
-                displayCart();
-            }
+            if (cartItem.qty <= 0) removeFromCart(productId);
+            else displayCart();
         }
     }
 
@@ -4267,43 +4030,22 @@
 
     function calculatePOSCart() {
         let subtotal = 0;
-        cart.forEach(item => {
-            subtotal += item.product.price * item.qty;
-        });
+        cart.forEach(item => subtotal += item.product.price * item.qty);
 
         const discountInputVal = parseFloat(document.getElementById('pos-discount').value) || 0;
         const discountVal = Math.max(0, discountInputVal);
         const discountType = document.getElementById('pos-discount-type').value;
-        let discountAmount = 0;
-
-        if (discountType === 'percentage') {
-            discountAmount = (subtotal * discountVal) / 100;
-        } else {
-            discountAmount = discountVal;
-        }
-
-        if (discountAmount > subtotal) {
-            discountAmount = subtotal;
-        }
+        let discountAmount = discountType === 'percentage' ? (subtotal * discountVal) / 100 : discountVal;
+        if (discountAmount > subtotal) discountAmount = subtotal;
 
         const grandTotal = subtotal - discountAmount;
-
         const payMethod = document.getElementById('pos-pay-method').value;
         let cashReceived = parseFloat(document.getElementById('pos-cash-received').value) || 0;
-        let balance = 0;
-
-        if (payMethod === 'Cash') {
-            balance = cashReceived - grandTotal;
-        } else {
-            cashReceived = grandTotal;
-        }
+        let balance = payMethod === 'Cash' ? (cashReceived - grandTotal) : 0;
+        if (payMethod !== 'Cash') cashReceived = grandTotal;
 
         checkoutTotals = {
-            subtotal: subtotal,
-            discount: discountAmount,
-            total: grandTotal,
-            balance: balance >= 0 ? balance : 0,
-            cashReceived: cashReceived
+            subtotal, discount: discountAmount, total: grandTotal, balance: balance >= 0 ? balance : 0, cashReceived
         };
 
         document.getElementById('pos-subtotal').innerText = `Rs. ${subtotal.toFixed(2)}`;
@@ -4338,11 +4080,8 @@
     async function triggerCashDrawerPulse() {
         if (drawerWriter) {
             try {
-                const pulsePin2 = new Uint8Array([0x1B, 0x70, 0x00, 0x19, 0xFA]);
-                const pulsePin5 = new Uint8Array([0x1B, 0x70, 0x01, 0x19, 0xFA]);
-                
-                await drawerWriter.write(pulsePin2);
-                await drawerWriter.write(pulsePin5);
+                await drawerWriter.write(new Uint8Array([0x1B, 0x70, 0x00, 0x19, 0xFA]));
+                await drawerWriter.write(new Uint8Array([0x1B, 0x70, 0x01, 0x19, 0xFA]));
             } catch (e) {
                 console.error("Cash drawer open pulse failed:", e);
             }
@@ -4351,7 +4090,7 @@
 
     async function checkoutAndPrintReceipt() {
         if (!isDayStarted) {
-            alert("⚠️ SECURITY BLOCK: POS Shift is NOT started! Please enter Opening Cash Float and Start Shift before processing sales.");
+            alert("⚠️ SECURITY BLOCK: POS Shift is NOT started! Please enter Opening Cash Float.");
             checkDayStartStatus(true);
             return;
         }
@@ -4368,8 +4107,7 @@
         }
 
         const billNo = Date.now().toString().slice(-6);
-        const rightNow = new Date();
-        const formattedDateString = formatDateTime(rightNow);
+        const formattedDateString = formatDateTime(new Date());
 
         document.getElementById('print-bill-details').innerText = `Date: ${formattedDateString}\nBill No: #${billNo}`;
         document.getElementById('print-subtotal').innerText = `Rs. ${checkoutTotals.subtotal.toFixed(2)}`;
@@ -4380,8 +4118,6 @@
         document.getElementById('print-balance').innerText = `Rs. ${checkoutTotals.balance.toFixed(2)}`;
 
         const printBody = document.getElementById('print-receipt-body');
-        printBody.innerHTML = '';
-        
         let printBodyHtml = '';
         cart.forEach(item => {
             const rowTotal = item.product.price * item.qty;
@@ -4402,24 +4138,14 @@
         window.print();
 
         const saleRecord = {
-            billNo: billNo,
-            date: todayStr,
-            items: JSON.parse(JSON.stringify(cart)),
-            subtotal: checkoutTotals.subtotal,
-            discount: checkoutTotals.discount,
-            total: checkoutTotals.total,
-            payMethod: payMethod,
-            cashReceived: checkoutTotals.cashReceived,
-            timestamp: firebase.database.ServerValue.TIMESTAMP,
-            status: "Active"
+            billNo, date: todayStr, items: JSON.parse(JSON.stringify(cart)),
+            subtotal: checkoutTotals.subtotal, discount: checkoutTotals.discount, total: checkoutTotals.total,
+            payMethod, cashReceived: checkoutTotals.cashReceived, timestamp: firebase.database.ServerValue.TIMESTAMP, status: "Active"
         };
 
         let methodKey = 'cash_sales';
-        if (payMethod === 'Card') {
-            methodKey = 'card_sales';
-        } else if (payMethod === 'Online Transfer') {
-            methodKey = 'online_sales';
-        }
+        if (payMethod === 'Card') methodKey = 'card_sales';
+        else if (payMethod === 'Online Transfer') methodKey = 'online_sales';
 
         try {
             const updatesMap = {};
@@ -4439,9 +4165,7 @@
 
             if (checkoutTotals.balance > 0) {
                 sendAmountToLED8N(checkoutTotals.balance, "change");
-                setTimeout(() => {
-                    sendAmountToLED8N(0.00, "total");
-                }, 5000);
+                setTimeout(() => sendAmountToLED8N(0.00, "total"), 5000);
             } else {
                 sendAmountToLED8N(0.00, "total");
             }
@@ -4458,13 +4182,8 @@
         try {
             const snapshot = await rtdb.ref('sales').orderByChild('timestamp').limitToLast(50).once('value');
             const data = snapshot.val();
-            fetchedInvoicesList = [];
-
-            if (data) {
-                fetchedInvoicesList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-                fetchedInvoicesList.sort((a, b) => b.timestamp - a.timestamp);
-            }
-            
+            fetchedInvoicesList = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
+            fetchedInvoicesList.sort((a, b) => b.timestamp - a.timestamp);
             currentHistoryPage = 1;
             displayHistorySales();
         } catch (error) {
@@ -4488,16 +4207,12 @@
         if (currentHistoryPage < 1) currentHistoryPage = 1;
 
         const startIdx = (currentHistoryPage - 1) * historyPerPage;
-        const endIdx = startIdx + historyPerPage;
-        const paginatedInvoices = fetchedInvoicesList.slice(startIdx, endIdx);
+        const paginatedInvoices = fetchedInvoicesList.slice(startIdx, startIdx + historyPerPage);
 
         let tableHtml = '';
         paginatedInvoices.forEach(invoice => {
             const invoiceDate = invoice.timestamp ? formatDateTime(new Date(invoice.timestamp)) : invoice.date;
-            const statusBadge = invoice.status === 'Reversed' 
-                ? `<span class="badge bg-danger">Reversed</span>` 
-                : `<span class="badge bg-success">Active</span>`;
-
+            const statusBadge = invoice.status === 'Reversed' ? `<span class="badge bg-danger">Reversed</span>` : `<span class="badge bg-success">Active</span>`;
             const reverseButton = invoice.status !== 'Reversed' 
                 ? `<button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="reverseInvoice('${invoice.id}')"><i class="bi bi-arrow-counterclockwise"></i> Reverse</button>`
                 : `<button class="btn btn-sm btn-outline-secondary py-0 px-2" disabled>Reversed</button>`;
@@ -4528,10 +4243,7 @@
 
     async function searchInvoiceByID() {
         const queryVal = document.getElementById('invoice-search-field').value.trim();
-        if (!queryVal) {
-            loadRecentSales();
-            return;
-        }
+        if (!queryVal) { loadRecentSales(); return; }
 
         const tbody = document.getElementById('pos-history-table-body');
         tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Searching strictly for invoice...</td></tr>`;
@@ -4539,11 +4251,9 @@
         try {
             const snapshot = await rtdb.ref(`sales/${queryVal}`).once('value');
             const data = snapshot.val();
-            fetchedInvoicesList = [];
+            fetchedInvoicesList = data ? [{ id: queryVal, ...data }] : [];
 
-            if (data) {
-                fetchedInvoicesList.push({ id: queryVal, ...data });
-            } else {
+            if (fetchedInvoicesList.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center text-warning">No invoice found matching ID #${queryVal}</td></tr>`;
                 document.getElementById('pos-history-pagination').innerHTML = '';
                 return;
@@ -4552,8 +4262,8 @@
             currentHistoryPage = 1;
             displayHistorySales();
         } catch (error) {
-            console.error("Error executing targeted search: ", error);
-            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Search operation failed.</td></tr>`;
+            console.error("Error executing search: ", error);
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Search failed.</td></tr>`;
         }
     }
 
@@ -4561,10 +4271,7 @@
         try {
             const snapshot = await rtdb.ref(`sales/${billNo}`).once('value');
             const sale = snapshot.val();
-            if (!sale) {
-                alert("Failed to locate invoice details.");
-                return;
-            }
+            if (!sale) return alert("Failed to locate invoice details.");
 
             const invoiceTime = sale.timestamp ? formatDateTime(new Date(sale.timestamp)) : sale.date;
             const titleModifier = sale.status === 'Reversed' ? '\n(VOID / REVERSED)' : '';
@@ -4580,16 +4287,13 @@
             document.getElementById('print-balance').innerText = `Rs. ${(balanceVal >= 0 ? balanceVal : 0).toFixed(2)}`;
 
             const printBody = document.getElementById('print-receipt-body');
-            printBody.innerHTML = '';
-            
             let printBodyHtml = '';
             sale.items.forEach(item => {
-                const rowTotal = item.product.price * item.qty;
                 printBodyHtml += `
                     <tr>
                         <td style="padding: 2px 0; text-align: left; word-break: break-word;">${item.product.name}</td>
                         <td style="text-align: center; vertical-align: top;">${item.qty}</td>
-                        <td style="text-align: right; vertical-align: top; white-space: nowrap;">Rs. ${rowTotal.toFixed(2)}</td>
+                        <td style="text-align: right; vertical-align: top; white-space: nowrap;">Rs. ${(item.product.price * item.qty).toFixed(2)}</td>
                     </tr>
                 `;
             });
@@ -4602,88 +4306,41 @@
             window.print();
         } catch (error) {
             console.error("Failed to reprint receipt: ", error);
-            alert("Reprint sequence interrupted.");
         }
     }
 
     async function reverseInvoice(billNo) {
-        if (!confirm(`Are you sure you want to reverse (void) Invoice #${billNo}? This will subtract its total values from active summaries.`)) {
-            return;
-        }
+        if (!confirm(`Are you sure you want to reverse (void) Invoice #${billNo}?`)) return;
 
         try {
             const snapshot = await rtdb.ref(`sales/${billNo}`).once('value');
             const sale = snapshot.val();
+            if (!sale || sale.status === 'Reversed') return;
 
-            if (!sale) {
-                alert("Sale invoice not found!");
-                return;
-            }
-
-            if (sale.status === 'Reversed') {
-                alert("This invoice has already been reversed!");
-                return;
-            }
-
-            const saleDate = sale.date;
             const saleTotal = parseFloat(sale.total || 0);
-            const payMethod = sale.payMethod;
-
             let methodKey = 'cash_sales';
-            if (payMethod === 'Card') {
-                methodKey = 'card_sales';
-            } else if (payMethod === 'Online Transfer') {
-                methodKey = 'online_sales';
-            }
+            if (sale.payMethod === 'Card') methodKey = 'card_sales';
+            else if (sale.payMethod === 'Online Transfer') methodKey = 'online_sales';
 
             const updatesMap = {};
             updatesMap[`sales/${billNo}/status`] = "Reversed";
-            updatesMap[`daily_summaries/${saleDate}/sales_total`] = firebase.database.ServerValue.increment(-saleTotal);
-            updatesMap[`daily_summaries/${saleDate}/orders_count`] = firebase.database.ServerValue.increment(-1);
-            updatesMap[`daily_summaries/${saleDate}/${methodKey}`] = firebase.database.ServerValue.increment(-saleTotal);
+            updatesMap[`daily_summaries/${sale.date}/sales_total`] = firebase.database.ServerValue.increment(-saleTotal);
+            updatesMap[`daily_summaries/${sale.date}/orders_count`] = firebase.database.ServerValue.increment(-1);
+            updatesMap[`daily_summaries/${sale.date}/${methodKey}`] = firebase.database.ServerValue.increment(-saleTotal);
 
             await rtdb.ref().update(updatesMap);
-
             alert(`Invoice #${billNo} has been successfully reversed.`);
-            
             updateDashboardData();
-            
-            if (document.getElementById('invoice-history-panel').classList.contains('show')) {
-                const searchVal = document.getElementById('invoice-search-field').value.trim();
-                if (searchVal) {
-                    searchInvoiceByID();
-                } else {
-                    loadRecentSales();
-                }
-            }
-
-            const reportStart = document.getElementById('sales-start-date').value;
-            const reportEnd = document.getElementById('sales-end-date').value;
-            if (reportStart && reportEnd) {
-                generateSalesReport();
-            }
-
+            loadRecentSales();
         } catch (error) {
             console.error("Failed to reverse sale invoice: ", error);
-            alert("Database reversal process failed.");
         }
     }
 
     async function generateSalesReport() {
         const startDate = document.getElementById('sales-start-date').value;
         const endDate = document.getElementById('sales-end-date').value;
-
-        if (!startDate || !endDate) {
-            alert("Please select both Start Date and End Date!");
-            return;
-        }
-
-        const diffTime = Math.abs(new Date(endDate) - new Date(startDate));
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays > 31) {
-            alert("Performance Guard: Please select a date range of 31 days or less to prevent database performance lagging.");
-            return;
-        }
+        if (!startDate || !endDate) return alert("Please select dates!");
 
         const tbody = document.getElementById('sales-report-table-body');
         tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Generating... Please wait.</td></tr>`;
@@ -4691,33 +4348,25 @@
         try {
             const snapshot = await rtdb.ref('sales').orderByChild('date').startAt(startDate).endAt(endDate).once('value');
             const data = snapshot.val() || {};
-            
             const filteredSales = Object.values(data).filter(sale => sale.status !== 'Reversed');
 
             let overallTotal = 0;
-            let overallCount = filteredSales.length;
             let itemWiseReport = {};
 
             filteredSales.forEach(sale => {
                 overallTotal += parseFloat(sale.total || 0);
-                
                 if (sale.items && Array.isArray(sale.items)) {
                     sale.items.forEach(cartItem => {
                         const itemID = cartItem.product.id;
-                        const itemName = cartItem.product.name;
-                        const itemCat = cartItem.product.category;
-                        const itemPrice = parseFloat(cartItem.product.price || 0);
                         const itemQty = parseInt(cartItem.qty || 0);
+                        const itemPrice = parseFloat(cartItem.product.price || 0);
 
                         if (itemWiseReport[itemID]) {
                             itemWiseReport[itemID].qtySold += itemQty;
                             itemWiseReport[itemID].revenue += itemPrice * itemQty;
                         } else {
                             itemWiseReport[itemID] = {
-                                name: itemName,
-                                category: itemCat,
-                                qtySold: itemQty,
-                                revenue: itemPrice * itemQty
+                                name: cartItem.product.name, category: cartItem.product.category, qtySold: itemQty, revenue: itemPrice * itemQty
                             };
                         }
                     });
@@ -4725,7 +4374,7 @@
             });
 
             document.getElementById('report-sales-total').innerText = `Rs. ${overallTotal.toFixed(2)}`;
-            document.getElementById('report-sales-count').innerText = overallCount;
+            document.getElementById('report-sales-count').innerText = filteredSales.length;
 
             tbody.innerHTML = '';
             const itemKeys = Object.keys(itemWiseReport);
@@ -4747,32 +4396,18 @@
                 `;
             });
             tbody.innerHTML = reportHtml;
-
         } catch (error) {
             console.error("Error generating sales report: ", error);
-            tbody.innerHTML = `<tr><td colspan="4" class="text-center text-danger">Failed to load report data.</td></tr>`;
         }
     }
 
     async function generateExpensesReport() {
         const startDate = document.getElementById('expenses-start-date').value;
         const endDate = document.getElementById('expenses-end-date').value;
-
-        if (!startDate || !endDate) {
-            alert("Please select both Start Date and End Date!");
-            return;
-        }
-
-        const diffTime = Math.abs(new Date(endDate) - new Date(startDate));
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays > 31) {
-            alert("Performance Guard: Please select a date range of 31 days or less to prevent database performance lagging.");
-            return;
-        }
+        if (!startDate || !endDate) return alert("Please select dates!");
 
         const catBody = document.getElementById('expenses-report-category-body');
         const detailsBody = document.getElementById('expenses-report-details-body');
-        
         catBody.innerHTML = `<tr><td colspan="2" class="text-center text-muted">Generating...</td></tr>`;
         detailsBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Generating...</td></tr>`;
 
@@ -4787,70 +4422,41 @@
             filteredExpenses.forEach(exp => {
                 const amount = parseFloat(exp.totalAmount || exp.amount || 0);
                 overallTotal += amount;
-
-                if (categoryWiseSummary[exp.category]) {
-                    categoryWiseSummary[exp.category] += amount;
-                } else {
-                    categoryWiseSummary[exp.category] = amount;
-                }
+                categoryWiseSummary[exp.category] = (categoryWiseSummary[exp.category] || 0) + amount;
             });
 
             document.getElementById('report-expenses-total').innerText = `Rs. ${overallTotal.toFixed(2)}`;
 
             catBody.innerHTML = '';
-            const catKeys = Object.keys(categoryWiseSummary);
-            if (catKeys.length === 0) {
-                catBody.innerHTML = `<tr><td colspan="2" class="text-center text-muted">No category-wise expenses found.</td></tr>`;
-            } else {
-                let catHtml = '';
-                catKeys.forEach(cat => {
-                    catHtml += `
-                        <tr>
-                            <td><strong>${cat}</strong></td>
-                            <td class="text-end fw-bold text-danger">Rs. ${categoryWiseSummary[cat].toFixed(2)}</td>
-                        </tr>
-                    `;
-                });
-                catBody.innerHTML = catHtml;
-            }
+            let catHtml = '';
+            Object.keys(categoryWiseSummary).forEach(cat => {
+                catHtml += `<tr><td><strong>${cat}</strong></td><td class="text-end fw-bold text-danger">Rs. ${categoryWiseSummary[cat].toFixed(2)}</td></tr>`;
+            });
+            catBody.innerHTML = catHtml || `<tr><td colspan="2" class="text-center text-muted">No expenses found.</td></tr>`;
 
             detailsBody.innerHTML = '';
-            if (filteredExpenses.length === 0) {
-                detailsBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No GRN / expense transactions recorded in this period.</td></tr>`;
-                return;
-            }
-
             let detailsHtml = '';
             filteredExpenses.sort((a,b) => (b.dateTime || b.date).localeCompare(a.dateTime || a.date)).forEach(exp => {
                 const label = exp.invoiceNo ? `#${exp.invoiceNo} - ${exp.supplier}` : (exp.desc || 'Expense');
-                const amt = parseFloat(exp.totalAmount || exp.amount || 0);
-
                 detailsHtml += `
                     <tr>
                         <td><strong>${label}</strong></td>
                         <td><span class="badge bg-danger">${exp.category}</span></td>
                         <td>${exp.dateTime || exp.date}</td>
-                        <td class="text-end fw-bold">Rs. ${amt.toFixed(2)}</td>
+                        <td class="text-end fw-bold">Rs. ${parseFloat(exp.totalAmount || exp.amount || 0).toFixed(2)}</td>
                     </tr>
                 `;
             });
-            detailsBody.innerHTML = detailsHtml;
-
+            detailsBody.innerHTML = detailsHtml || `<tr><td colspan="4" class="text-center text-muted">No GRN transactions recorded.</td></tr>`;
         } catch (error) {
             console.error("Error generating expenses report: ", error);
-            catBody.innerHTML = `<tr><td colspan="2" class="text-center text-danger">Failed to load summary.</td></tr>`;
-            detailsBody.innerHTML = `<tr><td colspan="4" class="text-center text-danger">Failed to load report data.</td></tr>`;
         }
     }
 
     async function generateMasterFinancialSummary() {
         const startDate = document.getElementById('pdf-start-date').value;
         const endDate = document.getElementById('pdf-end-date').value;
-
-        if (!startDate || !endDate) {
-            alert("Please select both From Date and To Date!");
-            return;
-        }
+        if (!startDate || !endDate) return alert("Please select dates!");
 
         const btnPreview = document.getElementById('btn-generate-pdf-preview');
         const btnDownload = document.getElementById('btn-download-pdf-file');
@@ -4869,32 +4475,22 @@
                 rtdb.ref('wastage').orderByChild('date').startAt(startDate).endAt(endDate).once('value')
             ]);
 
-            const salesData = salesSnap.val() || {};
-            const grnData = grnSnap.val() || {};
-            const pcData = pcSnap.val() || {};
-            const wastageData = wastageSnap.val() || {};
-
-            const activeSales = Object.values(salesData).filter(s => s.status !== 'Reversed');
-            let totalSalesGross = 0;
-            let salesCash = 0;
-            let salesCard = 0;
-            let salesOnline = 0;
-
-            activeSales.forEach(s => {
-                const amt = parseFloat(s.total || 0);
+            const activeSales = Object.values(salesSnap.val() || {}).filter(s => s.status !== 'Reversed');
+            let totalSalesGross = 0, salesCash = 0, salesCard = 0, salesOnline = 0;
+            activeSales.forEach(s => {const amt = parseFloat(s.total || 0);
                 totalSalesGross += amt;
                 if (s.payMethod === 'Cash') salesCash += amt;
                 else if (s.payMethod === 'Card') salesCard += amt;
                 else if (s.payMethod === 'Online Transfer') salesOnline += amt;
             });
 
-            const grnList = Object.values(grnData);
+            const grnList = Object.values(grnSnap.val() || {});
             let totalGrnOutflow = 0;
             grnList.forEach(g => {
                 totalGrnOutflow += parseFloat(g.totalAmount || g.amount || 0);
             });
 
-            const pcList = Object.values(pcData);
+            const pcList = Object.values(pcSnap.val() || {});
             let totalPcInflow = 0;
             let totalPcVoucherOut = 0;
             pcList.forEach(p => {
@@ -4903,7 +4499,7 @@
                 else totalPcVoucherOut += amt;
             });
 
-            const wastageList = Object.values(wastageData);
+            const wastageList = Object.values(wastageSnap.val() || {});
             let totalWastageLoss = 0;
             wastageList.forEach(w => {
                 totalWastageLoss += parseFloat(w.amount || 0);
@@ -5068,9 +4664,7 @@
 
             const floatVal = parseFloat(data.openingFloat || 0);
             const floatInput = document.getElementById('de-opening-float');
-            if (floatInput) {
-                floatInput.value = floatVal.toFixed(2);
-            }
+            if (floatInput) floatInput.value = floatVal.toFixed(2);
             
             calculateLiveDayEndReconciliation();
             loadDayEndHistory();
@@ -5122,13 +4716,9 @@
         const el = document.getElementById(elementId);
         if (!el) return;
         el.className = "text-end fw-bold";
-        if (value < 0) {
-            el.classList.add("text-danger");
-        } else if (value > 0) {
-            el.classList.add("text-success");
-        } else {
-            el.classList.add("text-muted");
-        }
+        if (value < 0) el.classList.add("text-danger");
+        else if (value > 0) el.classList.add("text-success");
+        else el.classList.add("text-muted");
     }
 
     async function submitDayEnd(event) {
@@ -5316,9 +4906,7 @@
                 const activePerms = [];
                 if (userObj.permissions) {
                     Object.keys(userObj.permissions).forEach(k => {
-                        if (userObj.permissions[k] === true) {
-                            activePerms.push(k);
-                        }
+                        if (userObj.permissions[k] === true) activePerms.push(k);
                     });
                 }
                 const permsText = activePerms.length > 0 ? activePerms.join(', ') : 'None';
@@ -5332,12 +4920,8 @@
                         <td><span class="badge bg-primary">${userObj.role}</span></td>
                         <td><span class="small text-wrap d-inline-block" style="max-width: 250px;">${permsText}</span></td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn-outline-primary me-1" onclick="editUser('${userObj.id}')">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${userObj.id}')">
-                                <i class="bi bi-trash"></i>
-                            </button>
+                            <button class="btn btn-sm btn-outline-primary me-1" onclick="editUser('${userObj.id}')"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteUser('${userObj.id}')"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -5445,9 +5029,7 @@
         const modules = ['dashboard', 'billing', 'products', 'expenses', 'wastage', 'reports', 'dayend', 'updates', 'users'];
         modules.forEach(mod => {
             const checkbox = document.getElementById(`perm-${mod}`);
-            if (checkbox) {
-                checkbox.checked = !!(userObj.permissions && userObj.permissions[mod] === true);
-            }
+            if (checkbox) checkbox.checked = !!(userObj.permissions && userObj.permissions[mod] === true);
         });
 
         document.getElementById('form-user-title').innerText = "Edit User Settings & Reset Password";
@@ -5461,7 +5043,7 @@
             return;
         }
 
-        if (confirm("Are you sure you want to delete this user profile? Note: This deletes the database profile. Authentication records are managed in Firebase console.")) {
+        if (confirm("Are you sure you want to delete this user profile?")) {
             try {
                 await rtdb.ref(`users/${uid}`).remove();
                 alert("User database profile deleted successfully.");
@@ -5493,7 +5075,6 @@
             try {
                 serialPort = await navigator.serial.requestPort();
                 await serialPort.open({ baudRate: 2400 }); 
-                
                 serialWriter = serialPort.writable.getWriter();
                 
                 const btn = document.getElementById('btn-connect-display');
@@ -5505,10 +5086,10 @@
                 await sendAmountToLED8N(0.00, "total");
             } catch (error) {
                 console.error("LED8N Display connection failed:", error);
-                alert("Display එක සම්බන්ධ කිරීමට නොහැකි විය: " + error.message);
+                alert("Display connection failed: " + error.message);
             }
         } else {
-            alert("ඔබේ බ්‍රවුසරය Web Serial API සඳහා සහය නොදක්වයි. කරුණාකර Google Chrome හෝ Edge භාවිතා කරන්න.");
+            alert("Web Serial API is not supported in this browser. Please use Google Chrome or MS Edge.");
         }
     }
 
@@ -5517,7 +5098,6 @@
         
         try {
             const amtStr = parseFloat(amount).toFixed(2); 
-            
             await serialWriter.write(new Uint8Array([0x0C]));
             
             let modeByte = 0x30;
@@ -5526,8 +5106,7 @@
             else if (mode === "change") modeByte = 0x33;
             else if (mode === "collect") modeByte = 0x34;
             
-            const indicatorCmd = new Uint8Array([0x1B, 0x73, modeByte]);
-            await serialWriter.write(indicatorCmd);
+            await serialWriter.write(new Uint8Array([0x1B, 0x73, modeByte]));
             
             const encoder = new TextEncoder();
             const escCmd = new Uint8Array([0x1B, 0x51, 0x41]);
@@ -5547,3 +5126,4 @@
 </script>
 </body>
 </html>
+                
