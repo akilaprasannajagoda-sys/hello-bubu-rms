@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1090,18 +1091,24 @@
                                 <span class="badge bg-secondary">On-Demand Querying</span>
                             </div>
 
+                            <!-- UPDATED PETTY CASH FILTER & PDF DOWNLOAD ROW -->
                             <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded border">
-                                <div class="col-md-4 col-6">
+                                <div class="col-md-3 col-6">
                                     <label class="small text-muted fw-bold">From Date</label>
                                     <input type="date" class="form-control form-control-sm" id="pc-filter-start">
                                 </div>
-                                <div class="col-md-4 col-6">
+                                <div class="col-md-3 col-6">
                                     <label class="small text-muted fw-bold">To Date</label>
                                     <input type="date" class="form-control form-control-sm" id="pc-filter-end">
                                 </div>
-                                <div class="col-md-4 col-12">
+                                <div class="col-md-3 col-6">
                                     <button class="btn btn-sm btn-primary w-100 fw-bold" onclick="loadPettyCashLogsClicked(true)">
-                                        <i class="bi bi-funnel"></i> Filter & Load Petty Cash Logs
+                                        <i class="bi bi-funnel me-1"></i> Filter Logs
+                                    </button>
+                                </div>
+                                <div class="col-md-3 col-6">
+                                    <button class="btn btn-sm btn-danger w-100 fw-bold" onclick="generatePettyCashPDF()">
+                                        <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF Summary
                                     </button>
                                 </div>
                             </div>
@@ -1130,7 +1137,7 @@
 
                             <div id="pc-load-placeholder" class="text-center py-5 text-muted">
                                 <i class="bi bi-cash-stack fs-1 d-block mb-2"></i>
-                                Select date period and click "Filter & Load Petty Cash Logs" to inspect previous voucher outflows and float top-ups.
+                                Select date period and click "Filter Logs" or "Download PDF Summary" to inspect voucher outflows and float top-ups.
                             </div>
                         </div>
                     </div>
@@ -3697,6 +3704,159 @@
         }
     }
 
+    /* ============================================================================
+       PETTY CASH PDF SUMMARY REPORT GENERATOR (NEW FEATURE)
+       ============================================================================ */
+    async function generatePettyCashPDF() {
+        const startDate = document.getElementById('pc-filter-start').value;
+        const endDate = document.getElementById('pc-filter-end').value;
+
+        if (!startDate || !endDate) {
+            alert("Please select both From Date and To Date for Petty Cash Report!");
+            return;
+        }
+
+        try {
+            const snapshot = await rtdb.ref('petty_cash_logs')
+                .orderByChild('date')
+                .startAt(startDate)
+                .endAt(endDate)
+                .once('value');
+            
+            const data = snapshot.val() || {};
+            const logs = Object.keys(data).map(k => ({ id: k, ...data[k] }));
+            logs.sort((a,b) => (a.dateTime || a.date).localeCompare(b.dateTime || b.date));
+
+            if (logs.length === 0) {
+                alert("No Petty Cash records found for the selected period!");
+                return;
+            }
+
+            let totalInflow = 0;
+            let totalOutflow = 0;
+            const categoryBreakdown = {};
+
+            let tableRowsHtml = '';
+            logs.forEach(log => {
+                const isTopUp = log.type === 'FLOAT_IN';
+                const amt = parseFloat(log.amount || 0);
+                if (isTopUp) {
+                    totalInflow += amt;
+                } else {
+                    totalOutflow += amt;
+                    const cat = log.category || 'General';
+                    categoryBreakdown[cat] = (categoryBreakdown[cat] || 0) + amt;
+                }
+
+                tableRowsHtml += `
+                    <tr>
+                        <td>${log.dateTime || log.date}</td>
+                        <td>${isTopUp ? 'Float Top-Up' : 'Voucher Expense'}</td>
+                        <td>${log.payee || log.issuedBy || 'N/A'}</td>
+                        <td>${log.category || 'General'}</td>
+                        <td>${log.reason || '-'}</td>
+                        <td style="text-align:right; color: ${isTopUp ? 'green' : 'red'}; font-weight:bold;">
+                            ${isTopUp ? '+' : '-'}Rs. ${amt.toFixed(2)}
+                        </td>
+                        <td style="text-align:right;">Rs. ${parseFloat(log.balanceAfter || 0).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            let catSummaryHtml = '';
+            Object.keys(categoryBreakdown).forEach(cat => {
+                catSummaryHtml += `
+                    <tr>
+                        <td>${cat}</td>
+                        <td style="text-align:right; font-weight:bold; color:red;">Rs. ${categoryBreakdown[cat].toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            const printElement = document.createElement('div');
+            printElement.style.padding = '20px';
+            printElement.style.fontFamily = 'Arial, sans-serif';
+            printElement.innerHTML = `
+                <div style="text-align:center; border-bottom:2px solid #333; padding-bottom:10px; margin-bottom:15px;">
+                    <h2 style="margin:0; color:#1a2a6c; font-weight:bold;">HELLO BUBU RESTAURANT</h2>
+                    <p style="margin:2px 0; font-size:12px;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                    <h4 style="margin:8px 0 0 0; color:#d9534f; text-transform:uppercase; font-weight:bold;">PETTY CASH STATEMENT REPORT</h4>
+                    <p style="margin:3px 0; font-size:11px; color:#555;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong> | Exported On: ${new Date().toLocaleString()}</p>
+                </div>
+
+                <h5 style="margin-bottom:5px; font-weight:bold;">1. SUMMARY OVERVIEW</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;" border="1" cellpadding="5">
+                    <tr style="background:#f2f2f2;">
+                        <th>Total Float Deposits (Inflows)</th>
+                        <th>Total Voucher Expenses (Outflows)</th>
+                        <th>Net Cash Movement</th>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:bold; color:green;">Rs. ${totalInflow.toFixed(2)}</td>
+                        <td style="text-align:center; font-weight:bold; color:red;">Rs. ${totalOutflow.toFixed(2)}</td>
+                        <td style="text-align:center; font-weight:bold; color:${(totalInflow - totalOutflow) >= 0 ? 'green' : 'red'};">
+                            Rs. ${(totalInflow - totalOutflow).toFixed(2)}
+                        </td>
+                    </tr>
+                </table>
+
+                ${Object.keys(categoryBreakdown).length > 0 ? `
+                    <h5 style="margin-bottom:5px; font-weight:bold;">2. EXPENSE CATEGORY BREAKDOWN</h5>
+                    <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px;" border="1" cellpadding="5">
+                        <tr style="background:#f2f2f2;">
+                            <th>Expense Category</th>
+                            <th style="text-align:right;">Total Spent</th>
+                        </tr>
+                        ${catSummaryHtml}
+                    </table>
+                ` : ''}
+
+                <h5 style="margin-bottom:5px; font-weight:bold;">3. ITEMIZED TRANSACTION LOGS</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:10px;" border="1" cellpadding="4">
+                    <thead>
+                        <tr style="background:#f2f2f2;">
+                            <th>Date & Time</th>
+                            <th>Type</th>
+                            <th>Payee / User</th>
+                            <th>Category</th>
+                            <th>Reason / Description</th>
+                            <th style="text-align:right;">Amount</th>
+                            <th style="text-align:right;">Balance After</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRowsHtml}
+                    </tbody>
+                </table>
+
+                <div style="margin-top:40px; display:flex; justify-content:space-between; font-size:10px;">
+                    <div>
+                        <p style="margin:0;">................................................</p>
+                        <p style="margin:0;">Prepared By</p>
+                    </div>
+                    <div>
+                        <p style="margin:0;">................................................</p>
+                        <p style="margin:0;">Approved By Manager</p>
+                    </div>
+                </div>
+            `;
+
+            const opt = {
+                margin:       8,
+                filename:     `Petty_Cash_Report_${startDate}_to_${endDate}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(printElement).save();
+
+        } catch (error) {
+            console.error("Error generating Petty Cash PDF: ", error);
+            alert("Failed to generate Petty Cash PDF report.");
+        }
+    }
+
     let isWastageLoaded = false;
     let currentWastagePage = 1;
     const wastagePerPage = 5;
@@ -3981,27 +4141,28 @@
             filterSelect.value = selectedValue;
         }
     }
-function displayPOSProducts() {
-    const grid = document.getElementById('pos-products-grid');
-    const searchVal = document.getElementById('pos-search').value.toLowerCase();
-    const categoryVal = document.getElementById('pos-category-filter').value;
-    
-    grid.innerHTML = '';
-    
-    const filteredProducts = products.filter(p => {
-        const matchesSearch = p.name.toLowerCase().includes(searchVal);
-        const matchesCategory = (categoryVal === 'All' || p.category === categoryVal);
-        return matchesSearch && matchesCategory;
-    });
-    
-    if (filteredProducts.length === 0) {
-        grid.innerHTML = `<div class="w-100 text-center py-5 text-muted">No items match your search filter.</div>`;
-        return;
-    }
-    
-    let gridHtml = '';
-    filteredProducts.forEach(product => {
-        gridHtml += `
+
+    function displayPOSProducts() {
+        const grid = document.getElementById('pos-products-grid');
+        const searchVal = document.getElementById('pos-search').value.toLowerCase();
+        const categoryVal = document.getElementById('pos-category-filter').value;
+        
+        grid.innerHTML = '';
+        
+        const filteredProducts = products.filter(p => {
+            const matchesSearch = p.name.toLowerCase().includes(searchVal);
+            const matchesCategory = (categoryVal === 'All' || p.category === categoryVal);
+            return matchesSearch && matchesCategory;
+        });
+        
+        if (filteredProducts.length === 0) {
+            grid.innerHTML = `<div class="w-100 text-center py-5 text-muted">No items match your search filter.</div>`;
+            return;
+        }
+        
+        let gridHtml = '';
+        filteredProducts.forEach(product => {
+            gridHtml += `
                 <div class="col">
                     <div class="card h-100 pos-product-card text-center p-2 bg-light" onclick="addToCart('${product.id}')">
                         <div class="card-body p-1 d-flex flex-column justify-content-between">
@@ -4014,10 +4175,11 @@ function displayPOSProducts() {
                     </div>
                 </div>
             `;
-    });
-    
-    grid.innerHTML = gridHtml;
-}
+        });
+        
+        grid.innerHTML = gridHtml;
+    }
+
     function addToCart(productId) {
         const product = products.find(p => p.id === productId);
         if (!product) return;
@@ -4151,7 +4313,6 @@ function displayPOSProducts() {
         sendAmountToLED8N(grandTotal, "total");
     }
 
-    // CONNECT CASH DRAWER / PRINTER PORT
     async function connectCashDrawer() {
         if ('serial' in navigator) {
             try {
@@ -4174,7 +4335,6 @@ function displayPOSProducts() {
         }
     }
 
-    // TRIGGER CASH DRAWER OPEN PULSE (Pin 2 and Pin 5)
     async function triggerCashDrawerPulse() {
         if (drawerWriter) {
             try {
@@ -4238,10 +4398,7 @@ function displayPOSProducts() {
         document.body.classList.add('print-receipt');
         document.body.classList.remove('print-zreport');
 
-        // Trigger Cash Drawer Pulse
         await triggerCashDrawerPulse();
-
-        // Print Receipt via Thermal Printer
         window.print();
 
         const saleRecord = {
@@ -4441,9 +4598,7 @@ function displayPOSProducts() {
             document.body.classList.add('print-receipt');
             document.body.classList.remove('print-zreport');
 
-            // Trigger Cash Drawer Pulse on Reprint
             await triggerCashDrawerPulse();
-
             window.print();
         } catch (error) {
             console.error("Failed to reprint receipt: ", error);
@@ -4688,9 +4843,6 @@ function displayPOSProducts() {
         }
     }
 
-    /* ============================================================================
-       MASTER FINANCIAL STATEMENT & PDF GENERATOR (NON-BLOCKING ASYNC)
-       ============================================================================ */
     async function generateMasterFinancialSummary() {
         const startDate = document.getElementById('pdf-start-date').value;
         const endDate = document.getElementById('pdf-end-date').value;
@@ -4710,7 +4862,6 @@ function displayPOSProducts() {
         btnPreview.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Processing...`;
 
         try {
-            // NON-BLOCKING PARALLEL PROMISE FETCHING
             const [salesSnap, grnSnap, pcSnap, wastageSnap] = await Promise.all([
                 rtdb.ref('sales').orderByChild('date').startAt(startDate).endAt(endDate).once('value'),
                 rtdb.ref('expenses').orderByChild('date').startAt(startDate).endAt(endDate).once('value'),
@@ -4723,7 +4874,6 @@ function displayPOSProducts() {
             const pcData = pcSnap.val() || {};
             const wastageData = wastageSnap.val() || {};
 
-            // 1. PROCESS SALES
             const activeSales = Object.values(salesData).filter(s => s.status !== 'Reversed');
             let totalSalesGross = 0;
             let salesCash = 0;
@@ -4738,14 +4888,12 @@ function displayPOSProducts() {
                 else if (s.payMethod === 'Online Transfer') salesOnline += amt;
             });
 
-            // 2. PROCESS GRN EXPENSES
             const grnList = Object.values(grnData);
             let totalGrnOutflow = 0;
             grnList.forEach(g => {
                 totalGrnOutflow += parseFloat(g.totalAmount || g.amount || 0);
             });
 
-            // 3. PROCESS PETTY CASH
             const pcList = Object.values(pcData);
             let totalPcInflow = 0;
             let totalPcVoucherOut = 0;
@@ -4755,19 +4903,16 @@ function displayPOSProducts() {
                 else totalPcVoucherOut += amt;
             });
 
-            // 4. PROCESS WASTAGE
             const wastageList = Object.values(wastageData);
             let totalWastageLoss = 0;
             wastageList.forEach(w => {
                 totalWastageLoss += parseFloat(w.amount || 0);
             });
 
-            // 5. CALCULATE MASTER CASH BOOK
             const totalCashInflows = salesCash + totalPcInflow;
             const totalCashOutflows = totalGrnOutflow + totalPcVoucherOut;
             const netCashPosition = totalCashInflows - totalCashOutflows;
 
-            // RENDER HTML FOR PDF / PREVIEW
             wrapper.innerHTML = `
                 <div class="pdf-header text-center">
                     <h3 style="margin:0; font-weight:bold; color:#1a2a6c;">HELLO BUBU RESTAURANT</h3>
@@ -5343,7 +5488,6 @@ function displayPOSProducts() {
         applyDefaultRoleTemplate();
     }
 
-    // LED8N DISPLAY INTEGRATION
     async function connectCustomerDisplay() {
         if ('serial' in navigator) {
             try {
