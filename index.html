@@ -1405,7 +1405,9 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="sales-report-tab" data-bs-toggle="tab" data-bs-target="#sales-report-panel" type="button" role="tab">Item-Wise Sales Report</button>
+                        <button class="nav-link fw-bold" id="sales-report-tab" data-bs-toggle="tab" data-bs-target="#sales-report-panel" type="button" role="tab">
+                            <i class="bi bi-cart-check me-1 text-success"></i> Item-Wise Sales Report
+                        </button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="invoice-lookup-tab" data-bs-toggle="tab" data-bs-target="#invoice-history-panel" type="button" role="tab" onclick="loadRecentSales()">Invoice History & Lookup</button>
@@ -1453,53 +1455,71 @@
                         </div>
                     </div>
 
+                    <!-- UPDATED ITEM-WISE SALES REPORT TAB WITH ACCURATE TIME DATES & HIGH-QUALITY PDF DOWNLOAD -->
                     <div class="tab-pane fade" id="sales-report-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
-                            <h5 class="mb-3">Item-Wise Sales Report</h5>
-                            <div class="row g-3 align-items-end mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-cart-check me-2 text-success"></i> Item-Wise Sales & Portion Analytics Report</h5>
+                                <span class="badge bg-success">Time-Precision Filtering</span>
+                            </div>
+
+                            <div class="row g-3 align-items-end mb-4 bg-light p-3 rounded border">
                                 <div class="col-md-4">
-                                    <label class="form-label">Start Date</label>
-                                    <input type="date" class="form-control" id="sales-start-date">
+                                    <label class="form-label small fw-bold text-dark">Start Date & Time (සම්භාරී ආරම්භක වේලාව)</label>
+                                    <input type="datetime-local" class="form-control" id="sales-start-date">
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label">End Date</label>
-                                    <input type="date" class="form-control" id="sales-end-date">
+                                    <label class="form-label small fw-bold text-dark">End Date & Time (සම්භාරී අවසාන වේලාව)</label>
+                                    <input type="datetime-local" class="form-control" id="sales-end-date">
                                 </div>
-                                <div class="col-md-4">
-                                    <button class="btn btn-success w-100" onclick="generateSalesReport()">
-                                        <i class="bi bi-funnel-fill me-1"></i> Generate Sales Report
+                                <div class="col-md-4 d-flex gap-2">
+                                    <button class="btn btn-success fw-bold w-100 py-2" onclick="generateSalesReport()">
+                                        <i class="bi bi-funnel-fill me-1"></i> View Report
+                                    </button>
+                                    <button class="btn btn-danger fw-bold w-100 py-2" onclick="downloadItemWiseSalesPDF()">
+                                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download PDF Report
                                     </button>
                                 </div>
                             </div>
 
                             <div class="row mb-4">
-                                <div class="col-md-6 mb-2">
-                                    <div class="p-3 bg-success-subtle text-success rounded">
-                                        <h6 class="mb-1">Total Period Sales</h6>
-                                        <h3 class="mb-0" id="report-sales-total">Rs. 0.00</h3>
+                                <div class="col-md-4 mb-2">
+                                    <div class="p-3 bg-success-subtle text-success rounded border border-success">
+                                        <h6 class="mb-1 fw-bold small text-uppercase">Total Period Sales (මුළු ආදායම)</h6>
+                                        <h3 class="mb-0 fw-bold" id="report-sales-total">Rs. 0.00</h3>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-2">
-                                    <div class="p-3 bg-info-subtle text-info rounded">
-                                        <h6 class="mb-1">Total Period Orders</h6>
-                                        <h3 class="mb-0" id="report-sales-count">0</h3>
+                                <div class="col-md-4 mb-2">
+                                    <div class="p-3 bg-info-subtle text-info-emphasis rounded border border-info">
+                                        <h6 class="mb-1 fw-bold small text-uppercase">Total Orders Count (බිල්පත් ගණන)</h6>
+                                        <h3 class="mb-0 fw-bold" id="report-sales-count">0</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <div class="p-3 bg-warning-subtle text-warning-emphasis rounded border border-warning">
+                                        <h6 class="mb-1 fw-bold small text-uppercase">Total Portions Sold (විකිණුනු මුළු ප්‍රමාණය)</h6>
+                                        <h3 class="mb-0 fw-bold" id="report-sales-items-count">0</h3>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle">
+                            <div class="table-responsive border rounded">
+                                <table class="table table-hover align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Product Name</th>
-                                            <th>Category</th>
-                                            <th class="text-center">Quantity Sold</th>
-                                            <th class="text-end">Total Revenue</th>
+                                            <th>Product Name (නිෂ්පාදනය)</th>
+                                            <th>Category (කාණ්ඩය)</th>
+                                            <th class="text-center">Quantity Sold (ප්‍රමාණය)</th>
+                                            <th class="text-end">Total Revenue (මුළු විකුණුම් එකතුව)</th>
+                                            <th class="text-end">Revenue Share (% ප්‍රතිශතය)</th>
                                         </tr>
                                     </thead>
                                     <tbody id="sales-report-table-body">
                                         <tr>
-                                            <td colspan="4" class="text-center text-muted">Select a date range and click generate.</td>
+                                            <td colspan="5" class="text-center text-muted py-4">
+                                                <i class="bi bi-calendar-range fs-2 d-block mb-2"></i>
+                                                Select Start/End Date Time range and click "View Report".
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -2030,6 +2050,15 @@
         return `${year}-${month}-${day}`;
     }
 
+    function formatForDateTimeLocal(d = new Date()) {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const hours = String(d.getHours()).padStart(2, '0');
+        const mins = String(d.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day}T${hours}:${mins}`;
+    }
+
     const todayStr = getLocalDateString();
     document.getElementById('current-date').innerText = new Date().toDateString();
     document.getElementById('expense-date').value = todayStr;
@@ -2044,8 +2073,19 @@
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const sevenDaysAgoStr = getLocalDateString(sevenDaysAgo);
 
-    document.getElementById('sales-start-date').value = sevenDaysAgoStr;
-    document.getElementById('sales-end-date').value = todayStr;
+    // Initial DateTime values for Item-Wise Sales Filter
+    const start7WithTime = new Date();
+    start7WithTime.setDate(start7WithTime.getDate() - 7);
+    start7WithTime.setHours(0, 0, 0, 0);
+
+    const todayWithEndTime = new Date();
+    todayWithEndTime.setHours(23, 59, 59, 999);
+
+    if (document.getElementById('sales-start-date')) {
+        document.getElementById('sales-start-date').value = formatForDateTimeLocal(start7WithTime);
+        document.getElementById('sales-end-date').value = formatForDateTimeLocal(todayWithEndTime);
+    }
+
     document.getElementById('expenses-start-date').value = sevenDaysAgoStr;
     document.getElementById('expenses-end-date').value = todayStr;
     
@@ -4337,67 +4377,261 @@
         }
     }
 
-    async function generateSalesReport() {
-        const startDate = document.getElementById('sales-start-date').value;
-        const endDate = document.getElementById('sales-end-date').value;
-        if (!startDate || !endDate) return alert("Please select dates!");
+    /* ACCURATE ITEM-WISE SALES DATA PROCESSOR WITH EXACT TIME RANGE SUPPORT */
+    async function fetchFilteredItemWiseSalesData() {
+        const startVal = document.getElementById('sales-start-date').value;
+        const endVal = document.getElementById('sales-end-date').value;
 
+        if (!startVal || !endVal) {
+            alert("Please select both Start Date & Time and End Date & Time!");
+            return null;
+        }
+
+        const startTimestamp = new Date(startVal).getTime();
+        const endTimestamp = new Date(endVal).getTime();
+
+        if (isNaN(startTimestamp) || isNaN(endTimestamp)) {
+            alert("Invalid Date & Time selection!");
+            return null;
+        }
+
+        const startDateStr = startVal.split('T')[0];
+        const endDateStr = endVal.split('T')[0];
+
+        // Query database by date range first, then filter accurately with exact timestamps
+        const snapshot = await rtdb.ref('sales').orderByChild('date').startAt(startDateStr).endAt(endDateStr).once('value');
+        const data = snapshot.val() || {};
+
+        const activeSales = Object.values(data).filter(sale => {
+            if (sale.status === 'Reversed') return false;
+            
+            const saleTime = sale.timestamp ? sale.timestamp : new Date(sale.date).getTime();
+            return saleTime >= startTimestamp && saleTime <= endTimestamp;
+        });
+
+        let overallTotalRevenue = 0;
+        let totalPortionsCount = 0;
+        let itemWiseReport = {};
+        let categoryWiseTotals = {};
+
+        activeSales.forEach(sale => {
+            overallTotalRevenue += parseFloat(sale.total || 0);
+            if (sale.items && Array.isArray(sale.items)) {
+                sale.items.forEach(cartItem => {
+                    const itemID = cartItem.product.id || cartItem.product.name;
+                    const itemName = cartItem.product.name;
+                    const itemCategory = cartItem.product.category || "General";
+                    const itemQty = parseInt(cartItem.qty || 0);
+                    const itemPrice = parseFloat(cartItem.product.price || 0);
+                    const lineRevenue = itemPrice * itemQty;
+
+                    totalPortionsCount += itemQty;
+                    categoryWiseTotals[itemCategory] = (categoryWiseTotals[itemCategory] || 0) + lineRevenue;
+
+                    if (itemWiseReport[itemID]) {
+                        itemWiseReport[itemID].qtySold += itemQty;
+                        itemWiseReport[itemID].revenue += lineRevenue;
+                    } else {
+                        itemWiseReport[itemID] = {
+                            name: itemName,
+                            category: itemCategory,
+                            price: itemPrice,
+                            qtySold: itemQty,
+                            revenue: lineRevenue
+                        };
+                    }
+                });
+            }
+        });
+
+        return {
+            startValFormatted: startVal.replace('T', ' '),
+            endValFormatted: endVal.replace('T', ' '),
+            ordersCount: activeSales.length,
+            overallTotalRevenue,
+            totalPortionsCount,
+            itemWiseReport,
+            categoryWiseTotals
+        };
+    }
+
+    async function generateSalesReport() {
         const tbody = document.getElementById('sales-report-table-body');
-        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Generating... Please wait.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4"><span class="spinner-border spinner-border-sm me-2"></span> Calculating sales analytics...</td></tr>`;
 
         try {
-            const snapshot = await rtdb.ref('sales').orderByChild('date').startAt(startDate).endAt(endDate).once('value');
-            const data = snapshot.val() || {};
-            const filteredSales = Object.values(data).filter(sale => sale.status !== 'Reversed');
+            const reportData = await fetchFilteredItemWiseSalesData();
+            if (!reportData) return;
 
-            let overallTotal = 0;
-            let itemWiseReport = {};
-
-            filteredSales.forEach(sale => {
-                overallTotal += parseFloat(sale.total || 0);
-                if (sale.items && Array.isArray(sale.items)) {
-                    sale.items.forEach(cartItem => {
-                        const itemID = cartItem.product.id;
-                        const itemQty = parseInt(cartItem.qty || 0);
-                        const itemPrice = parseFloat(cartItem.product.price || 0);
-
-                        if (itemWiseReport[itemID]) {
-                            itemWiseReport[itemID].qtySold += itemQty;
-                            itemWiseReport[itemID].revenue += itemPrice * itemQty;
-                        } else {
-                            itemWiseReport[itemID] = {
-                                name: cartItem.product.name, category: cartItem.product.category, qtySold: itemQty, revenue: itemPrice * itemQty
-                            };
-                        }
-                    });
-                }
-            });
-
-            document.getElementById('report-sales-total').innerText = `Rs. ${overallTotal.toFixed(2)}`;
-            document.getElementById('report-sales-count').innerText = filteredSales.length;
+            document.getElementById('report-sales-total').innerText = `Rs. ${reportData.overallTotalRevenue.toFixed(2)}`;
+            document.getElementById('report-sales-count').innerText = reportData.ordersCount;
+            document.getElementById('report-sales-items-count').innerText = reportData.totalPortionsCount;
 
             tbody.innerHTML = '';
-            const itemKeys = Object.keys(itemWiseReport);
-            if (itemKeys.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No active itemized sales found in this period.</td></tr>`;
+            const itemsArray = Object.values(reportData.itemWiseReport);
+
+            if (itemsArray.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">No active sales found within selected date and time range.</td></tr>`;
                 return;
             }
 
+            // High to Low Revenue Sort
+            itemsArray.sort((a, b) => b.revenue - a.revenue);
+
             let reportHtml = '';
-            itemKeys.forEach(key => {
-                const itemData = itemWiseReport[key];
+            itemsArray.forEach(item => {
+                const sharePct = reportData.overallTotalRevenue > 0 ? ((item.revenue / reportData.overallTotalRevenue) * 100).toFixed(1) : '0.0';
                 reportHtml += `
                     <tr>
-                        <td><strong>${itemData.name}</strong></td>
-                        <td><span class="badge bg-secondary">${itemData.category}</span></td>
-                        <td class="text-center">${itemData.qtySold}</td>
-                        <td class="text-end fw-bold">Rs. ${itemData.revenue.toFixed(2)}</td>
+                        <td><strong>${item.name}</strong></td>
+                        <td><span class="badge bg-secondary">${item.category}</span></td>
+                        <td class="text-center fw-bold fs-6">${item.qtySold}</td>
+                        <td class="text-end fw-bold text-success fs-6">Rs. ${item.revenue.toFixed(2)}</td>
+                        <td class="text-end fw-bold text-primary">${sharePct}%</td>
                     </tr>
                 `;
             });
+
             tbody.innerHTML = reportHtml;
         } catch (error) {
             console.error("Error generating sales report: ", error);
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger py-4">Failed to process sales report data.</td></tr>`;
+        }
+    }
+
+    /* HIGH-QUALITY ITEM-WISE SALES PDF REPORT GENERATOR */
+    async function downloadItemWiseSalesPDF() {
+        try {
+            const reportData = await fetchFilteredItemWiseSalesData();
+            if (!reportData) return;
+
+            const itemsArray = Object.values(reportData.itemWiseReport);
+            if (itemsArray.length === 0) {
+                alert("No active sales records found in the selected date & time period to export.");
+                return;
+            }
+
+            itemsArray.sort((a, b) => b.revenue - a.revenue);
+
+            let tableRowsHtml = '';
+            itemsArray.forEach((item, index) => {
+                const sharePct = reportData.overallTotalRevenue > 0 ? ((item.revenue / reportData.overallTotalRevenue) * 100).toFixed(1) : '0.0';
+                tableRowsHtml += `
+                    <tr>
+                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:center;">${index + 1}</td>
+                        <td style="padding:6px 8px; border:1px solid #ddd;"><strong>${item.name}</strong></td>
+                        <td style="padding:6px 8px; border:1px solid #ddd;"><span style="background:#6c757d; color:#fff; padding:2px 6px; border-radius:4px; font-size:10px;">${item.category}</span></td>
+                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:right;">Rs. ${item.price.toFixed(2)}</td>
+                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:center; font-weight:bold;">${item.qtySold}</td>
+                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#11998e;">Rs. ${item.revenue.toFixed(2)}</td>
+                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#1a2a6c;">${sharePct}%</td>
+                    </tr>
+                `;
+            });
+
+            let categorySummaryHtml = '';
+            Object.keys(reportData.categoryWiseTotals).forEach(cat => {
+                const catTotal = reportData.categoryWiseTotals[cat];
+                const catPct = reportData.overallTotalRevenue > 0 ? ((catTotal / reportData.overallTotalRevenue) * 100).toFixed(1) : '0.0';
+                categorySummaryHtml += `
+                    <tr>
+                        <td style="padding:6px 8px; border:1px solid #ddd;"><strong>${cat}</strong></td>
+                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#11998e;">Rs. ${catTotal.toFixed(2)}</td>
+                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:right; font-weight:bold;">${catPct}%</td>
+                    </tr>
+                `;
+            });
+
+            const printElement = document.createElement('div');
+            printElement.style.padding = '15px';
+            printElement.style.fontFamily = 'Arial, sans-serif';
+            printElement.style.color = '#333';
+            printElement.innerHTML = `
+                <div style="text-align:center; border-bottom:2px solid #1a2a6c; padding-bottom:10px; margin-bottom:15px;">
+                    <h2 style="margin:0; color:#1a2a6c; font-weight:bold; letter-spacing:0.5px;">HELLO BUBU RESTAURANT</h2>
+                    <p style="margin:2px 0; font-size:11px; color:#555;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                    <h4 style="margin:8px 0 0 0; color:#11998e; text-transform:uppercase; font-weight:bold; letter-spacing:0.5px;">ITEM-WISE SALES & PORTION ANALYTICS REPORT</h4>
+                    <p style="margin:3px 0; font-size:10px; color:#666;">Period: <strong>${reportData.startValFormatted}</strong> to <strong>${reportData.endValFormatted}</strong> | Generated On: ${new Date().toLocaleString()}</p>
+                </div>
+
+                <h5 style="margin:12px 0 6px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">1. EXECUTIVE PERFORMANCE SUMMARY</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px; border:1px solid #ccc;" cellpadding="6">
+                    <tbody>
+                        <tr style="background:#f0fdf4;">
+                            <td style="border:1px solid #ccc; width:60%;"><strong>Total Revenue Generated (මුළු සක්‍රීය විකුණුම් ආදායම)</strong></td>
+                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold; color:#11998e; font-size:13px;">Rs. ${reportData.overallTotalRevenue.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #ccc;">Total Processed Bills / Orders (මුළු බිල්පත් ගණන)</td>
+                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold;">${reportData.ordersCount} Orders</td>
+                        </tr>
+                        <tr style="background:#f9f9f9;">
+                            <td style="border:1px solid #ccc;">Total Portion / Item Units Sold (අලෙවි වූ සමස්ත ඒකක ගණන)</td>
+                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold; color:#1a2a6c;">${reportData.totalPortionsCount} Units</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5 style="margin:12px 0 6px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">2. CATEGORY-WISE SALES BREAKDOWN</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px; border:1px solid #ccc;" cellpadding="6">
+                    <thead>
+                        <tr style="background:#f0f4f8; color:#1a2a6c;">
+                            <th style="border:1px solid #ccc; text-align:left;">Category Name</th>
+                            <th style="border:1px solid #ccc; text-align:right;">Category Revenue</th>
+                            <th style="border:1px solid #ccc; text-align:right;">Revenue Share %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${categorySummaryHtml}
+                    </tbody>
+                </table>
+
+                <h5 style="margin:12px 0 6px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">3. DETAILED ITEM-WISE SALES BREAKDOWN</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:10px; border:1px solid #ccc; table-layout:fixed;" cellpadding="5">
+                    <thead>
+                        <tr style="background:#1a2a6c; color:#ffffff;">
+                            <th style="border:1px solid #1a2a6c; text-align:center; width:6%;">#</th>
+                            <th style="border:1px solid #1a2a6c; text-align:left; width:30%;">Product Name</th>
+                            <th style="border:1px solid #1a2a6c; text-align:left; width:16%;">Category</th>
+                            <th style="border:1px solid #1a2a6c; text-align:right; width:14%;">Unit Price</th>
+                            <th style="border:1px solid #1a2a6c; text-align:center; width:10%;">Qty Sold</th>
+                            <th style="border:1px solid #1a2a6c; text-align:right; width:14%;">Total Revenue</th>
+                            <th style="border:1px solid #1a2a6c; text-align:right; width:10%;">Share %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRowsHtml}
+                    </tbody>
+                </table>
+
+                <div style="margin-top:35px; display:flex; justify-content:space-between; font-size:10px; color:#444;">
+                    <div>
+                        <p style="margin:0;">................................................</p>
+                        <p style="margin:3px 0 0 0; font-weight:bold;">Report Generated By</p>
+                    </div>
+                    <div>
+                        <p style="margin:0;">................................................</p>
+                        <p style="margin:3px 0 0 0; font-weight:bold;">Approved By Manager</p>
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top:20px; font-size:8px; color:#888;">
+                    Software Copyright © 2026 Systems.LK | Hotline: 0760672029
+                </div>
+            `;
+
+            const opt = {
+                margin:       8,
+                filename:     `Item_Wise_Sales_Report_${reportData.startValFormatted.slice(0,10)}_to_${reportData.endValFormatted.slice(0,10)}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(printElement).save();
+
+        } catch (error) {
+            console.error("Error generating Item-Wise Sales PDF: ", error);
+            alert("Failed to download PDF report. Detail: " + error.message);
         }
     }
 
@@ -4477,7 +4711,8 @@
 
             const activeSales = Object.values(salesSnap.val() || {}).filter(s => s.status !== 'Reversed');
             let totalSalesGross = 0, salesCash = 0, salesCard = 0, salesOnline = 0;
-            activeSales.forEach(s => {const amt = parseFloat(s.total || 0);
+            activeSales.forEach(s => {
+                const amt = parseFloat(s.total || 0);
                 totalSalesGross += amt;
                 if (s.payMethod === 'Cash') salesCash += amt;
                 else if (s.payMethod === 'Card') salesCard += amt;
@@ -5126,4 +5361,3 @@
 </script>
 </body>
 </html>
-                
