@@ -251,6 +251,9 @@
 </head>
 <body>
 
+<!-- Global Datalists for Fast Searchable Dropdowns -->
+<datalist id="raw-materials-datalist"></datalist>
+
 <!-- Thermal Print Template for Receipts -->
 <div id="receipt-print-area">
     <div style="text-align: center;">
@@ -303,7 +306,7 @@
     </div>
 </div>
 
-<!-- Thermal Print Template for Z-Report -->
+<!-- Thermal Print Template for Z-Report (SEPARATED FLOAT & CASH SALES) -->
 <div id="zreport-print-area">
     <div style="text-align: center;">
         <h3 style="margin: 0; font-size: 15px; font-weight: bold;">HELLO BUBU</h3>
@@ -312,8 +315,8 @@
         <div class="receipt-divider"></div>
     </div>
     <div style="font-size: 10px;">
-        <div style="display: flex; justify-content: space-between;">
-            <span>Opening Float:</span>
+        <div style="display: flex; justify-content: space-between; font-weight: bold;">
+            <span>Opening Cash Float:</span>
             <strong id="print-z-float">Rs. 0.00</strong>
         </div>
         <div class="receipt-divider"></div>
@@ -322,12 +325,21 @@
             <span id="print-z-exp-cash">Rs. 0.00</span>
         </div>
         <div style="display: flex; justify-content: space-between;">
-            <span>Actual Cash Submitted:</span>
+            <span>Actual Cash Sales Submitted:</span>
             <span id="print-z-act-cash">Rs. 0.00</span>
         </div>
         <div style="display: flex; justify-content: space-between; font-weight: bold;">
-            <span>Cash Variance:</span>
+            <span>Cash Sales Variance:</span>
             <span id="print-z-var-cash">Rs. 0.00</span>
+        </div>
+        <div class="receipt-divider"></div>
+        <div style="display: flex; justify-content: space-between; font-weight: bold; background: #eee; padding: 2px 0;">
+            <span>EXPECTED TOTAL DRAWER CASH:</span>
+            <span id="print-z-exp-drawer-cash">Rs. 0.00</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-weight: bold; background: #eee; padding: 2px 0;">
+            <span>ACTUAL TOTAL DRAWER CASH:</span>
+            <span id="print-z-act-drawer-cash">Rs. 0.00</span>
         </div>
         <div class="receipt-divider"></div>
         <div style="display: flex; justify-content: space-between;">
@@ -770,14 +782,14 @@
                                 <div class="bg-light p-3 rounded mb-3 border">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <h6 class="fw-bold mb-0 small text-secondary"><i class="bi bi-journals me-1"></i> Recipe / Portion Ingredients</h6>
-                                        <span class="badge bg-info text-dark small">GRN Auto-Cost</span>
+                                        <span class="badge bg-info text-dark small">Searchable Material</span>
                                     </div>
                                     
                                     <div class="row g-2 align-items-end mb-2">
                                         <div class="col-12">
-                                            <select class="form-select form-select-sm" id="recipe-mat-select">
-                                                <option value="">-- Select Ingredient Material --</option>
-                                            </select>
+                                            <!-- SEARCHABLE RAW MATERIAL SELECTION IN RECIPE BUILDER -->
+                                            <input class="form-control form-control-sm" list="raw-materials-datalist" id="recipe-mat-input" placeholder="Type / Search Raw Material..." oninput="onRecipeMaterialSearchInput()">
+                                            <input type="hidden" id="recipe-mat-selected-id">
                                         </div>
                                         <div class="col-8">
                                             <div class="input-group input-group-sm">
@@ -840,12 +852,21 @@
 
                     <div class="col-lg-7 col-md-12">
                         <div class="card card-custom bg-white p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                                 <h5 class="mb-0 fw-bold"><i class="bi bi-box-seam me-1"></i> Product List & Live Costings</h5>
                                 <button class="btn btn-sm btn-primary" id="btn-load-products" onclick="loadProductsClicked()">
                                     <i class="bi bi-arrow-clockwise me-1"></i> Load Products
                                 </button>
                             </div>
+
+                            <!-- PRODUCT SEARCH INPUT (SEARCH PRODUCTS CAPABILITY) -->
+                            <div class="mb-3" id="product-search-wrapper">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control" id="product-list-search-input" placeholder="Search product by name or category..." oninput="displayProducts()">
+                                </div>
+                            </div>
+
                             <div id="products-list-wrapper" class="d-none">
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle">
@@ -921,18 +942,25 @@
                                         </div>
 
                                         <div class="bg-light p-3 rounded mb-3 border">
-                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-1">
                                                 <h6 class="fw-bold mb-0 small text-secondary"><i class="bi bi-cart-plus me-1"></i> Add Raw Material Items</h6>
-                                                <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 small" onclick="openNewRawMaterialModal()">
-                                                    <i class="bi bi-plus-circle-fill me-1"></i> New Material
-                                                </button>
+                                                <div>
+                                                    <!-- NEW RAW MATERIAL & MANAGE MATERIALS BUTTONS -->
+                                                    <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 small me-1" onclick="openNewRawMaterialModal()">
+                                                        <i class="bi bi-plus-circle-fill me-1"></i> New
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-outline-dark py-0 px-2 small" onclick="openManageRawMaterialsModal()">
+                                                        <i class="bi bi-gear-fill me-1"></i> Manage Raw Materials
+                                                    </button>
+                                                </div>
                                             </div>
                                             
                                             <div class="row g-2 align-items-end mb-2">
                                                 <div class="col-12">
-                                                    <select class="form-select form-select-sm" id="grn-item-select" onchange="onRawMaterialSelect()">
-                                                        <option value="">-- Select Raw Material Item --</option>
-                                                    </select>
+                                                    <!-- SEARCHABLE RAW MATERIAL DROPDOWN IN GRN -->
+                                                    <label class="small text-muted fw-bold d-block">Search & Select Raw Material</label>
+                                                    <input class="form-control form-control-sm" list="raw-materials-datalist" id="grn-item-search-input" placeholder="Type raw material name..." oninput="onGrnRawMaterialSearchInput()">
+                                                    <input type="hidden" id="grn-item-selected-id">
                                                 </div>
                                                 <div class="col-5">
                                                     <input type="number" step="0.01" class="form-control form-control-sm" id="grn-item-qty" placeholder="Qty" onkeydown="if(event.key==='Enter'){ event.preventDefault(); addGrnItemRow(); }">
@@ -1263,14 +1291,16 @@
                 </div>
             </div>
 
+            <!-- ADD / EDIT RAW MATERIAL MODAL -->
             <div class="modal fade" id="newRawMaterialModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header bg-primary text-white">
-                            <h5 class="modal-title fw-bold"><i class="bi bi-box-seam me-1"></i> Add New Raw Material / Ingredient</h5>
+                            <h5 class="modal-title fw-bold" id="raw-material-modal-title"><i class="bi bi-box-seam me-1"></i> Add New Raw Material / Ingredient</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form id="new-raw-material-form" onsubmit="saveNewRawMaterial(event)">
+                            <input type="hidden" id="edit-mat-id">
                             <div class="modal-body p-4">
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-dark">Raw Material Name</label>
@@ -1281,23 +1311,69 @@
                                         <label class="form-label small fw-bold text-dark">Unit of Measure</label>
                                         <select class="form-select" id="new-mat-unit" required>
                                             <option value="Kg">Kg (Kilograms)</option>
+                                            <option value="g">g (Grams)</option>
                                             <option value="L">L (Liters)</option>
+                                            <option value="ml">ml (Milliliters)</option>
                                             <option value="Pkts">Pkts (Packets)</option>
                                             <option value="Pcs">Pcs (Pieces)</option>
                                             <option value="Units">Units</option>
                                         </select>
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label small fw-bold text-dark">Initial Cost Price (Rs.)</label>
+                                        <label class="form-label small fw-bold text-dark">Initial / Default Unit Cost (Rs.)</label>
                                         <input type="number" step="0.01" class="form-control" id="new-mat-cost" value="0" placeholder="0.00" min="0">
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary fw-bold">Save Raw Material</button>
+                                <button type="submit" class="btn btn-primary fw-bold" id="btn-save-raw-material">Save Raw Material</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MANAGE RAW MATERIALS MODAL (EDIT/UPDATE/DELETE RAW MATERIALS) -->
+            <div class="modal fade" id="manageRawMaterialsModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header bg-dark text-white">
+                            <h5 class="modal-title fw-bold"><i class="bi bi-box-seam me-2"></i> Manage Raw Materials List</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="input-group input-group-sm w-50">
+                                    <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control" id="manage-mat-search-input" placeholder="Search raw material..." oninput="displayManageRawMaterialsTable()">
+                                </div>
+                                <button class="btn btn-sm btn-primary fw-bold" onclick="openNewRawMaterialModal()">
+                                    <i class="bi bi-plus-lg me-1"></i> Add New Material
+                                </button>
+                            </div>
+                            <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
+                                <table class="table table-hover align-middle border">
+                                    <thead class="table-light sticky-top">
+                                        <tr>
+                                            <th>Material Name</th>
+                                            <th class="text-center">Unit</th>
+                                            <th class="text-end">Latest Unit Cost (Rs.)</th>
+                                            <th class="text-center">Last Updated</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="manage-raw-materials-table-body">
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted">No raw materials added.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1313,9 +1389,9 @@
                                 
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-dark">Wasted Raw Material / Ingredient</label>
-                                    <select class="form-select form-select-sm" id="wastage-item-select" onchange="onWastageMaterialSelect()" required>
-                                        <option value="">-- Select Raw Material --</option>
-                                    </select>
+                                    <!-- SEARCHABLE RAW MATERIAL DROPDOWN IN WASTAGE -->
+                                    <input class="form-control form-control-sm" list="raw-materials-datalist" id="wastage-item-search-input" placeholder="Search raw material..." oninput="onWastageRawMaterialSearchInput()" required>
+                                    <input type="hidden" id="wastage-item-selected-id">
                                 </div>
 
                                 <div class="row g-2 mb-3">
@@ -1839,7 +1915,7 @@
                 </div>
             </div>
 
-            <!-- 9. DAY END PAGE -->
+            <!-- 9. DAY END PAGE (SEPARATE FLOAT & CASH SALES) -->
             <div id="page-dayend" class="page-section">
                 <div class="row">
                     <div class="col-md-5 mb-4">
@@ -1857,13 +1933,14 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label text-dark small fw-bold">Opening Float / Starting Cash (Rs.)</label>
+                                    <label class="form-label text-dark small fw-bold">Opening Cash Float (Rs.)</label>
                                     <input type="number" step="0.01" class="form-control bg-light" id="de-opening-float" value="0" oninput="calculateLiveDayEndReconciliation()" required readonly>
                                     <small class="text-muted" style="font-size: 0.75rem;">Opening Float set at Day Start cannot be edited manually.</small>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-dark small fw-bold">Actual Cash Collected in Hand (Rs.)</label>
-                                    <input type="number" step="0.01" class="form-control" id="de-actual-cash" value="0" oninput="calculateLiveDayEndReconciliation()" required>
+                                    <label class="form-label text-dark small fw-bold">Actual POS Cash Sales Collected (Rs.)</label>
+                                    <input type="number" step="0.01" class="form-control" id="de-actual-cash" value="0" oninput="calculateLiveDayEndReconciliation()" placeholder="Enter cash sales collected" required>
+                                    <small class="text-muted" style="font-size: 0.75rem;">Enter physical cash sales revenue collected (excluding float).</small>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label text-dark small fw-bold">Actual Card Collected (Terminal Total) (Rs.)</label>
@@ -1891,7 +1968,7 @@
                                 <table class="table table-bordered align-middle">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Method</th>
+                                            <th>Method / Line Item</th>
                                             <th class="text-end">System Expected</th>
                                             <th class="text-end">Actual Entered</th>
                                             <th class="text-end">Variance / Difference</th>
@@ -1899,25 +1976,37 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><strong>Cash</strong> (Float + Sales)</td>
+                                            <td><strong>Opening Cash Float</strong></td>
+                                            <td class="text-end" id="de-preview-exp-float">Rs. 0.00</td>
+                                            <td class="text-end text-primary" id="de-preview-act-float">Rs. 0.00</td>
+                                            <td class="text-end fw-bold text-muted" id="de-preview-var-float">Rs. 0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>POS Cash Sales Revenue</strong></td>
                                             <td class="text-end" id="de-preview-exp-cash">Rs. 0.00</td>
                                             <td class="text-end text-primary" id="de-preview-act-cash">Rs. 0.00</td>
                                             <td class="text-end fw-bold" id="de-preview-var-cash">Rs. 0.00</td>
                                         </tr>
+                                        <tr class="table-light fw-bold text-dark">
+                                            <td><i class="bi bi-box-arrow-in-down me-1"></i> Total Drawer Cash (Float + Cash Sales)</td>
+                                            <td class="text-end" id="de-preview-exp-drawer-cash">Rs. 0.00</td>
+                                            <td class="text-end text-primary" id="de-preview-act-drawer-cash">Rs. 0.00</td>
+                                            <td class="text-end" id="de-preview-var-drawer-cash">Rs. 0.00</td>
+                                        </tr>
                                         <tr>
-                                            <td><strong>Card</strong></td>
+                                            <td><strong>Card Terminal Sales</strong></td>
                                             <td class="text-end" id="de-preview-exp-card">Rs. 0.00</td>
                                             <td class="text-end text-primary" id="de-preview-act-card">Rs. 0.00</td>
                                             <td class="text-end fw-bold" id="de-preview-var-card">Rs. 0.00</td>
                                         </tr>
                                         <tr>
-                                            <td><strong>Online Transfer</strong></td>
+                                            <td><strong>Online Bank Transfers</strong></td>
                                             <td class="text-end" id="de-preview-exp-online">Rs. 0.00</td>
                                             <td class="text-end text-primary" id="de-preview-act-online">Rs. 0.00</td>
                                             <td class="text-end fw-bold" id="de-preview-var-online">Rs. 0.00</td>
                                         </tr>
                                         <tr class="table-secondary fw-bold text-dark">
-                                            <td>TOTAL SUMMARY</td>
+                                            <td>TOTAL SUMMARY (System Revenue)</td>
                                             <td class="text-end" id="de-preview-exp-total">Rs. 0.00</td>
                                             <td class="text-end" id="de-preview-act-total">Rs. 0.00</td>
                                             <td class="text-end" id="de-preview-var-total">Rs. 0.00</td>
@@ -2051,6 +2140,7 @@
     let categories = [];
     let products = [];
     let rawMaterials = [];
+    let rawMaterialsMap = {}; // Fast O(1) Hash Map Optimization
     let expenseCategories = [];
     let expenses = []; 
     let wastage = [];
@@ -2112,7 +2202,6 @@
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const sevenDaysAgoStr = getLocalDateString(sevenDaysAgo);
 
-    // Initial DateTime values for Item-Wise Sales Filter
     const start7WithTime = new Date();
     start7WithTime.setDate(start7WithTime.getDate() - 7);
     start7WithTime.setHours(0, 0, 0, 0);
@@ -2271,7 +2360,7 @@
         if (confirm("Are you sure you want to sign out?")) {
             try {
                 await auth.signOut();
-                categories = []; products = []; rawMaterials = []; expenseCategories = [];
+                categories = []; products = []; rawMaterials = []; rawMaterialsMap = {}; expenseCategories = [];
                 expenses = []; wastage = []; updates = []; cart = []; userAccountsList = [];
                 currentUserPermissions = null; todayExpectedSales = { cash: 0, card: 0, online: 0 };
                 currentPettyCashBalance = 0; pettyCashLogsList = []; recipeBuilderList = [];
@@ -2351,6 +2440,10 @@
             const rawMatSnapshot = await rtdb.ref('raw_materials').once('value');
             const rawMatData = rawMatSnapshot.val();
             rawMaterials = rawMatData ? Object.keys(rawMatData).map(key => ({ id: key, ...rawMatData[key] })) : [];
+            
+            // Re-populate fast O(1) Raw Materials Map
+            rawMaterialsMap = {};
+            rawMaterials.forEach(m => rawMaterialsMap[m.id] = m);
 
             const expCatSnapshot = await rtdb.ref('expenseCategories').once('value');
             const expCatData = expCatSnapshot.val();
@@ -2367,9 +2460,6 @@
             displayCategories();
             displayExpenseCategories();
             populateRawMaterialsDropdown();
-            populateWastageRawMaterialsDropdown();
-            populateRecipeRawMaterialsDropdown();
-            populatePettyCashCategoryDropdown();
             checkUnclosedShiftStatus();
             updateDashboardData();
             displayUpdates();
@@ -2383,7 +2473,6 @@
         }
     }
 
-    /* DAY START / SHIFT OPEN LOGIC */
     async function checkDayStartStatus(autoShowModal = true) {
         try {
             const snapshot = await rtdb.ref(`daily_summaries/${todayStr}/openingFloat`).once('value');
@@ -2473,12 +2562,13 @@
             displayPOSProducts();
             checkDayStartStatus(true);
         } else if (pageId === 'products') {
-            populateRecipeRawMaterialsDropdown();
+            populateRawMaterialsDropdown();
             if (isProductsLoaded) displayProducts();
         } else if (pageId === 'expenses') {
             loadPettyCashBalance();
+            populateRawMaterialsDropdown();
         } else if (pageId === 'wastage') {
-            populateWastageRawMaterialsDropdown();
+            populateRawMaterialsDropdown();
         } else if (pageId === 'reports') {
             generateSalesReport();
             generateExpensesReport();
@@ -2697,42 +2787,225 @@
     let currentProductPage = 1;
     const productsPerPage = 5;
 
-    function populateRecipeRawMaterialsDropdown() {
-        const select = document.getElementById('recipe-mat-select');
-        if (!select) return;
+    function populateRawMaterialsDropdown() {
+        const datalist = document.getElementById('raw-materials-datalist');
+        if (!datalist) return;
 
-        let html = '<option value="">-- Select Ingredient Material --</option>';
+        let datalistHtml = '';
+        rawMaterialsMap = {}; // Rebuild O(1) map
         rawMaterials.sort((a,b) => a.name.localeCompare(b.name)).forEach(mat => {
+            rawMaterialsMap[mat.id] = mat;
             const unitText = mat.unit ? ` (${mat.unit})` : '';
             const costText = mat.unitCost ? ` - Rs.${parseFloat(mat.unitCost).toFixed(2)}/${mat.unit || 'Unit'}` : '';
-            html += `<option value="${mat.id}">${mat.name}${unitText}${costText}</option>`;
+            datalistHtml += `<option value="${mat.name}" data-id="${mat.id}" data-cost="${mat.unitCost || 0}" data-unit="${mat.unit || 'Qty'}">${mat.name}${unitText}${costText}</option>`;
         });
 
-        select.innerHTML = html;
-        select.onchange = function() {
-            const mat = rawMaterials.find(m => m.id === this.value);
-            const unitDisplay = document.getElementById('recipe-mat-unit-display');
-            if (unitDisplay) unitDisplay.innerText = mat ? (mat.unit || 'Qty') : 'Qty';
-        };
+        datalist.innerHTML = datalistHtml;
     }
 
-    function addRecipeIngredientRow() {
-        const selectEl = document.getElementById('recipe-mat-select');
-        const matId = selectEl.value;
-        const qtyInput = document.getElementById('recipe-mat-qty');
-        const qty = parseFloat(qtyInput.value) || 0;
-        const mat = rawMaterials.find(m => m.id === matId);
+    function onGrnRawMaterialSearchInput() {
+        const inputVal = document.getElementById('grn-item-search-input').value.trim();
+        const priceInput = document.getElementById('grn-item-unitprice');
+        const hiddenId = document.getElementById('grn-item-selected-id');
 
-        if (!mat || qty <= 0) {
-            alert("Please select a Raw Material and enter a valid Portion Quantity!");
+        const mat = rawMaterials.find(m => m.name.toLowerCase() === inputVal.toLowerCase());
+        if (mat) {
+            priceInput.value = parseFloat(mat.unitCost || 0).toFixed(2);
+            hiddenId.value = mat.id;
+        } else {
+            hiddenId.value = '';
+        }
+    }
+
+    function onRecipeMaterialSearchInput() {
+        const inputVal = document.getElementById('recipe-mat-input').value.trim();
+        const unitDisplay = document.getElementById('recipe-mat-unit-display');
+        const hiddenId = document.getElementById('recipe-mat-selected-id');
+
+        const mat = rawMaterials.find(m => m.name.toLowerCase() === inputVal.toLowerCase());
+        if (mat) {
+            unitDisplay.innerText = mat.unit || 'Qty';
+            hiddenId.value = mat.id;
+        } else {
+            unitDisplay.innerText = 'Qty';
+            hiddenId.value = '';
+        }
+    }
+
+    function onWastageRawMaterialSearchInput() {
+        const inputVal = document.getElementById('wastage-item-search-input').value.trim();
+        const unitCostInput = document.getElementById('wastage-unit-cost');
+        const unitDisplay = document.getElementById('wastage-unit-display');
+        const hiddenId = document.getElementById('wastage-item-selected-id');
+
+        const mat = rawMaterials.find(m => m.name.toLowerCase() === inputVal.toLowerCase());
+        if (mat) {
+            unitCostInput.value = parseFloat(mat.unitCost || 0).toFixed(2);
+            unitDisplay.innerText = mat.unit || 'Qty';
+            hiddenId.value = mat.id;
+        } else {
+            unitCostInput.value = '0.00';
+            unitDisplay.innerText = 'Qty';
+            hiddenId.value = '';
+        }
+        calculateWastageTotal();
+    }
+
+    function openManageRawMaterialsModal() {
+        displayManageRawMaterialsTable();
+        new bootstrap.Modal(document.getElementById('manageRawMaterialsModal')).show();
+    }
+
+    function displayManageRawMaterialsTable() {
+        const tbody = document.getElementById('manage-raw-materials-table-body');
+        const searchVal = (document.getElementById('manage-mat-search-input')?.value || '').toLowerCase().trim();
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+
+        const filtered = rawMaterials.filter(m => m.name.toLowerCase().includes(searchVal));
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">No raw materials match your search.</td></tr>`;
             return;
         }
 
-        const existing = recipeBuilderList.find(i => i.materialId === matId);
+        let html = '';
+        filtered.sort((a,b) => a.name.localeCompare(b.name)).forEach(mat => {
+            html += `
+                <tr>
+                    <td><strong>${mat.name}</strong></td>
+                    <td class="text-center"><span class="badge bg-secondary">${mat.unit || 'Unit'}</span></td>
+                    <td class="text-end fw-bold text-primary">Rs. ${parseFloat(mat.unitCost || 0).toFixed(2)}</td>
+                    <td class="text-center small text-muted">${mat.lastUpdated || '-'}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-primary py-0 px-2 me-1" onclick="editRawMaterial('${mat.id}')"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteRawMaterial('${mat.id}')"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html;
+    }
+
+    function editRawMaterial(id) {
+        const mat = rawMaterialsMap[id] || rawMaterials.find(m => m.id === id);
+        if (!mat) return;
+
+        document.getElementById('edit-mat-id').value = mat.id;
+        document.getElementById('new-mat-name').value = mat.name;
+        document.getElementById('new-mat-unit').value = mat.unit || 'Kg';
+        document.getElementById('new-mat-cost').value = parseFloat(mat.unitCost || 0).toFixed(2);
+
+        document.getElementById('raw-material-modal-title').innerHTML = `<i class="bi bi-pencil-square me-1"></i> Edit Raw Material / Ingredient`;
+        document.getElementById('btn-save-raw-material').innerText = "Update Raw Material";
+
+        const manageModalEl = document.getElementById('manageRawMaterialsModal');
+        const manageModal = bootstrap.Modal.getInstance(manageModalEl);
+        if (manageModal) manageModal.hide();
+
+        new bootstrap.Modal(document.getElementById('newRawMaterialModal')).show();
+    }
+
+    async function deleteRawMaterial(id) {
+        const mat = rawMaterialsMap[id] || rawMaterials.find(m => m.id === id);
+        if (!mat) return;
+
+        if (confirm(`Are you sure you want to delete Raw Material "${mat.name}"?`)) {
+            try {
+                await rtdb.ref(`raw_materials/${id}`).remove();
+                rawMaterials = rawMaterials.filter(m => m.id !== id);
+                delete rawMaterialsMap[id];
+                populateRawMaterialsDropdown();
+                displayManageRawMaterialsTable();
+                if (isProductsLoaded) displayProducts();
+                alert(`Raw Material "${mat.name}" deleted successfully.`);
+            } catch (error) {
+                console.error("Error deleting Raw Material:", error);
+                alert("Failed to delete Raw Material.");
+            }
+        }
+    }
+
+    function openNewRawMaterialModal() {
+        document.getElementById('edit-mat-id').value = '';
+        document.getElementById('new-raw-material-form').reset();
+        document.getElementById('raw-material-modal-title').innerHTML = `<i class="bi bi-box-seam me-1"></i> Add New Raw Material / Ingredient`;
+        document.getElementById('btn-save-raw-material').innerText = "Save Raw Material";
+
+        new bootstrap.Modal(document.getElementById('newRawMaterialModal')).show();
+    }
+
+    async function saveNewRawMaterial(event) {
+        event.preventDefault();
+        const editId = document.getElementById('edit-mat-id').value;
+        const name = document.getElementById('new-mat-name').value.trim();
+        const unit = document.getElementById('new-mat-unit').value;
+        const cost = Math.max(0, parseFloat(document.getElementById('new-mat-cost').value) || 0);
+
+        if (!name) return;
+
+        try {
+            const nowFormatted = getLocalDateString();
+
+            if (editId) {
+                const matObj = { name, unit, unitCost: cost, lastUpdated: nowFormatted };
+                await rtdb.ref(`raw_materials/${editId}`).update(matObj);
+
+                const idx = rawMaterials.findIndex(m => m.id === editId);
+                if (idx !== -1) rawMaterials[idx] = { id: editId, ...matObj };
+                rawMaterialsMap[editId] = { id: editId, ...matObj };
+
+                alert(`Raw Material "${name}" updated successfully!`);
+            } else {
+                const newRef = rtdb.ref('raw_materials').push();
+                const matObj = { name, unit, unitCost: cost, lastUpdated: nowFormatted };
+                await newRef.set(matObj);
+
+                matObj.id = newRef.key;
+                rawMaterials.push(matObj);
+                rawMaterialsMap[newRef.key] = matObj;
+                alert(`Raw Material "${name}" created successfully!`);
+            }
+
+            populateRawMaterialsDropdown();
+
+            const modalEl = document.getElementById('newRawMaterialModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+
+            document.getElementById('new-raw-material-form').reset();
+            document.getElementById('edit-mat-id').value = '';
+
+            if (isProductsLoaded) displayProducts();
+            displayManageRawMaterialsTable();
+        } catch (error) {
+            console.error("Error saving Raw Material: ", error);
+            alert("Failed to save Raw Material.");
+        }
+    }
+
+    function addRecipeIngredientRow() {
+        const nameInput = document.getElementById('recipe-mat-input');
+        const inputVal = nameInput.value.trim();
+        const selectedId = document.getElementById('recipe-mat-selected-id').value;
+
+        let mat = rawMaterialsMap[selectedId] || rawMaterials.find(m => m.name.toLowerCase() === inputVal.toLowerCase());
+        const qtyInput = document.getElementById('recipe-mat-qty');
+        const qty = parseFloat(qtyInput.value) || 0;
+
+        if (!mat || qty <= 0) {
+            alert("Please search/select a valid Raw Material and enter Portion Quantity!");
+            return;
+        }
+
+        const existing = recipeBuilderList.find(i => i.materialId === mat.id);
         if (existing) existing.qty += qty;
         else recipeBuilderList.push({ materialId: mat.id, materialName: mat.name, unit: mat.unit || 'Unit', qty: qty });
 
-        selectEl.value = '';
+        nameInput.value = '';
+        document.getElementById('recipe-mat-selected-id').value = '';
         qtyInput.value = '';
         document.getElementById('recipe-mat-unit-display').innerText = 'Qty';
         displayRecipeBuilderTable();
@@ -2743,11 +3016,12 @@
         displayRecipeBuilderTable();
     }
 
+    // Fast O(1) Cost Lookups Optimization
     function calculateProductCostFromRecipe(recipeList) {
         if (!recipeList || !Array.isArray(recipeList) || recipeList.length === 0) return 0;
         let totalCost = 0;
         recipeList.forEach(item => {
-            const mat = rawMaterials.find(m => m.id === item.materialId);
+            const mat = rawMaterialsMap[item.materialId] || rawMaterials.find(m => m.id === item.materialId);
             const latestUnitCost = mat ? (parseFloat(mat.unitCost) || 0) : (parseFloat(item.unitCost) || 0);
             totalCost += item.qty * latestUnitCost;
         });
@@ -2767,7 +3041,7 @@
 
         let html = '';
         recipeBuilderList.forEach((item, index) => {
-            const mat = rawMaterials.find(m => m.id === item.materialId);
+            const mat = rawMaterialsMap[item.materialId] || rawMaterials.find(m => m.id === item.materialId);
             const latestUnitCost = mat ? (parseFloat(mat.unitCost) || 0) : 0;
             const lineCost = item.qty * latestUnitCost;
 
@@ -2812,20 +3086,25 @@
     function displayProducts() {
         if (!isProductsLoaded) return;
         const tableBody = document.getElementById('product-table-body');
+        const searchInputVal = (document.getElementById('product-list-search-input')?.value || '').toLowerCase().trim();
         tableBody.innerHTML = '';
 
-        if(products.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No products available.</td></tr>`;
+        const filteredProducts = products.filter(p => {
+            return p.name.toLowerCase().includes(searchInputVal) || (p.category && p.category.toLowerCase().includes(searchInputVal));
+        });
+
+        if (filteredProducts.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">No products found matching search filter.</td></tr>`;
             document.getElementById('product-pagination').innerHTML = '';
             return;
         }
 
-        const totalPages = Math.ceil(products.length / productsPerPage);
+        const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
         if (currentProductPage > totalPages) currentProductPage = totalPages;
         if (currentProductPage < 1) currentProductPage = 1;
 
         const startIdx = (currentProductPage - 1) * productsPerPage;
-        const paginatedProducts = products.slice(startIdx, startIdx + productsPerPage);
+        const paginatedProducts = filteredProducts.slice(startIdx, startIdx + productsPerPage);
 
         let tableHtml = '';
         paginatedProducts.forEach(product => {
@@ -2927,6 +3206,8 @@
     function clearProductForm() {
         document.getElementById('product-id').value = '';
         document.getElementById('product-form').reset();
+        document.getElementById('recipe-mat-input').value = '';
+        document.getElementById('recipe-mat-selected-id').value = '';
         recipeBuilderList = [];
         displayRecipeBuilderTable();
 
@@ -3003,76 +3284,20 @@
     let currentExpensePage = 1;
     const expensesPerPage = 5;
 
-    function populateRawMaterialsDropdown() {
-        const select = document.getElementById('grn-item-select');
-        if (!select) return;
-
-        let html = '<option value="">-- Select Raw Material Item --</option>';
-        rawMaterials.sort((a,b) => a.name.localeCompare(b.name)).forEach(mat => {
-            const currentCostText = mat.unitCost ? ` (Rs.${parseFloat(mat.unitCost).toFixed(2)}/${mat.unit || 'Unit'})` : '';
-            html += `<option value="${mat.id}">${mat.name}${currentCostText}</option>`;
-        });
-
-        select.innerHTML = html;
-        populateRecipeRawMaterialsDropdown();
-        populateWastageRawMaterialsDropdown();
-    }
-
-    function onRawMaterialSelect() {
-        const materialId = document.getElementById('grn-item-select').value;
-        const priceInput = document.getElementById('grn-item-unitprice');
-        const mat = rawMaterials.find(m => m.id === materialId);
-        priceInput.value = mat ? (mat.unitCost || '') : '';
-    }
-
-    function openNewRawMaterialModal() {
-        new bootstrap.Modal(document.getElementById('newRawMaterialModal')).show();
-    }
-
-    async function saveNewRawMaterial(event) {
-        event.preventDefault();
-        const name = document.getElementById('new-mat-name').value.trim();
-        const unit = document.getElementById('new-mat-unit').value;
-        const cost = Math.max(0, parseFloat(document.getElementById('new-mat-cost').value) || 0);
-
-        if (!name) return;
-
-        try {
-            const newRef = rtdb.ref('raw_materials').push();
-            const matObj = { name, unit, unitCost: cost, lastUpdated: todayStr };
-            await newRef.set(matObj);
-
-            matObj.id = newRef.key;
-            rawMaterials.push(matObj);
-            populateRawMaterialsDropdown();
-
-            document.getElementById('grn-item-select').value = newRef.key;
-            onRawMaterialSelect();
-
-            const modalEl = document.getElementById('newRawMaterialModal');
-            const modal = bootstrap.Modal.getInstance(modalEl);
-            if (modal) modal.hide();
-
-            document.getElementById('new-raw-material-form').reset();
-            alert(`Raw Material "${name}" created successfully!`);
-        } catch (error) {
-            console.error("Error creating Raw Material: ", error);
-            alert("Failed to create Raw Material.");
-        }
-    }
-
     function addGrnItemRow() {
-        const selectEl = document.getElementById('grn-item-select');
-        const materialId = selectEl.value;
+        const nameInput = document.getElementById('grn-item-search-input');
+        const inputVal = nameInput.value.trim();
+        const selectedId = document.getElementById('grn-item-selected-id').value;
+
         const qtyInput = document.getElementById('grn-item-qty');
         const priceInput = document.getElementById('grn-item-unitprice');
 
-        const mat = rawMaterials.find(m => m.id === materialId);
+        let mat = rawMaterialsMap[selectedId] || rawMaterials.find(m => m.name.toLowerCase() === inputVal.toLowerCase());
         const qty = parseFloat(qtyInput.value) || 0;
         const price = parseFloat(priceInput.value) || 0;
 
         if (!mat || qty <= 0 || price <= 0) {
-            alert("Please select a Raw Material and enter valid Qty & Unit Price!");
+            alert("Please search/select a valid Raw Material and enter valid Qty & Unit Price!");
             return;
         }
 
@@ -3080,7 +3305,8 @@
             materialId: mat.id, name: mat.name, unit: mat.unit || 'Unit', qty, price, total: qty * price
         });
 
-        selectEl.value = ''; qtyInput.value = ''; priceInput.value = '';
+        nameInput.value = ''; document.getElementById('grn-item-selected-id').value = '';
+        qtyInput.value = ''; priceInput.value = '';
         displayGrnItemsTable();
     }
 
@@ -3156,7 +3382,7 @@
                     updatesMap[`raw_materials/${item.materialId}/unitCost`] = item.price;
                     updatesMap[`raw_materials/${item.materialId}/lastUpdated`] = dateTimeFormatted;
 
-                    const matLocal = rawMaterials.find(m => m.id === item.materialId);
+                    const matLocal = rawMaterialsMap[item.materialId] || rawMaterials.find(m => m.id === item.materialId);
                     if (matLocal) {
                         matLocal.unitCost = item.price;
                         matLocal.lastUpdated = dateTimeFormatted;
@@ -3169,6 +3395,8 @@
             alert("GRN Note saved successfully & Raw Material Unit Costs updated!");
             document.getElementById('grn-form').reset();
             document.getElementById('expense-date').value = todayStr;
+            document.getElementById('grn-item-search-input').value = '';
+            document.getElementById('grn-item-selected-id').value = '';
             grnItemsList = [];
             displayGrnItemsTable();
             populateRawMaterialsDropdown();
@@ -3550,7 +3778,7 @@
         }
     }
 
-    /* COMPLETE PETTY CASH PDF SUMMARY REPORT GENERATOR */
+    /* ULTRA-FAST PETTY CASH PDF SUMMARY REPORT GENERATOR (POINT-IN-TIME OPENING BALANCE) */
     async function generatePettyCashPDF() {
         const startDate = document.getElementById('pc-filter-start').value;
         const endDate = document.getElementById('pc-filter-end').value;
@@ -3561,23 +3789,28 @@
         }
 
         try {
-            const snapshot = await rtdb.ref('petty_cash_logs')
+            // Fast O(1) Opening Balance Fetch (Reads prior record before startDate)
+            const priorSnap = await rtdb.ref('petty_cash_logs')
                 .orderByChild('date')
+                .endBefore(startDate)
+                .limitToLast(1)
+                .once('value');
+
+            let openingBalance = 0;
+            if (priorSnap.exists()) {
+                const priorVal = Object.values(priorSnap.val())[0];
+                openingBalance = parseFloat(priorVal.balanceAfter || 0);
+            }
+
+            // Fetch ONLY logs within range
+            const periodSnap = await rtdb.ref('petty_cash_logs')
+                .orderByChild('date')
+                .startAt(startDate)
                 .endAt(endDate)
                 .once('value');
             
-            const data = snapshot.val() || {};
-            const allLogs = Object.keys(data).map(k => ({ id: k, ...data[k] }));
-
-            let openingBalance = 0;
-            const priorLogs = allLogs.filter(log => log.date < startDate);
-            priorLogs.forEach(log => {
-                const amt = parseFloat(log.amount || 0);
-                if (log.type === 'FLOAT_IN') openingBalance += amt;
-                else openingBalance -= amt;
-            });
-
-            const periodLogs = allLogs.filter(log => log.date >= startDate && log.date <= endDate);
+            const data = periodSnap.val() || {};
+            const periodLogs = Object.keys(data).map(k => ({ id: k, ...data[k] }));
             periodLogs.sort((a,b) => (a.dateTime || a.date).localeCompare(b.dateTime || b.date));
 
             if (periodLogs.length === 0 && openingBalance === 0) {
@@ -3642,6 +3875,8 @@
             printElement.style.fontFamily = 'Arial, sans-serif';
             printElement.style.color = '#333';
             printElement.innerHTML = `
+                <div style="text-align:center;
+
                 <div style="text-align:center; border-bottom:2px solid #1a2a6c; padding-bottom:10px; margin-bottom:15px;">
                     <h2 style="margin:0; color:#1a2a6c; font-weight:bold; letter-spacing:0.5px;">HELLO BUBU RESTAURANT</h2>
                     <p style="margin:2px 0; font-size:11px; color:#555;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
@@ -3746,36 +3981,6 @@
     let currentWastagePage = 1;
     const wastagePerPage = 5;
 
-    function populateWastageRawMaterialsDropdown() {
-        const select = document.getElementById('wastage-item-select');
-        if (!select) return;
-
-        let html = '<option value="">-- Select Raw Material --</option>';
-        rawMaterials.sort((a,b) => a.name.localeCompare(b.name)).forEach(mat => {
-            const currentCostText = mat.unitCost ? ` (Rs.${parseFloat(mat.unitCost).toFixed(2)}/${mat.unit || 'Unit'})` : '';
-            html += `<option value="${mat.id}">${mat.name}${currentCostText}</option>`;
-        });
-
-        select.innerHTML = html;
-    }
-
-    function onWastageMaterialSelect() {
-        const materialId = document.getElementById('wastage-item-select').value;
-        const unitCostInput = document.getElementById('wastage-unit-cost');
-        const unitDisplay = document.getElementById('wastage-unit-display');
-
-        const mat = rawMaterials.find(m => m.id === materialId);
-        if (mat) {
-            unitCostInput.value = parseFloat(mat.unitCost || 0).toFixed(2);
-            unitDisplay.innerText = mat.unit || 'Qty';
-        } else {
-            unitCostInput.value = '0.00';
-            unitDisplay.innerText = 'Qty';
-        }
-
-        calculateWastageTotal();
-    }
-
     function calculateWastageTotal() {
         const qty = parseFloat(document.getElementById('wastage-qty').value) || 0;
         const unitCost = parseFloat(document.getElementById('wastage-unit-cost').value) || 0;
@@ -3816,8 +4021,7 @@
             return;
         }
 
-        const totalPages = Math.ceil
-        (wastage.length / wastagePerPage);
+        const totalPages = Math.ceil(wastage.length / wastagePerPage);
         if (currentWastagePage > totalPages) currentWastagePage = totalPages;
         if (currentWastagePage < 1) currentWastagePage = 1;
 
@@ -3855,15 +4059,16 @@
 
     async function saveWastage(event) {
         event.preventDefault();
-        const matId = document.getElementById('wastage-item-select').value;
-        const mat = rawMaterials.find(m => m.id === matId);
+        const matSearchInput = document.getElementById('wastage-item-search-input').value.trim();
+        const selectedId = document.getElementById('wastage-item-selected-id').value;
+        const mat = rawMaterialsMap[selectedId] || rawMaterials.find(m => m.name.toLowerCase() === matSearchInput.toLowerCase());
         const qty = parseFloat(document.getElementById('wastage-qty').value) || 0;
         const unitCost = parseFloat(document.getElementById('wastage-unit-cost').value) || 0;
         const totalLoss = parseFloat(document.getElementById('wastage-amount').value) || 0;
         const date = document.getElementById('wastage-date').value;
 
         if (!mat || qty <= 0 || totalLoss <= 0) {
-            alert("Please select a Raw Material and enter a valid Wasted Qty!");
+            alert("Please search/select a valid Raw Material and enter Wasted Qty!");
             return;
         }
 
@@ -3910,6 +4115,8 @@
     function clearWastageForm() {
         document.getElementById('wastage-id').value = '';
         document.getElementById('wastage-form').reset();
+        document.getElementById('wastage-item-search-input').value = '';
+        document.getElementById('wastage-item-selected-id').value = '';
         document.getElementById('wastage-date').value = todayStr;
         document.getElementById('wastage-unit-display').innerText = 'Qty';
         document.getElementById('wastage-unit-cost').value = '0.00';
@@ -4239,6 +4446,16 @@
             updatesMap[`daily_summaries/${todayStr}/orders_count`] = firebase.database.ServerValue.increment(1);
             updatesMap[`daily_summaries/${todayStr}/${methodKey}`] = firebase.database.ServerValue.increment(checkoutTotals.total);
 
+            // Item-wise sales pre-aggregation for Fast Reports
+            cart.forEach(item => {
+                const prodId = item.product.id || item.product.name;
+                updatesMap[`daily_item_sales/${todayStr}/${prodId}/qty`] = firebase.database.ServerValue.increment(item.qty);
+                updatesMap[`daily_item_sales/${todayStr}/${prodId}/revenue`] = firebase.database.ServerValue.increment(item.product.price * item.qty);
+                updatesMap[`daily_item_sales/${todayStr}/${prodId}/name`] = item.product.name;
+                updatesMap[`daily_item_sales/${todayStr}/${prodId}/category`] = item.product.category || "General";
+                updatesMap[`daily_item_sales/${todayStr}/${prodId}/price`] = item.product.price;
+            });
+
             await rtdb.ref().update(updatesMap);
             
             cart = [];
@@ -4352,7 +4569,6 @@
         }
     }
 
-    /* INVOICE HISTORY FILTER BY DATE RANGE (ULTRA FAST INDEXED QUERY) */
     async function filterInvoicesByDate() {
         const startDate = document.getElementById('invoice-filter-start').value;
         const endDate = document.getElementById('invoice-filter-end').value;
@@ -4439,6 +4655,15 @@
             updatesMap[`daily_summaries/${sale.date}/orders_count`] = firebase.database.ServerValue.increment(-1);
             updatesMap[`daily_summaries/${sale.date}/${methodKey}`] = firebase.database.ServerValue.increment(-saleTotal);
 
+            // Reverse pre-aggregated daily item sales
+            if (sale.items && Array.isArray(sale.items)) {
+                sale.items.forEach(item => {
+                    const prodId = item.product.id || item.product.name;
+                    updatesMap[`daily_item_sales/${sale.date}/${prodId}/qty`] = firebase.database.ServerValue.increment(-item.qty);
+                    updatesMap[`daily_item_sales/${sale.date}/${prodId}/revenue`] = firebase.database.ServerValue.increment(-(item.product.price * item.qty));
+                });
+            }
+
             await rtdb.ref().update(updatesMap);
             alert(`Invoice #${billNo} has been successfully reversed.`);
             updateDashboardData();
@@ -4448,7 +4673,7 @@
         }
     }
 
-    /* ACCURATE ITEM-WISE SALES DATA PROCESSOR WITH EXACT TIME RANGE SUPPORT */
+    /* FAST ITEM-WISE SALES DATA PROCESSOR (USING PRE-AGGREGATED DAILY SUMMARIES) */
     async function fetchFilteredItemWiseSalesData() {
         const startVal = document.getElementById('sales-start-date').value;
         const endVal = document.getElementById('sales-end-date').value;
@@ -4469,55 +4694,54 @@
         const startDateStr = startVal.split('T')[0];
         const endDateStr = endVal.split('T')[0];
 
-        const snapshot = await rtdb.ref('sales').orderByChild('date').startAt(startDateStr).endAt(endDateStr).once('value');
+        // Fetch pre-aggregated item sales
+        const snapshot = await rtdb.ref('daily_item_sales').orderByKey().startAt(startDateStr).endAt(endDateStr).once('value');
         const data = snapshot.val() || {};
-
-        const activeSales = Object.values(data).filter(sale => {
-            if (sale.status === 'Reversed') return false;
-            
-            const saleTime = sale.timestamp ? sale.timestamp : new Date(sale.date).getTime();
-            return saleTime >= startTimestamp && saleTime <= endTimestamp;
-        });
 
         let overallTotalRevenue = 0;
         let totalPortionsCount = 0;
         let itemWiseReport = {};
         let categoryWiseTotals = {};
 
-        activeSales.forEach(sale => {
-            overallTotalRevenue += parseFloat(sale.total || 0);
-            if (sale.items && Array.isArray(sale.items)) {
-                sale.items.forEach(cartItem => {
-                    const itemID = cartItem.product.id || cartItem.product.name;
-                    const itemName = cartItem.product.name;
-                    const itemCategory = cartItem.product.category || "General";
-                    const itemQty = parseInt(cartItem.qty || 0);
-                    const itemPrice = parseFloat(cartItem.product.price || 0);
-                    const lineRevenue = itemPrice * itemQty;
+        Object.keys(data).forEach(dayKey => {
+            const dayItems = data[dayKey];
+            Object.keys(dayItems).forEach(itemKey => {
+                const itemData = dayItems[itemKey];
+                const qty = parseInt(itemData.qty || 0);
+                const revenue = parseFloat(itemData.revenue || 0);
+                const cat = itemData.category || "General";
 
-                    totalPortionsCount += itemQty;
-                    categoryWiseTotals[itemCategory] = (categoryWiseTotals[itemCategory] || 0) + lineRevenue;
+                if (qty > 0) {
+                    overallTotalRevenue += revenue;
+                    totalPortionsCount += qty;
+                    categoryWiseTotals[cat] = (categoryWiseTotals[cat] || 0) + revenue;
 
-                    if (itemWiseReport[itemID]) {
-                        itemWiseReport[itemID].qtySold += itemQty;
-                        itemWiseReport[itemID].revenue += lineRevenue;
+                    if (itemWiseReport[itemKey]) {
+                        itemWiseReport[itemKey].qtySold += qty;
+                        itemWiseReport[itemKey].revenue += revenue;
                     } else {
-                        itemWiseReport[itemID] = {
-                            name: itemName,
-                            category: itemCategory,
-                            price: itemPrice,
-                            qtySold: itemQty,
-                            revenue: lineRevenue
+                        itemWiseReport[itemKey] = {
+                            name: itemData.name || itemKey,
+                            category: cat,
+                            price: parseFloat(itemData.price || 0),
+                            qtySold: qty,
+                            revenue: revenue
                         };
                     }
-                });
-            }
+                }
+            });
         });
+
+        // Also fetch daily summary count
+        const summarySnap = await rtdb.ref('daily_summaries').orderByKey().startAt(startDateStr).endAt(endDateStr).once('value');
+        const summaryData = summarySnap.val() || {};
+        let ordersCount = 0;
+        Object.values(summaryData).forEach(s => ordersCount += parseInt(s.orders_count || 0));
 
         return {
             startValFormatted: startVal.replace('T', ' '),
             endValFormatted: endVal.replace('T', ' '),
-            ordersCount: activeSales.length,
+            ordersCount,
             overallTotalRevenue,
             totalPortionsCount,
             itemWiseReport,
@@ -4568,7 +4792,6 @@
         }
     }
 
-    /* HIGH-QUALITY ITEM-WISE SALES PDF REPORT GENERATOR */
     async function downloadItemWiseSalesPDF() {
         try {
             const reportData = await fetchFilteredItemWiseSalesData();
@@ -4756,7 +4979,6 @@
         }
     }
 
-    /* COMPLETE GRN SUMMARY PDF GENERATOR FOR SELECTED DATE RANGE */
     async function downloadGRNSummaryPDF() {
         const startDate = document.getElementById('expenses-start-date') ? document.getElementById('expenses-start-date').value : document.getElementById('expense-filter-start').value;
         const endDate = document.getElementById('expenses-end-date') ? document.getElementById('expenses-end-date').value : document.getElementById('expense-filter-end').value;
@@ -5107,6 +5329,7 @@
         html2pdf().set(opt).from(element).save();
     }
 
+    /* DAY END (Z-REPORT) DATA FETCHING & LIVE RECONCILIATION */
     async function fetchTodaySalesForDayEnd() {
         const selectedDate = (document.getElementById('de-shift-date') && document.getElementById('de-shift-date').value) ? document.getElementById('de-shift-date').value : todayStr;
         try {
@@ -5130,43 +5353,63 @@
         }
     }
 
+    /* LIVE DAY END RECONCILIATION WITH SEPARATE FLOAT & CASH SALES CALCULATION */
     function calculateLiveDayEndReconciliation() {
         const openingFloat = parseFloat(document.getElementById('de-opening-float').value) || 0;
-        const actualCash = parseFloat(document.getElementById('de-actual-cash').value) || 0;
+        const actualCashSales = parseFloat(document.getElementById('de-actual-cash').value) || 0;
         const actualCard = parseFloat(document.getElementById('de-actual-card').value) || 0;
         const actualOnline = parseFloat(document.getElementById('de-actual-online').value) || 0;
 
-        const expectedCashTotal = todayExpectedSales.cash + openingFloat;
+        const expectedCashSales = todayExpectedSales.cash;
         const expectedCardTotal = todayExpectedSales.card;
         const expectedOnlineTotal = todayExpectedSales.online;
 
-        const varianceCash = actualCash - expectedCashTotal;
+        const expectedDrawerCash = openingFloat + expectedCashSales;
+        const actualDrawerCash = openingFloat + actualCashSales;
+
+        const varianceCashSales = actualCashSales - expectedCashSales;
+        const varianceDrawerCash = actualDrawerCash - expectedDrawerCash;
         const varianceCard = actualCard - expectedCardTotal;
         const varianceOnline = actualOnline - expectedOnlineTotal;
 
-        const totalExpected = expectedCashTotal + expectedCardTotal + expectedOnlineTotal;
-        const totalActual = actualCash + actualCard + actualOnline;
-        const totalVariance = totalActual - totalExpected;
+        const totalExpectedRevenue = expectedCashSales + expectedCardTotal + expectedOnlineTotal;
+        const totalActualRevenue = actualCashSales + actualCard + actualOnline;
+        const totalVarianceRevenue = totalActualRevenue - totalExpectedRevenue;
 
-        document.getElementById('de-preview-exp-cash').innerText = `Rs. ${expectedCashTotal.toFixed(2)}`;
-        document.getElementById('de-preview-act-cash').innerText = `Rs. ${actualCash.toFixed(2)}`;
-        document.getElementById('de-preview-var-cash').innerText = `Rs. ${varianceCash.toFixed(2)}`;
-        setVarianceClass('de-preview-var-cash', varianceCash);
+        // Display Opening Float Line
+        document.getElementById('de-preview-exp-float').innerText = `Rs. ${openingFloat.toFixed(2)}`;
+        document.getElementById('de-preview-act-float').innerText = `Rs. ${openingFloat.toFixed(2)}`;
+        document.getElementById('de-preview-var-float').innerText = `Rs. 0.00`;
 
+        // Display POS Cash Sales Revenue Line
+        document.getElementById('de-preview-exp-cash').innerText = `Rs. ${expectedCashSales.toFixed(2)}`;
+        document.getElementById('de-preview-act-cash').innerText = `Rs. ${actualCashSales.toFixed(2)}`;
+        document.getElementById('de-preview-var-cash').innerText = `Rs. ${varianceCashSales.toFixed(2)}`;
+        setVarianceClass('de-preview-var-cash', varianceCashSales);
+
+        // Display Total Drawer Cash Line
+        document.getElementById('de-preview-exp-drawer-cash').innerText = `Rs. ${expectedDrawerCash.toFixed(2)}`;
+        document.getElementById('de-preview-act-drawer-cash').innerText = `Rs. ${actualDrawerCash.toFixed(2)}`;
+        document.getElementById('de-preview-var-drawer-cash').innerText = `Rs. ${varianceDrawerCash.toFixed(2)}`;
+        setVarianceClass('de-preview-var-drawer-cash', varianceDrawerCash);
+
+        // Display Card Line
         document.getElementById('de-preview-exp-card').innerText = `Rs. ${expectedCardTotal.toFixed(2)}`;
         document.getElementById('de-preview-act-card').innerText = `Rs. ${actualCard.toFixed(2)}`;
         document.getElementById('de-preview-var-card').innerText = `Rs. ${varianceCard.toFixed(2)}`;
         setVarianceClass('de-preview-var-card', varianceCard);
 
+        // Display Online Line
         document.getElementById('de-preview-exp-online').innerText = `Rs. ${expectedOnlineTotal.toFixed(2)}`;
         document.getElementById('de-preview-act-online').innerText = `Rs. ${actualOnline.toFixed(2)}`;
         document.getElementById('de-preview-var-online').innerText = `Rs. ${varianceOnline.toFixed(2)}`;
         setVarianceClass('de-preview-var-online', varianceOnline);
 
-        document.getElementById('de-preview-exp-total').innerText = `Rs. ${totalExpected.toFixed(2)}`;
-        document.getElementById('de-preview-act-total').innerText = `Rs. ${totalActual.toFixed(2)}`;
-        document.getElementById('de-preview-var-total').innerText = `Rs. ${totalVariance.toFixed(2)}`;
-        setVarianceClass('de-preview-var-total', totalVariance);
+        // Display Total Revenue Summary Line
+        document.getElementById('de-preview-exp-total').innerText = `Rs. ${totalExpectedRevenue.toFixed(2)}`;
+        document.getElementById('de-preview-act-total').innerText = `Rs. ${totalActualRevenue.toFixed(2)}`;
+        document.getElementById('de-preview-var-total').innerText = `Rs. ${totalVarianceRevenue.toFixed(2)}`;
+        setVarianceClass('de-preview-var-total', totalVarianceRevenue);
     }
 
     function setVarianceClass(elementId, value) {
@@ -5178,27 +5421,31 @@
         else el.classList.add("text-muted");
     }
 
+    /* SUBMIT DAY END SHIFT CLOSURE (Z-REPORT) */
     async function submitDayEnd(event) {
         event.preventDefault();
 
         const selectedDate = (document.getElementById('de-shift-date') && document.getElementById('de-shift-date').value) ? document.getElementById('de-shift-date').value : todayStr;
         const openingFloat = parseFloat(document.getElementById('de-opening-float').value) || 0;
-        const actualCash = parseFloat(document.getElementById('de-actual-cash').value) || 0;
+        const actualCashSales = parseFloat(document.getElementById('de-actual-cash').value) || 0;
         const actualCard = parseFloat(document.getElementById('de-actual-card').value) || 0;
         const actualOnline = parseFloat(document.getElementById('de-actual-online').value) || 0;
         const notes = document.getElementById('de-notes').value.trim();
 
-        const expectedCashTotal = todayExpectedSales.cash + openingFloat;
+        const expectedCashSales = todayExpectedSales.cash;
         const expectedCardTotal = todayExpectedSales.card;
         const expectedOnlineTotal = todayExpectedSales.online;
 
-        const varianceCash = actualCash - expectedCashTotal;
+        const expectedDrawerCash = openingFloat + expectedCashSales;
+        const actualDrawerCash = openingFloat + actualCashSales;
+
+        const varianceCashSales = actualCashSales - expectedCashSales;
         const varianceCard = actualCard - expectedCardTotal;
         const varianceOnline = actualOnline - expectedOnlineTotal;
 
-        const totalExpected = expectedCashTotal + expectedCardTotal + expectedOnlineTotal;
-        const totalActual = actualCash + actualCard + actualOnline;
-        const totalVariance = totalActual - totalExpected;
+        const totalExpectedRevenue = expectedCashSales + expectedCardTotal + expectedOnlineTotal;
+        const totalActualRevenue = actualCashSales + actualCard + actualOnline;
+        const totalVarianceRevenue = totalActualRevenue - totalExpectedRevenue;
 
         const currentUserName = auth.currentUser ? (auth.currentUser.email.split('@')[0]) : "system";
 
@@ -5206,18 +5453,20 @@
             date: selectedDate,
             closedBy: currentUserName,
             openingFloat: openingFloat,
-            expectedCash: expectedCashTotal,
-            actualCash: actualCash,
-            varianceCash: varianceCash,
+            expectedCashSales: expectedCashSales,
+            actualCashSales: actualCashSales,
+            varianceCashSales: varianceCashSales,
+            expectedDrawerCash: expectedDrawerCash,
+            actualDrawerCash: actualDrawerCash,
             expectedCard: expectedCardTotal,
             actualCard: actualCard,
             varianceCard: varianceCard,
             expectedOnline: expectedOnlineTotal,
             actualOnline: actualOnline,
             varianceOnline: varianceOnline,
-            totalExpected: totalExpected,
-            totalActual: totalActual,
-            totalVariance: totalVariance,
+            totalExpected: totalExpectedRevenue,
+            totalActual: totalActualRevenue,
+            totalVariance: totalVarianceRevenue,
             notes: notes || "N/A",
             timestamp: firebase.database.ServerValue.TIMESTAMP
         };
@@ -5229,9 +5478,12 @@
             document.getElementById('print-z-meta').innerText = `Date: ${selectedDate} | Closed By: ${currentUserName}`;
             document.getElementById('print-z-float').innerText = `Rs. ${openingFloat.toFixed(2)}`;
             
-            document.getElementById('print-z-exp-cash').innerText = `Rs. ${expectedCashTotal.toFixed(2)}`;
-            document.getElementById('print-z-act-cash').innerText = `Rs. ${actualCash.toFixed(2)}`;
-            document.getElementById('print-z-var-cash').innerText = `Rs. ${varianceCash.toFixed(2)}`;
+            document.getElementById('print-z-exp-cash').innerText = `Rs. ${expectedCashSales.toFixed(2)}`;
+            document.getElementById('print-z-act-cash').innerText = `Rs. ${actualCashSales.toFixed(2)}`;
+            document.getElementById('print-z-var-cash').innerText = `Rs. ${varianceCashSales.toFixed(2)}`;
+
+            document.getElementById('print-z-exp-drawer-cash').innerText = `Rs. ${expectedDrawerCash.toFixed(2)}`;
+            document.getElementById('print-z-act-drawer-cash').innerText = `Rs. ${actualDrawerCash.toFixed(2)}`;
 
             document.getElementById('print-z-exp-card').innerText = `Rs. ${expectedCardTotal.toFixed(2)}`;
             document.getElementById('print-z-act-card').innerText = `Rs. ${actualCard.toFixed(2)}`;
@@ -5241,9 +5493,9 @@
             document.getElementById('print-z-act-online').innerText = `Rs. ${actualOnline.toFixed(2)}`;
             document.getElementById('print-z-var-online').innerText = `Rs. ${varianceOnline.toFixed(2)}`;
 
-            document.getElementById('print-z-sales-total').innerText = `Rs. ${totalExpected.toFixed(2)}`;
-            document.getElementById('print-z-collected-total').innerText = `Rs. ${totalActual.toFixed(2)}`;
-            document.getElementById('print-z-variance-total').innerText = `Rs. ${totalVariance.toFixed(2)}`;
+            document.getElementById('print-z-sales-total').innerText = `Rs. ${totalExpectedRevenue.toFixed(2)}`;
+            document.getElementById('print-z-collected-total').innerText = `Rs. ${totalActualRevenue.toFixed(2)}`;
+            document.getElementById('print-z-variance-total').innerText = `Rs. ${totalVarianceRevenue.toFixed(2)}`;
             document.getElementById('print-z-notes').innerText = notes || "N/A";
 
             document.body.classList.add('print-zreport');
@@ -5282,13 +5534,16 @@
             let historyHtml = '';
             list.forEach(item => {
                 const varClass = item.totalVariance < 0 ? 'text-danger' : (item.totalVariance > 0 ? 'text-success' : 'text-muted');
+                const expCashVal = parseFloat(item.expectedCashSales || item.expectedCash || 0);
+                const actCashVal = parseFloat(item.actualCashSales || item.actualCash || 0);
+
                 historyHtml += `
                     <tr>
                         <td><strong>${item.date}</strong></td>
                         <td>${item.closedBy}</td>
-                        <td class="text-end">Rs. ${parseFloat(item.expectedCash).toFixed(2)}</td>
-                        <td class="text-end">Rs. ${parseFloat(item.actualCash).toFixed(2)}</td>
-                        <td class="text-end fw-bold ${varClass}">Rs. ${parseFloat(item.totalVariance).toFixed(2)}</td>
+                        <td class="text-end">Rs. ${expCashVal.toFixed(2)}</td>
+                        <td class="text-end">Rs. ${actCashVal.toFixed(2)}</td>
+                        <td class="text-end fw-bold ${varClass}">Rs. ${parseFloat(item.totalVariance || 0).toFixed(2)}</td>
                         <td class="text-center">
                             <button class="btn btn-sm btn-outline-dark py-0 px-1" onclick="reprintZReport('${item.date}')" style="font-size: 0.8rem;">
                                 <i class="bi bi-printer"></i> Reprint
@@ -5311,12 +5566,22 @@
             const item = snapshot.val();
             if (!item) return;
 
+            const expCashVal = parseFloat(item.expectedCashSales || item.expectedCash || 0);
+            const actCashVal = parseFloat(item.actualCashSales || item.actualCash || 0);
+            const varCashVal = parseFloat(item.varianceCashSales || item.varianceCash || 0);
+
+            const expDrawerCash = parseFloat(item.expectedDrawerCash || (expCashVal + parseFloat(item.openingFloat || 0)));
+            const actDrawerCash = parseFloat(item.actualDrawerCash || (actCashVal + parseFloat(item.openingFloat || 0)));
+
             document.getElementById('print-z-meta').innerText = `Date: ${item.date} | User: ${item.closedBy}`;
             document.getElementById('print-z-float').innerText = `Rs. ${parseFloat(item.openingFloat || 0).toFixed(2)}`;
             
-            document.getElementById('print-z-exp-cash').innerText = `Rs. ${parseFloat(item.expectedCash || 0).toFixed(2)}`;
-            document.getElementById('print-z-act-cash').innerText = `Rs. ${parseFloat(item.actualCash || 0).toFixed(2)}`;
-            document.getElementById('print-z-var-cash').innerText = `Rs. ${parseFloat(item.varianceCash || 0).toFixed(2)}`;
+            document.getElementById('print-z-exp-cash').innerText = `Rs. ${expCashVal.toFixed(2)}`;
+            document.getElementById('print-z-act-cash').innerText = `Rs. ${actCashVal.toFixed(2)}`;
+            document.getElementById('print-z-var-cash').innerText = `Rs. ${varCashVal.toFixed(2)}`;
+
+            document.getElementById('print-z-exp-drawer-cash').innerText = `Rs. ${expDrawerCash.toFixed(2)}`;
+            document.getElementById('print-z-act-drawer-cash').innerText = `Rs. ${actDrawerCash.toFixed(2)}`;
 
             document.getElementById('print-z-exp-card').innerText = `Rs. ${parseFloat(item.expectedCard || 0).toFixed(2)}`;
             document.getElementById('print-z-act-card').innerText = `Rs. ${parseFloat(item.actualCard || 0).toFixed(2)}`;
