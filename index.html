@@ -2818,6 +2818,7 @@
     }
 
     function onRecipeMaterialSearchInput() {
+
         const inputVal = document.getElementById('recipe-mat-input').value.trim();
         const unitDisplay = document.getElementById('recipe-mat-unit-display');
         const hiddenId = document.getElementById('recipe-mat-selected-id');
@@ -3016,7 +3017,6 @@
         displayRecipeBuilderTable();
     }
 
-    // Fast O(1) Cost Lookups Optimization
     function calculateProductCostFromRecipe(recipeList) {
         if (!recipeList || !Array.isArray(recipeList) || recipeList.length === 0) return 0;
         let totalCost = 0;
@@ -3778,7 +3778,6 @@
         }
     }
 
-    /* ULTRA-FAST PETTY CASH PDF SUMMARY REPORT GENERATOR (POINT-IN-TIME OPENING BALANCE) */
     async function generatePettyCashPDF() {
         const startDate = document.getElementById('pc-filter-start').value;
         const endDate = document.getElementById('pc-filter-end').value;
@@ -3789,7 +3788,6 @@
         }
 
         try {
-            // Fast O(1) Opening Balance Fetch (Reads prior record before startDate)
             const priorSnap = await rtdb.ref('petty_cash_logs')
                 .orderByChild('date')
                 .endBefore(startDate)
@@ -3802,7 +3800,6 @@
                 openingBalance = parseFloat(priorVal.balanceAfter || 0);
             }
 
-            // Fetch ONLY logs within range
             const periodSnap = await rtdb.ref('petty_cash_logs')
                 .orderByChild('date')
                 .startAt(startDate)
@@ -3875,8 +3872,6 @@
             printElement.style.fontFamily = 'Arial, sans-serif';
             printElement.style.color = '#333';
             printElement.innerHTML = `
-                <div style="text-align:center;
-
                 <div style="text-align:center; border-bottom:2px solid #1a2a6c; padding-bottom:10px; margin-bottom:15px;">
                     <h2 style="margin:0; color:#1a2a6c; font-weight:bold; letter-spacing:0.5px;">HELLO BUBU RESTAURANT</h2>
                     <p style="margin:2px 0; font-size:11px; color:#555;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
@@ -4673,7 +4668,7 @@
         }
     }
 
-    /* FAST ITEM-WISE SALES DATA PROCESSOR (USING PRE-AGGREGATED DAILY SUMMARIES) */
+    /* FAST & ACCURATE ITEM-WISE SALES DATA PROCESSOR (READS DIRECTLY FROM INVOICES) */
     async function fetchFilteredItemWiseSalesData() {
         const startVal = document.getElementById('sales-start-date').value;
         const endVal = document.getElementById('sales-end-date').value;
@@ -4694,59 +4689,77 @@
         const startDateStr = startVal.split('T')[0];
         const endDateStr = endVal.split('T')[0];
 
-        // Fetch pre-aggregated item sales
-        const snapshot = await rtdb.ref('daily_item_sales').orderByKey().startAt(startDateStr).endAt(endDateStr).once('value');
-        const data = snapshot.val() || {};
+        try {
+            // Fetch directly from actual Sales Invoices for 100% accuracy
+            const snapshot = await rtdb.ref('sales').orderByChild('date').startAt(startDateStr).endAt(endDateStr).once('value');
+            const salesData = snapshot.val() || {};
 
-        let overallTotalRevenue = 0;
-        let totalPortionsCount = 0;
-        let itemWiseReport = {};
-        let categoryWiseTotals = {};
+            let overallTotalRevenue = 0;
+            let totalPortionsCount = 0;
+            let ordersCount = 0;
+            let itemWiseReport = {};
+            let categoryWiseTotals = {};
 
-        Object.keys(data).forEach(dayKey => {
-            const dayItems = data[dayKey];
-            Object.keys(dayItems).forEach(itemKey => {
-                const itemData = dayItems[itemKey];
-                const qty = parseInt(itemData.qty || 0);
-                const revenue = parseFloat(itemData.revenue || 0);
-                const cat = itemData.category || "General";
+            Object.keys(salesData).forEach(billKey => {
+                const sale = salesData[billKey];
+                
+                // Exclude reversed bills
+                if (sale.status !== 'Reversed') {
+                    
+                    // Precise Time Filtering if timestamp is present
+                    if (sale.timestamp) {
+                        if (sale.timestamp < startTimestamp || sale.timestamp > endTimestamp) {
+                            return; // Skip bills outside the selected time range
+                        }
+                    }
 
-                if (qty > 0) {
-                    overallTotalRevenue += revenue;
-                    totalPortionsCount += qty;
-                    categoryWiseTotals[cat] = (categoryWiseTotals[cat] || 0) + revenue;
+                    ordersCount++;
 
-                    if (itemWiseReport[itemKey]) {
-                        itemWiseReport[itemKey].qtySold += qty;
-                        itemWiseReport[itemKey].revenue += revenue;
-                    } else {
-                        itemWiseReport[itemKey] = {
-                            name: itemData.name || itemKey,
-                            category: cat,
-                            price: parseFloat(itemData.price || 0),
-                            qtySold: qty,
-                            revenue: revenue
-                        };
+                    if (sale.items && Array.isArray(sale.items)) {
+                        sale.items.forEach(item => {
+                            const prodName = item.product ? item.product.name : (item.name || "Unknown Item");
+                            const prodCategory = item.product ? (item.product.category || "General") : (item.category || "General");
+                            const prodPrice = item.product ? parseFloat(item.product.price || 0) : parseFloat(item.price || 0);
+                            const qty = parseInt(item.qty || 0);
+                            const itemRevenue = prodPrice * qty;
+
+                            if (qty > 0) {
+                                overallTotalRevenue += itemRevenue;
+                                totalPortionsCount += qty;
+                                categoryWiseTotals[prodCategory] = (categoryWiseTotals[prodCategory] || 0) + itemRevenue;
+
+                                if (itemWiseReport[prodName]) {
+                                    itemWiseReport[prodName].qtySold += qty;
+                                    itemWiseReport[prodName].revenue += itemRevenue;
+                                } else {
+                                    itemWiseReport[prodName] = {
+                                        name: prodName,
+                                        category: prodCategory,
+                                        price: prodPrice,
+                                        qtySold: qty,
+                                        revenue: itemRevenue
+                                    };
+                                }
+                            }
+                        });
                     }
                 }
             });
-        });
 
-        // Also fetch daily summary count
-        const summarySnap = await rtdb.ref('daily_summaries').orderByKey().startAt(startDateStr).endAt(endDateStr).once('value');
-        const summaryData = summarySnap.val() || {};
-        let ordersCount = 0;
-        Object.values(summaryData).forEach(s => ordersCount += parseInt(s.orders_count || 0));
-
-        return {
-            startValFormatted: startVal.replace('T', ' '),
-            endValFormatted: endVal.replace('T', ' '),
-            ordersCount,
-            overallTotalRevenue,
-            totalPortionsCount,
-            itemWiseReport,
-            categoryWiseTotals
-        };
+            return {
+                startValFormatted: startVal.replace('T', ' '),
+                endValFormatted: endVal.replace('T', ' '),
+                ordersCount,
+                overallTotalRevenue,
+                totalPortionsCount,
+                itemWiseReport,
+                categoryWiseTotals
+            };
+        } catch (error) {
+            console.error("Error fetching sales data: ", error);
+            alert("Error reading sales records from database.");
+            return null;
+        }
     }
 
     async function generateSalesReport() {
@@ -5329,7 +5342,6 @@
         html2pdf().set(opt).from(element).save();
     }
 
-    /* DAY END (Z-REPORT) DATA FETCHING & LIVE RECONCILIATION */
     async function fetchTodaySalesForDayEnd() {
         const selectedDate = (document.getElementById('de-shift-date') && document.getElementById('de-shift-date').value) ? document.getElementById('de-shift-date').value : todayStr;
         try {
@@ -5353,7 +5365,6 @@
         }
     }
 
-    /* LIVE DAY END RECONCILIATION WITH SEPARATE FLOAT & CASH SALES CALCULATION */
     function calculateLiveDayEndReconciliation() {
         const openingFloat = parseFloat(document.getElementById('de-opening-float').value) || 0;
         const actualCashSales = parseFloat(document.getElementById('de-actual-cash').value) || 0;
@@ -5376,36 +5387,30 @@
         const totalActualRevenue = actualCashSales + actualCard + actualOnline;
         const totalVarianceRevenue = totalActualRevenue - totalExpectedRevenue;
 
-        // Display Opening Float Line
         document.getElementById('de-preview-exp-float').innerText = `Rs. ${openingFloat.toFixed(2)}`;
         document.getElementById('de-preview-act-float').innerText = `Rs. ${openingFloat.toFixed(2)}`;
         document.getElementById('de-preview-var-float').innerText = `Rs. 0.00`;
 
-        // Display POS Cash Sales Revenue Line
         document.getElementById('de-preview-exp-cash').innerText = `Rs. ${expectedCashSales.toFixed(2)}`;
         document.getElementById('de-preview-act-cash').innerText = `Rs. ${actualCashSales.toFixed(2)}`;
         document.getElementById('de-preview-var-cash').innerText = `Rs. ${varianceCashSales.toFixed(2)}`;
         setVarianceClass('de-preview-var-cash', varianceCashSales);
 
-        // Display Total Drawer Cash Line
         document.getElementById('de-preview-exp-drawer-cash').innerText = `Rs. ${expectedDrawerCash.toFixed(2)}`;
         document.getElementById('de-preview-act-drawer-cash').innerText = `Rs. ${actualDrawerCash.toFixed(2)}`;
         document.getElementById('de-preview-var-drawer-cash').innerText = `Rs. ${varianceDrawerCash.toFixed(2)}`;
         setVarianceClass('de-preview-var-drawer-cash', varianceDrawerCash);
 
-        // Display Card Line
         document.getElementById('de-preview-exp-card').innerText = `Rs. ${expectedCardTotal.toFixed(2)}`;
         document.getElementById('de-preview-act-card').innerText = `Rs. ${actualCard.toFixed(2)}`;
         document.getElementById('de-preview-var-card').innerText = `Rs. ${varianceCard.toFixed(2)}`;
         setVarianceClass('de-preview-var-card', varianceCard);
 
-        // Display Online Line
         document.getElementById('de-preview-exp-online').innerText = `Rs. ${expectedOnlineTotal.toFixed(2)}`;
         document.getElementById('de-preview-act-online').innerText = `Rs. ${actualOnline.toFixed(2)}`;
         document.getElementById('de-preview-var-online').innerText = `Rs. ${varianceOnline.toFixed(2)}`;
         setVarianceClass('de-preview-var-online', varianceOnline);
 
-        // Display Total Revenue Summary Line
         document.getElementById('de-preview-exp-total').innerText = `Rs. ${totalExpectedRevenue.toFixed(2)}`;
         document.getElementById('de-preview-act-total').innerText = `Rs. ${totalActualRevenue.toFixed(2)}`;
         document.getElementById('de-preview-var-total').innerText = `Rs. ${totalVarianceRevenue.toFixed(2)}`;
@@ -5421,7 +5426,6 @@
         else el.classList.add("text-muted");
     }
 
-    /* SUBMIT DAY END SHIFT CLOSURE (Z-REPORT) */
     async function submitDayEnd(event) {
         event.preventDefault();
 
@@ -5848,3 +5852,4 @@
 </script>
 </body>
 </html>
+
