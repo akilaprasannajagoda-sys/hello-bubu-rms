@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1003,17 +1002,22 @@
                                     </div>
                                     
                                     <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded border">
-                                        <div class="col-md-4 col-6">
+                                        <div class="col-md-3 col-6">
                                             <label class="small text-muted fw-bold">From Date</label>
                                             <input type="date" class="form-control form-control-sm" id="expense-filter-start">
                                         </div>
-                                        <div class="col-md-4 col-6">
+                                        <div class="col-md-3 col-6">
                                             <label class="small text-muted fw-bold">To Date</label>
                                             <input type="date" class="form-control form-control-sm" id="expense-filter-end">
                                         </div>
-                                        <div class="col-md-4 col-12">
+                                        <div class="col-md-3 col-6">
                                             <button class="btn btn-sm btn-danger w-100 fw-bold" onclick="loadExpensesClicked(true)">
-                                                <i class="bi bi-funnel"></i> Filter & Load GRN Records
+                                                <i class="bi bi-funnel"></i> Filter Records
+                                            </button>
+                                        </div>
+                                        <div class="col-md-3 col-6">
+                                            <button class="btn btn-sm btn-outline-danger w-100 fw-bold" onclick="downloadGRNSummaryPDF()">
+                                                <i class="bi bi-file-earmark-pdf"></i> GRN PDF
                                             </button>
                                         </div>
                                     </div>
@@ -1039,7 +1043,7 @@
                                     </div>
                                     <div id="expenses-load-placeholder" class="text-center py-5 text-muted">
                                         <i class="bi bi-journal-text fs-1 d-block mb-2"></i>
-                                        Select date period and click "Filter & Load GRN Records" to fetch database records safely without slowing down the app.
+                                        Select date period and click "Filter Records" to fetch GRN notes or "GRN PDF" to export PDF summary.
                                     </div>
                                 </div>
                             </div>
@@ -1410,10 +1414,14 @@
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="invoice-lookup-tab" data-bs-toggle="tab" data-bs-target="#invoice-history-panel" type="button" role="tab" onclick="loadRecentSales()">Invoice History & Lookup</button>
+                        <button class="nav-link fw-bold" id="invoice-lookup-tab" data-bs-toggle="tab" data-bs-target="#invoice-history-panel" type="button" role="tab" onclick="loadRecentSales()">
+                            <i class="bi bi-clock-history me-1 text-primary"></i> Invoice History & Lookup
+                        </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="expenses-report-tab" data-bs-toggle="tab" data-bs-target="#expenses-report-panel" type="button" role="tab">Expenses Report</button>
+                        <button class="nav-link fw-bold" id="expenses-report-tab" data-bs-toggle="tab" data-bs-target="#expenses-report-panel" type="button" role="tab">
+                            <i class="bi bi-journal-text me-1 text-danger"></i> Expenses & GRN Summary Report
+                        </button>
                     </li>
                 </ul>
 
@@ -1455,7 +1463,7 @@
                         </div>
                     </div>
 
-                    <!-- UPDATED ITEM-WISE SALES REPORT TAB WITH ACCURATE TIME DATES & HIGH-QUALITY PDF DOWNLOAD -->
+                    <!-- ITEM-WISE SALES REPORT TAB -->
                     <div class="tab-pane fade" id="sales-report-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
@@ -1527,20 +1535,38 @@
                         </div>
                     </div>
 
+                    <!-- UPDATED INVOICE HISTORY & LOOKUP TAB -->
                     <div class="tab-pane fade" id="invoice-history-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
-                            <h5 class="mb-3 border-bottom pb-2">Search Invoice / Transaction History</h5>
-                            <div class="row g-2 mb-4 align-items-end">
-                                <div class="col-md-6">
-                                    <label class="small text-muted fw-bold">Search by Invoice ID</label>
-                                    <div class="input-group">
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-search me-2 text-primary"></i> Search Invoice / Transaction History</h5>
+                                <span class="badge bg-secondary">Indexed Fast Search</span>
+                            </div>
+
+                            <div class="row g-2 mb-4 align-items-end bg-light p-3 rounded border">
+                                <div class="col-md-4">
+                                    <label class="small text-muted fw-bold">Search strictly by Invoice ID / Bill No</label>
+                                    <div class="input-group input-group-sm">
                                         <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
                                         <input type="text" class="form-control" id="invoice-search-field" placeholder="e.g. 567890">
-                                        <button class="btn btn-primary" onclick="searchInvoiceByID()">Search</button>
+                                        <button class="btn btn-primary fw-bold" onclick="searchInvoiceByID()">Search</button>
                                     </div>
                                 </div>
-                                <div class="col-md-6 text-md-end">
-                                    <button class="btn btn-outline-secondary" onclick="loadRecentSales()"><i class="bi bi-arrow-clockwise me-1"></i> Refresh History</button>
+                                <div class="col-md-3">
+                                    <label class="small text-muted fw-bold">From Date</label>
+                                    <input type="date" class="form-control form-control-sm" id="invoice-filter-start">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="small text-muted fw-bold">To Date</label>
+                                    <input type="date" class="form-control form-control-sm" id="invoice-filter-end">
+                                </div>
+                                <div class="col-md-2 d-flex gap-1">
+                                    <button class="btn btn-sm btn-success w-100 fw-bold" onclick="filterInvoicesByDate()">
+                                        <i class="bi bi-funnel me-1"></i> Filter
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="loadRecentSales()" title="Refresh Latest">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                    </button>
                                 </div>
                             </div>
 
@@ -1558,7 +1584,10 @@
                                     </thead>
                                     <tbody id="pos-history-table-body">
                                         <tr>
-                                            <td colspan="6" class="text-center text-muted">Click Refresh to load list...</td>
+                                            <td colspan="6" class="text-center text-muted py-4">
+                                                <i class="bi bi-clock-history fs-2 d-block mb-2"></i>
+                                                Click Refresh or Filter to load sales invoice transactions.
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -1569,54 +1598,64 @@
                         </div>
                     </div>
 
+                    <!-- UPDATED EXPENSES & GRN SUMMARY REPORT TAB -->
                     <div class="tab-pane fade" id="expenses-report-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
-                            <h5 class="mb-3">Expenses & GRN Summary Report</h5>
-                            <div class="row g-3 align-items-end mb-4">
-                                <div class="col-md-4">
-                                    <label class="form-label">Start Date</label>
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-journal-text me-2 text-danger"></i> Expenses & GRN Summary Report</h5>
+                                <span class="badge bg-danger">Fast PDF Export</span>
+                            </div>
+
+                            <div class="row g-3 align-items-end mb-4 bg-light p-3 rounded border">
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-bold text-dark">Start Date</label>
                                     <input type="date" class="form-control" id="expenses-start-date">
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="form-label">End Date</label>
+                                <div class="col-md-3">
+                                    <label class="form-label small fw-bold text-dark">End Date</label>
                                     <input type="date" class="form-control" id="expenses-end-date">
                                 </div>
-                                <div class="col-md-4">
-                                    <button class="btn btn-danger w-100" onclick="generateExpensesReport()">
-                                        <i class="bi bi-funnel-fill me-1"></i> Generate Expenses Report
+                                <div class="col-md-3">
+                                    <button class="btn btn-danger w-100 fw-bold py-2" onclick="generateExpensesReport()">
+                                        <i class="bi bi-funnel-fill me-1"></i> View Expenses Report
+                                    </button>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-outline-danger w-100 fw-bold py-2" onclick="downloadGRNSummaryPDF()">
+                                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download GRN PDF
                                     </button>
                                 </div>
                             </div>
 
                             <div class="row mb-4">
                                 <div class="col-12">
-                                    <div class="p-3 bg-danger-subtle text-danger rounded">
-                                        <h6 class="mb-1">Total Period Expenses / GRN</h6>
-                                        <h3 class="mb-0" id="report-expenses-total">Rs. 0.00</h3>
+                                    <div class="p-3 bg-danger-subtle text-danger rounded border border-danger">
+                                        <h6 class="mb-1 fw-bold text-uppercase small">Total Period Expenses / GRN (මුළු කාලසීමාවේ GRN වියදම)</h6>
+                                        <h3 class="mb-0 fw-bold" id="report-expenses-total">Rs. 0.00</h3>
                                     </div>
                                 </div>
                             </div>
 
-                            <h6 class="fw-bold mt-2 mb-3">Category-Wise Breakdown</h6>
-                            <div class="table-responsive mb-4">
-                                <table class="table table-hover align-middle">
+                            <h6 class="fw-bold mt-2 mb-3 text-dark">Category-Wise Expense Breakdown</h6>
+                            <div class="table-responsive mb-4 border rounded">
+                                <table class="table table-hover align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
                                             <th>Expense Category</th>
-                                            <th class="text-end">Total Spent</th>
+                                            <th class="text-end">Total Spent (Rs.)</th>
                                         </tr>
                                     </thead>
                                     <tbody id="expenses-report-category-body">
                                         <tr>
-                                            <td colspan="2" class="text-center text-muted">Select a date range and click generate.</td>
+                                            <td colspan="2" class="text-center text-muted py-3">Select a date range and click view report.</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
 
-                            <h6 class="fw-bold mb-3">Itemized GRN Transactions</h6>
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle">
+                            <h6 class="fw-bold mb-3 text-dark">Itemized GRN Transactions History</h6>
+                            <div class="table-responsive border rounded">
+                                <table class="table table-hover align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
                                             <th>Invoice / Supplier</th>
@@ -1627,7 +1666,7 @@
                                     </thead>
                                     <tbody id="expenses-report-details-body">
                                         <tr>
-                                            <td colspan="4" class="text-center text-muted">Select a date range and click generate.</td>
+                                            <td colspan="4" class="text-center text-muted py-3">Select a date range and click view report.</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -2093,6 +2132,11 @@
     document.getElementById('expense-filter-end').value = todayStr;
     document.getElementById('wastage-filter-start').value = sevenDaysAgoStr;
     document.getElementById('wastage-filter-end').value = todayStr;
+
+    if (document.getElementById('invoice-filter-start')) {
+        document.getElementById('invoice-filter-start').value = sevenDaysAgoStr;
+        document.getElementById('invoice-filter-end').value = todayStr;
+    }
 
     if (document.getElementById('pdf-start-date')) {
         document.getElementById('pdf-start-date').value = sevenDaysAgoStr;
@@ -3772,7 +3816,8 @@
             return;
         }
 
-        const totalPages = Math.ceil(wastage.length / wastagePerPage);
+        const totalPages = Math.ceil
+        (wastage.length / wastagePerPage);
         if (currentWastagePage > totalPages) currentWastagePage = totalPages;
         if (currentWastagePage < 1) currentWastagePage = 1;
 
@@ -4217,13 +4262,13 @@
 
     async function loadRecentSales() {
         const tbody = document.getElementById('pos-history-table-body');
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Fetching recent invoices...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted"><span class="spinner-border spinner-border-sm me-2"></span> Fetching recent invoices...</td></tr>`;
 
         try {
             const snapshot = await rtdb.ref('sales').orderByChild('timestamp').limitToLast(50).once('value');
             const data = snapshot.val();
             fetchedInvoicesList = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
-            fetchedInvoicesList.sort((a, b) => b.timestamp - a.timestamp);
+            fetchedInvoicesList.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             currentHistoryPage = 1;
             displayHistorySales();
         } catch (error) {
@@ -4261,7 +4306,7 @@
                 <tr>
                     <td><strong>#${invoice.id}</strong></td>
                     <td>${invoiceDate}</td>
-                    <td><span class="badge bg-light text-dark">${invoice.payMethod}</span></td>
+                    <td><span class="badge bg-light text-dark border">${invoice.payMethod}</span></td>
                     <td class="text-end fw-bold">Rs. ${parseFloat(invoice.total || 0).toFixed(2)}</td>
                     <td class="text-center">${statusBadge}</td>
                     <td class="text-center">
@@ -4272,7 +4317,7 @@
             `;
         });
 
-        tableBody.innerHTML = tableHtml;
+        tbody.innerHTML = tableHtml;
         renderPagination('pos-history-pagination', totalPages, currentHistoryPage, 'changeHistoryPage');
     }
 
@@ -4286,7 +4331,7 @@
         if (!queryVal) { loadRecentSales(); return; }
 
         const tbody = document.getElementById('pos-history-table-body');
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Searching strictly for invoice...</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Searching strictly for invoice #${queryVal}...</td></tr>`;
 
         try {
             const snapshot = await rtdb.ref(`sales/${queryVal}`).once('value');
@@ -4294,7 +4339,7 @@
             fetchedInvoicesList = data ? [{ id: queryVal, ...data }] : [];
 
             if (fetchedInvoicesList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-warning">No invoice found matching ID #${queryVal}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-warning py-4">No invoice found matching ID #${queryVal}</td></tr>`;
                 document.getElementById('pos-history-pagination').innerHTML = '';
                 return;
             }
@@ -4304,6 +4349,32 @@
         } catch (error) {
             console.error("Error executing search: ", error);
             tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Search failed.</td></tr>`;
+        }
+    }
+
+    /* INVOICE HISTORY FILTER BY DATE RANGE (ULTRA FAST INDEXED QUERY) */
+    async function filterInvoicesByDate() {
+        const startDate = document.getElementById('invoice-filter-start').value;
+        const endDate = document.getElementById('invoice-filter-end').value;
+
+        if (!startDate || !endDate) {
+            alert("Please select both From Date and To Date!");
+            return;
+        }
+
+        const tbody = document.getElementById('pos-history-table-body');
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted py-4"><span class="spinner-border spinner-border-sm me-2"></span> Filtering invoices...</td></tr>`;
+
+        try {
+            const snapshot = await rtdb.ref('sales').orderByChild('date').startAt(startDate).endAt(endDate).once('value');
+            const data = snapshot.val();
+            fetchedInvoicesList = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
+            fetchedInvoicesList.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            currentHistoryPage = 1;
+            displayHistorySales();
+        } catch (error) {
+            console.error("Error filtering invoices by date: ", error);
+            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4">Failed to filter invoices.</td></tr>`;
         }
     }
 
@@ -4398,7 +4469,6 @@
         const startDateStr = startVal.split('T')[0];
         const endDateStr = endVal.split('T')[0];
 
-        // Query database by date range first, then filter accurately with exact timestamps
         const snapshot = await rtdb.ref('sales').orderByChild('date').startAt(startDateStr).endAt(endDateStr).once('value');
         const data = snapshot.val() || {};
 
@@ -4475,7 +4545,6 @@
                 return;
             }
 
-            // High to Low Revenue Sort
             itemsArray.sort((a, b) => b.revenue - a.revenue);
 
             let reportHtml = '';
@@ -4642,8 +4711,8 @@
 
         const catBody = document.getElementById('expenses-report-category-body');
         const detailsBody = document.getElementById('expenses-report-details-body');
-        catBody.innerHTML = `<tr><td colspan="2" class="text-center text-muted">Generating...</td></tr>`;
-        detailsBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Generating...</td></tr>`;
+        catBody.innerHTML = `<tr><td colspan="2" class="text-center text-muted"><span class="spinner-border spinner-border-sm me-2"></span> Generating summary...</td></tr>`;
+        detailsBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted"><span class="spinner-border spinner-border-sm me-2"></span> Generating details...</td></tr>`;
 
         try {
             const snapshot = await rtdb.ref('expenses').orderByChild('date').startAt(startDate).endAt(endDate).once('value');
@@ -4666,7 +4735,7 @@
             Object.keys(categoryWiseSummary).forEach(cat => {
                 catHtml += `<tr><td><strong>${cat}</strong></td><td class="text-end fw-bold text-danger">Rs. ${categoryWiseSummary[cat].toFixed(2)}</td></tr>`;
             });
-            catBody.innerHTML = catHtml || `<tr><td colspan="2" class="text-center text-muted">No expenses found.</td></tr>`;
+            catBody.innerHTML = catHtml || `<tr><td colspan="2" class="text-center text-muted py-3">No expenses found for selected dates.</td></tr>`;
 
             detailsBody.innerHTML = '';
             let detailsHtml = '';
@@ -4681,9 +4750,162 @@
                     </tr>
                 `;
             });
-            detailsBody.innerHTML = detailsHtml || `<tr><td colspan="4" class="text-center text-muted">No GRN transactions recorded.</td></tr>`;
+            detailsBody.innerHTML = detailsHtml || `<tr><td colspan="4" class="text-center text-muted py-3">No GRN transactions recorded.</td></tr>`;
         } catch (error) {
             console.error("Error generating expenses report: ", error);
+        }
+    }
+
+    /* COMPLETE GRN SUMMARY PDF GENERATOR FOR SELECTED DATE RANGE */
+    async function downloadGRNSummaryPDF() {
+        const startDate = document.getElementById('expenses-start-date') ? document.getElementById('expenses-start-date').value : document.getElementById('expense-filter-start').value;
+        const endDate = document.getElementById('expenses-end-date') ? document.getElementById('expenses-end-date').value : document.getElementById('expense-filter-end').value;
+
+        if (!startDate || !endDate) {
+            alert("Please select both From Date and To Date for GRN Summary!");
+            return;
+        }
+
+        try {
+            const snapshot = await rtdb.ref('expenses').orderByChild('date').startAt(startDate).endAt(endDate).once('value');
+            const data = snapshot.val() || {};
+            const grnList = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+
+            if (grnList.length === 0) {
+                alert("No GRN / Expense records found for the selected date range!");
+                return;
+            }
+
+            grnList.sort((a, b) => (a.dateTime || a.date).localeCompare(b.dateTime || b.date));
+
+            let totalGRNAmount = 0;
+            let categoryBreakdown = {};
+            let tableRowsHtml = '';
+
+            grnList.forEach((grn, index) => {
+                const amt = parseFloat(grn.totalAmount || grn.amount || 0);
+                totalGRNAmount += amt;
+
+                const cat = grn.category || 'Uncategorized';
+                categoryBreakdown[cat] = (categoryBreakdown[cat] || 0) + amt;
+
+                let itemsDetail = '';
+                if (grn.items && Array.isArray(grn.items)) {
+                    itemsDetail = grn.items.map(i => `${i.name} (${i.qty} ${i.unit || ''} @ Rs.${parseFloat(i.price).toFixed(2)})`).join('<br>');
+                } else {
+                    itemsDetail = grn.desc || 'Single Expense Record';
+                }
+
+                tableRowsHtml += `
+                    <tr>
+                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:center;">${index + 1}</td>
+                        <td style="padding:5px 6px; border:1px solid #ddd; white-space:nowrap;">${grn.dateTime || grn.date}</td>
+                        <td style="padding:5px 6px; border:1px solid #ddd;"><strong>#${grn.invoiceNo || 'N/A'}</strong><br><small style="color:#555;">${grn.supplier || 'N/A'}</small></td>
+                        <td style="padding:5px 6px; border:1px solid #ddd;"><span style="background:#c62828; color:#fff; padding:2px 5px; border-radius:3px; font-size:9px;">${cat}</span></td>
+                        <td style="padding:5px 6px; border:1px solid #ddd; font-size:9px;">${itemsDetail}</td>
+                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#c62828;">Rs. ${amt.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            let categorySummaryHtml = '';
+            Object.keys(categoryBreakdown).forEach(cat => {
+                const catAmt = categoryBreakdown[cat];
+                const catPct = totalGRNAmount > 0 ? ((catAmt / totalGRNAmount) * 100).toFixed(1) : '0.0';
+                categorySummaryHtml += `
+                    <tr>
+                        <td style="padding:6px 8px; border:1px solid #ddd;"><strong>${cat}</strong></td>
+                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#c62828;">Rs. ${catAmt.toFixed(2)}</td>
+                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:right; font-weight:bold;">${catPct}%</td>
+                    </tr>
+                `;
+            });
+
+            const printElement = document.createElement('div');
+            printElement.style.padding = '15px';
+            printElement.style.fontFamily = 'Arial, sans-serif';
+            printElement.style.color = '#333';
+            printElement.innerHTML = `
+                <div style="text-align:center; border-bottom:2px solid #1a2a6c; padding-bottom:10px; margin-bottom:15px;">
+                    <h2 style="margin:0; color:#1a2a6c; font-weight:bold; letter-spacing:0.5px;">HELLO BUBU RESTAURANT</h2>
+                    <p style="margin:2px 0; font-size:11px; color:#555;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                    <h4 style="margin:8px 0 0 0; color:#c62828; text-transform:uppercase; font-weight:bold; letter-spacing:0.5px;">GOODS RECEIVED NOTE (GRN) & EXPENSE SUMMARY REPORT</h4>
+                    <p style="margin:3px 0; font-size:10px; color:#666;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong> | Exported On: ${new Date().toLocaleString()}</p>
+                </div>
+
+                <h5 style="margin:12px 0 6px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">1. OVERALL EXPENSE SUMMARY</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px; border:1px solid #ccc;" cellpadding="6">
+                    <tbody>
+                        <tr style="background:#ffebee;">
+                            <td style="border:1px solid #ccc; width:60%;"><strong>Total Goods Received Note (GRN) Value (මුළු GRN එකතුව)</strong></td>
+                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold; color:#c62828; font-size:13px;">Rs. ${totalGRNAmount.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #ccc;">Total Processed GRN Invoices (බිල්පත් සංඛ්‍යාව)</td>
+                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold;">${grnList.length} Invoices</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h5 style="margin:12px 0 6px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">2. CATEGORY-WISE EXPENSE BREAKDOWN</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px; border:1px solid #ccc;" cellpadding="6">
+                    <thead>
+                        <tr style="background:#f0f4f8; color:#1a2a6c;">
+                            <th style="border:1px solid #ccc; text-align:left;">Expense Category</th>
+                            <th style="border:1px solid #ccc; text-align:right;">Total Spent</th>
+                            <th style="border:1px solid #ccc; text-align:right;">Percentage %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${categorySummaryHtml}
+                    </tbody>
+                </table>
+
+                <h5 style="margin:12px 0 6px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">3. ITEMIZED GRN TRANSACTIONS LOG</h5>
+                <table style="width:100%; border-collapse:collapse; font-size:10px; border:1px solid #ccc; table-layout:fixed;" cellpadding="5">
+                    <thead>
+                        <tr style="background:#1a2a6c; color:#ffffff;">
+                            <th style="border:1px solid #1a2a6c; text-align:center; width:5%;">#</th>
+                            <th style="border:1px solid #1a2a6c; text-align:left; width:15%;">Date & Time</th>
+                            <th style="border:1px solid #1a2a6c; text-align:left; width:20%;">Invoice / Supplier</th>
+                            <th style="border:1px solid #1a2a6c; text-align:left; width:15%;">Category</th>
+                            <th style="border:1px solid #1a2a6c; text-align:left; width:30%;">Item Details</th>
+                            <th style="border:1px solid #1a2a6c; text-align:right; width:15%;">Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRowsHtml}
+                    </tbody>
+                </table>
+
+                <div style="margin-top:35px; display:flex; justify-content:space-between; font-size:10px; color:#444;">
+                    <div>
+                        <p style="margin:0;">................................................</p>
+                        <p style="margin:3px 0 0 0; font-weight:bold;">Prepared By</p>
+                    </div>
+                    <div>
+                        <p style="margin:0;">................................................</p>
+                        <p style="margin:3px 0 0 0; font-weight:bold;">Approved By Manager</p>
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top:20px; font-size:8px; color:#888;">
+                    Software Copyright © 2026 Systems.LK | Hotline: 0760672029
+                </div>
+            `;
+
+            const opt = {
+                margin:       8,
+                filename:     `GRN_Summary_Report_${startDate}_to_${endDate}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(printElement).save();
+
+        } catch (error) {
+            console.error("Error generating GRN Summary PDF: ", error);
+            alert("Failed to download GRN Summary PDF report.");
         }
     }
 
