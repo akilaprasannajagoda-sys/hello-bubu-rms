@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -306,7 +305,7 @@
     </div>
 </div>
 
-<!-- Thermal Print Template for Z-Report (SEPARATED FLOAT & CASH SALES) -->
+<!-- Thermal Print Template for Z-Report -->
 <div id="zreport-print-area">
     <div style="text-align: center;">
         <h3 style="margin: 0; font-size: 15px; font-weight: bold;">HELLO BUBU</h3>
@@ -787,7 +786,6 @@
                                     
                                     <div class="row g-2 align-items-end mb-2">
                                         <div class="col-12">
-                                            <!-- SEARCHABLE RAW MATERIAL SELECTION IN RECIPE BUILDER -->
                                             <input class="form-control form-control-sm" list="raw-materials-datalist" id="recipe-mat-input" placeholder="Type / Search Raw Material..." oninput="onRecipeMaterialSearchInput()">
                                             <input type="hidden" id="recipe-mat-selected-id">
                                         </div>
@@ -859,7 +857,6 @@
                                 </button>
                             </div>
 
-                            <!-- PRODUCT SEARCH INPUT (SEARCH PRODUCTS CAPABILITY) -->
                             <div class="mb-3" id="product-search-wrapper">
                                 <div class="input-group input-group-sm">
                                     <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
@@ -945,7 +942,6 @@
                                             <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-1">
                                                 <h6 class="fw-bold mb-0 small text-secondary"><i class="bi bi-cart-plus me-1"></i> Add Raw Material Items</h6>
                                                 <div>
-                                                    <!-- NEW RAW MATERIAL & MANAGE MATERIALS BUTTONS -->
                                                     <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 small me-1" onclick="openNewRawMaterialModal()">
                                                         <i class="bi bi-plus-circle-fill me-1"></i> New
                                                     </button>
@@ -957,7 +953,6 @@
                                             
                                             <div class="row g-2 align-items-end mb-2">
                                                 <div class="col-12">
-                                                    <!-- SEARCHABLE RAW MATERIAL DROPDOWN IN GRN -->
                                                     <label class="small text-muted fw-bold d-block">Search & Select Raw Material</label>
                                                     <input class="form-control form-control-sm" list="raw-materials-datalist" id="grn-item-search-input" placeholder="Type raw material name..." oninput="onGrnRawMaterialSearchInput()">
                                                     <input type="hidden" id="grn-item-selected-id">
@@ -1334,7 +1329,7 @@
                 </div>
             </div>
 
-            <!-- MANAGE RAW MATERIALS MODAL (EDIT/UPDATE/DELETE RAW MATERIALS) -->
+            <!-- MANAGE RAW MATERIALS MODAL -->
             <div class="modal fade" id="manageRawMaterialsModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
@@ -1389,7 +1384,6 @@
                                 
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold text-dark">Wasted Raw Material / Ingredient</label>
-                                    <!-- SEARCHABLE RAW MATERIAL DROPDOWN IN WASTAGE -->
                                     <input class="form-control form-control-sm" list="raw-materials-datalist" id="wastage-item-search-input" placeholder="Search raw material..." oninput="onWastageRawMaterialSearchInput()" required>
                                     <input type="hidden" id="wastage-item-selected-id">
                                 </div>
@@ -1611,7 +1605,7 @@
                         </div>
                     </div>
 
-                    <!-- UPDATED INVOICE HISTORY & LOOKUP TAB -->
+                    <!-- INVOICE HISTORY & LOOKUP TAB -->
                     <div class="tab-pane fade" id="invoice-history-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
@@ -1674,7 +1668,7 @@
                         </div>
                     </div>
 
-                    <!-- UPDATED EXPENSES & GRN SUMMARY REPORT TAB -->
+                    <!-- EXPENSES & GRN SUMMARY REPORT TAB -->
                     <div class="tab-pane fade" id="expenses-report-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
@@ -1915,7 +1909,7 @@
                 </div>
             </div>
 
-            <!-- 9. DAY END PAGE (SEPARATE FLOAT & CASH SALES) -->
+            <!-- 9. DAY END PAGE -->
             <div id="page-dayend" class="page-section">
                 <div class="row">
                     <div class="col-md-5 mb-4">
@@ -2140,7 +2134,7 @@
     let categories = [];
     let products = [];
     let rawMaterials = [];
-    let rawMaterialsMap = {}; // Fast O(1) Hash Map Optimization
+    let rawMaterialsMap = {}; 
     let expenseCategories = [];
     let expenses = []; 
     let wastage = [];
@@ -2441,7 +2435,6 @@
             const rawMatData = rawMatSnapshot.val();
             rawMaterials = rawMatData ? Object.keys(rawMatData).map(key => ({ id: key, ...rawMatData[key] })) : [];
             
-            // Re-populate fast O(1) Raw Materials Map
             rawMaterialsMap = {};
             rawMaterials.forEach(m => rawMaterialsMap[m.id] = m);
 
@@ -2792,7 +2785,7 @@
         if (!datalist) return;
 
         let datalistHtml = '';
-        rawMaterialsMap = {}; // Rebuild O(1) map
+        rawMaterialsMap = {}; 
         rawMaterials.sort((a,b) => a.name.localeCompare(b.name)).forEach(mat => {
             rawMaterialsMap[mat.id] = mat;
             const unitText = mat.unit ? ` (${mat.unit})` : '';
@@ -2818,7 +2811,6 @@
     }
 
     function onRecipeMaterialSearchInput() {
-
         const inputVal = document.getElementById('recipe-mat-input').value.trim();
         const unitDisplay = document.getElementById('recipe-mat-unit-display');
         const hiddenId = document.getElementById('recipe-mat-selected-id');
@@ -4441,7 +4433,6 @@
             updatesMap[`daily_summaries/${todayStr}/orders_count`] = firebase.database.ServerValue.increment(1);
             updatesMap[`daily_summaries/${todayStr}/${methodKey}`] = firebase.database.ServerValue.increment(checkoutTotals.total);
 
-            // Item-wise sales pre-aggregation for Fast Reports
             cart.forEach(item => {
                 const prodId = item.product.id || item.product.name;
                 updatesMap[`daily_item_sales/${todayStr}/${prodId}/qty`] = firebase.database.ServerValue.increment(item.qty);
@@ -4650,7 +4641,6 @@
             updatesMap[`daily_summaries/${sale.date}/orders_count`] = firebase.database.ServerValue.increment(-1);
             updatesMap[`daily_summaries/${sale.date}/${methodKey}`] = firebase.database.ServerValue.increment(-saleTotal);
 
-            // Reverse pre-aggregated daily item sales
             if (sale.items && Array.isArray(sale.items)) {
                 sale.items.forEach(item => {
                     const prodId = item.product.id || item.product.name;
@@ -4668,7 +4658,7 @@
         }
     }
 
-    /* FAST & ACCURATE ITEM-WISE SALES DATA PROCESSOR (READS DIRECTLY FROM INVOICES) */
+    /* ITEM-WISE SALES DATA PROCESSOR */
     async function fetchFilteredItemWiseSalesData() {
         const startVal = document.getElementById('sales-start-date').value;
         const endVal = document.getElementById('sales-end-date').value;
@@ -4690,7 +4680,6 @@
         const endDateStr = endVal.split('T')[0];
 
         try {
-            // Fetch directly from actual Sales Invoices for 100% accuracy
             const snapshot = await rtdb.ref('sales').orderByChild('date').startAt(startDateStr).endAt(endDateStr).once('value');
             const salesData = snapshot.val() || {};
 
@@ -4703,13 +4692,10 @@
             Object.keys(salesData).forEach(billKey => {
                 const sale = salesData[billKey];
                 
-                // Exclude reversed bills
                 if (sale.status !== 'Reversed') {
-                    
-                    // Precise Time Filtering if timestamp is present
                     if (sale.timestamp) {
                         if (sale.timestamp < startTimestamp || sale.timestamp > endTimestamp) {
-                            return; // Skip bills outside the selected time range
+                            return; 
                         }
                     }
 
@@ -4805,6 +4791,7 @@
         }
     }
 
+    /* PERFECT PAGE-BREAK FIXED ITEM-WISE SALES PDF DOWNLOAD */
     async function downloadItemWiseSalesPDF() {
         try {
             const reportData = await fetchFilteredItemWiseSalesData();
@@ -4822,14 +4809,14 @@
             itemsArray.forEach((item, index) => {
                 const sharePct = reportData.overallTotalRevenue > 0 ? ((item.revenue / reportData.overallTotalRevenue) * 100).toFixed(1) : '0.0';
                 tableRowsHtml += `
-                    <tr>
-                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:center;">${index + 1}</td>
-                        <td style="padding:6px 8px; border:1px solid #ddd;"><strong>${item.name}</strong></td>
-                        <td style="padding:6px 8px; border:1px solid #ddd;"><span style="background:#6c757d; color:#fff; padding:2px 6px; border-radius:4px; font-size:10px;">${item.category}</span></td>
-                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:right;">Rs. ${item.price.toFixed(2)}</td>
-                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:center; font-weight:bold;">${item.qtySold}</td>
-                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#11998e;">Rs. ${item.revenue.toFixed(2)}</td>
-                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#1a2a6c;">${sharePct}%</td>
+                    <tr style="page-break-inside: avoid !important; break-inside: avoid !important;">
+                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:center;">${index + 1}</td>
+                        <td style="padding:5px 6px; border:1px solid #ddd;"><strong>${item.name}</strong></td>
+                        <td style="padding:5px 6px; border:1px solid #ddd;"><span style="background:#6c757d; color:#fff; padding:2px 6px; border-radius:4px; font-size:9px;">${item.category}</span></td>
+                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:right;">Rs. ${item.price.toFixed(2)}</td>
+                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:center; font-weight:bold;">${item.qtySold}</td>
+                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#11998e;">Rs. ${item.revenue.toFixed(2)}</td>
+                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#1a2a6c;">${sharePct}%</td>
                     </tr>
                 `;
             });
@@ -4839,60 +4826,73 @@
                 const catTotal = reportData.categoryWiseTotals[cat];
                 const catPct = reportData.overallTotalRevenue > 0 ? ((catTotal / reportData.overallTotalRevenue) * 100).toFixed(1) : '0.0';
                 categorySummaryHtml += `
-                    <tr>
-                        <td style="padding:6px 8px; border:1px solid #ddd;"><strong>${cat}</strong></td>
-                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#11998e;">Rs. ${catTotal.toFixed(2)}</td>
-                        <td style="padding:6px 8px; border:1px solid #ddd; text-align:right; font-weight:bold;">${catPct}%</td>
+                    <tr style="page-break-inside: avoid !important;">
+                        <td style="padding:5px 6px; border:1px solid #ddd;"><strong>${cat}</strong></td>
+                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#11998e;">Rs. ${catTotal.toFixed(2)}</td>
+                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:right; font-weight:bold;">${catPct}%</td>
                     </tr>
                 `;
             });
 
             const printElement = document.createElement('div');
-            printElement.style.padding = '15px';
+            printElement.style.padding = '10px';
             printElement.style.fontFamily = 'Arial, sans-serif';
             printElement.style.color = '#333';
+            
             printElement.innerHTML = `
-                <div style="text-align:center; border-bottom:2px solid #1a2a6c; padding-bottom:10px; margin-bottom:15px;">
-                    <h2 style="margin:0; color:#1a2a6c; font-weight:bold; letter-spacing:0.5px;">HELLO BUBU RESTAURANT</h2>
-                    <p style="margin:2px 0; font-size:11px; color:#555;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
-                    <h4 style="margin:8px 0 0 0; color:#11998e; text-transform:uppercase; font-weight:bold; letter-spacing:0.5px;">ITEM-WISE SALES & PORTION ANALYTICS REPORT</h4>
-                    <p style="margin:3px 0; font-size:10px; color:#666;">Period: <strong>${reportData.startValFormatted}</strong> to <strong>${reportData.endValFormatted}</strong> | Generated On: ${new Date().toLocaleString()}</p>
+                <style>
+                    .pdf-page-block { page-break-inside: avoid !important; break-inside: avoid !important; }
+                    table { border-collapse: collapse; width: 100%; }
+                    thead { display: table-header-group !important; }
+                    tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+                    h5 { page-break-after: avoid !important; break-after: avoid !important; }
+                </style>
+
+                <div style="text-align:center; border-bottom:2px solid #1a2a6c; padding-bottom:8px; margin-bottom:12px;">
+                    <h2 style="margin:0; color:#1a2a6c; font-weight:bold; letter-spacing:0.5px; font-size:18px;">HELLO BUBU RESTAURANT</h2>
+                    <p style="margin:2px 0; font-size:10px; color:#555;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                    <h4 style="margin:6px 0 0 0; color:#11998e; text-transform:uppercase; font-weight:bold; font-size:13px;">ITEM-WISE SALES & PORTION ANALYTICS REPORT</h4>
+                    <p style="margin:3px 0; font-size:9px; color:#666;">Period: <strong>${reportData.startValFormatted}</strong> to <strong>${reportData.endValFormatted}</strong> | Generated On: ${new Date().toLocaleString()}</p>
                 </div>
 
-                <h5 style="margin:12px 0 6px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">1. EXECUTIVE PERFORMANCE SUMMARY</h5>
-                <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px; border:1px solid #ccc;" cellpadding="6">
-                    <tbody>
-                        <tr style="background:#f0fdf4;">
-                            <td style="border:1px solid #ccc; width:60%;"><strong>Total Revenue Generated (මුළු සක්‍රීය විකුණුම් ආදායම)</strong></td>
-                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold; color:#11998e; font-size:13px;">Rs. ${reportData.overallTotalRevenue.toFixed(2)}</td>
-                        </tr>
-                        <tr>
-                            <td style="border:1px solid #ccc;">Total Processed Bills / Orders (මුළු බිල්පත් ගණන)</td>
-                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold;">${reportData.ordersCount} Orders</td>
-                        </tr>
-                        <tr style="background:#f9f9f9;">
-                            <td style="border:1px solid #ccc;">Total Portion / Item Units Sold (අලෙවි වූ සමස්ත ඒකක ගණන)</td>
-                            <td style="border:1px solid #ccc; text-align:right; font-weight:bold; color:#1a2a6c;">${reportData.totalPortionsCount} Units</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="pdf-page-block">
+                    <h5 style="margin:10px 0 5px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">1. EXECUTIVE PERFORMANCE SUMMARY</h5>
+                    <table style="font-size:10px; margin-bottom:12px; border:1px solid #ccc;" cellpadding="5">
+                        <tbody>
+                            <tr style="background:#f0fdf4;">
+                                <td style="border:1px solid #ccc; width:60%;"><strong>Total Revenue Generated (මුළු සක්‍රීය විකුණුම් ආදායම)</strong></td>
+                                <td style="border:1px solid #ccc; text-align:right; font-weight:bold; color:#11998e; font-size:12px;">Rs. ${reportData.overallTotalRevenue.toFixed(2)}</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #ccc;">Total Processed Bills / Orders (මුළු බිල්පත් ගණන)</td>
+                                <td style="border:1px solid #ccc; text-align:right; font-weight:bold;">${reportData.ordersCount} Orders</td>
+                            </tr>
+                            <tr style="background:#f9f9f9;">
+                                <td style="border:1px solid #ccc;">Total Portion / Item Units Sold (අලෙවි වූ සමස්ත ඒකක ගණන)</td>
+                                <td style="border:1px solid #ccc; text-align:right; font-weight:bold; color:#1a2a6c;">${reportData.totalPortionsCount} Units</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                <h5 style="margin:12px 0 6px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">2. CATEGORY-WISE SALES BREAKDOWN</h5>
-                <table style="width:100%; border-collapse:collapse; font-size:11px; margin-bottom:15px; border:1px solid #ccc;" cellpadding="6">
-                    <thead>
-                        <tr style="background:#f0f4f8; color:#1a2a6c;">
-                            <th style="border:1px solid #ccc; text-align:left;">Category Name</th>
-                            <th style="border:1px solid #ccc; text-align:right;">Category Revenue</th>
-                            <th style="border:1px solid #ccc; text-align:right;">Revenue Share %</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${categorySummaryHtml}
-                    </tbody>
-                </table>
+                <div class="pdf-page-block">
+                    <h5 style="margin:10px 0 5px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">2. CATEGORY-WISE SALES BREAKDOWN</h5>
+                    <table style="font-size:10px; margin-bottom:12px; border:1px solid #ccc;" cellpadding="5">
+                        <thead>
+                            <tr style="background:#f0f4f8; color:#1a2a6c;">
+                                <th style="border:1px solid #ccc; text-align:left;">Category Name</th>
+                                <th style="border:1px solid #ccc; text-align:right;">Category Revenue</th>
+                                <th style="border:1px solid #ccc; text-align:right;">Revenue Share %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${categorySummaryHtml}
+                        </tbody>
+                    </table>
+                </div>
 
-                <h5 style="margin:12px 0 6px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase;">3. DETAILED ITEM-WISE SALES BREAKDOWN</h5>
-                <table style="width:100%; border-collapse:collapse; font-size:10px; border:1px solid #ccc; table-layout:fixed;" cellpadding="5">
+                <h5 style="margin:10px 0 5px 0; font-weight:bold; color:#1a2a6c; font-size:11px; text-transform:uppercase; page-break-after:avoid;">3. DETAILED ITEM-WISE SALES BREAKDOWN</h5>
+                <table style="font-size:9.5px; border:1px solid #ccc; table-layout:fixed;" cellpadding="4">
                     <thead>
                         <tr style="background:#1a2a6c; color:#ffffff;">
                             <th style="border:1px solid #1a2a6c; text-align:center; width:6%;">#</th>
@@ -4909,27 +4909,30 @@
                     </tbody>
                 </table>
 
-                <div style="margin-top:35px; display:flex; justify-content:space-between; font-size:10px; color:#444;">
-                    <div>
-                        <p style="margin:0;">................................................</p>
-                        <p style="margin:3px 0 0 0; font-weight:bold;">Report Generated By</p>
+                <div class="pdf-page-block" style="margin-top:30px; padding-top:10px;">
+                    <div style="display:flex; justify-content:space-between; font-size:10px; color:#444;">
+                        <div>
+                            <p style="margin:0;">................................................</p>
+                            <p style="margin:3px 0 0 0; font-weight:bold;">Report Generated By</p>
+                        </div>
+                        <div>
+                            <p style="margin:0;">................................................</p>
+                            <p style="margin:3px 0 0 0; font-weight:bold;">Approved By Manager</p>
+                        </div>
                     </div>
-                    <div>
-                        <p style="margin:0;">................................................</p>
-                        <p style="margin:3px 0 0 0; font-weight:bold;">Approved By Manager</p>
+                    <div style="text-align:center; margin-top:15px; font-size:8px; color:#888;">
+                        Software Copyright © 2026 Systems.LK | Hotline: 0760672029
                     </div>
-                </div>
-                <div style="text-align:center; margin-top:20px; font-size:8px; color:#888;">
-                    Software Copyright © 2026 Systems.LK | Hotline: 0760672029
                 </div>
             `;
 
             const opt = {
-                margin:       8,
+                margin:       [8, 8, 8, 8],
                 filename:     `Item_Wise_Sales_Report_${reportData.startValFormatted.slice(0,10)}_to_${reportData.endValFormatted.slice(0,10)}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                html2canvas:  { scale: 2, useCORS: true, logging: false },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'], avoid: ['tr', 'h5', '.pdf-page-block'] }
             };
 
             html2pdf().set(opt).from(printElement).save();
@@ -5144,10 +5147,11 @@
         }
     }
 
+    /* ACCURATE FINANCIAL STATEMENT & CASH BOOK CALCULATOR */
     async function generateMasterFinancialSummary() {
         const startDate = document.getElementById('pdf-start-date').value;
         const endDate = document.getElementById('pdf-end-date').value;
-        if (!startDate || !endDate) return alert("Please select dates!");
+        if (!startDate || !endDate) return alert("Please select valid dates!");
 
         const btnPreview = document.getElementById('btn-generate-pdf-preview');
         const btnDownload = document.getElementById('btn-download-pdf-file');
@@ -5156,7 +5160,7 @@
         const wrapper = document.getElementById('pdf-statement-wrapper');
 
         btnPreview.disabled = true;
-        btnPreview.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Processing...`;
+        btnPreview.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Calculating...`;
 
         try {
             const [salesSnap, grnSnap, pcSnap, wastageSnap] = await Promise.all([
@@ -5168,6 +5172,7 @@
 
             const activeSales = Object.values(salesSnap.val() || {}).filter(s => s.status !== 'Reversed');
             let totalSalesGross = 0, salesCash = 0, salesCard = 0, salesOnline = 0;
+            
             activeSales.forEach(s => {
                 const amt = parseFloat(s.total || 0);
                 totalSalesGross += amt;
@@ -5183,12 +5188,12 @@
             });
 
             const pcList = Object.values(pcSnap.val() || {});
-            let totalPcInflow = 0;
+            let totalPcTopUp = 0;
             let totalPcVoucherOut = 0;
             pcList.forEach(p => {
                 const amt = parseFloat(p.amount || 0);
-                if (p.type === 'FLOAT_IN') totalPcInflow += amt;
-                else totalPcVoucherOut += amt;
+                if (p.type === 'FLOAT_IN') totalPcTopUp += amt;
+                else if (p.type === 'EXPENSE_OUT') totalPcVoucherOut += amt;
             });
 
             const wastageList = Object.values(wastageSnap.val() || {});
@@ -5197,106 +5202,103 @@
                 totalWastageLoss += parseFloat(w.amount || 0);
             });
 
-            const totalCashInflows = salesCash + totalPcInflow;
-            const totalCashOutflows = totalGrnOutflow + totalPcVoucherOut;
-            const netCashPosition = totalCashInflows - totalCashOutflows;
+            const totalOperatingExpenses = totalGrnOutflow + totalPcVoucherOut;
+            const operatingProfit = totalSalesGross - totalOperatingExpenses;
+            const netEstimatedIncome = operatingProfit - totalWastageLoss;
+
+            const physicalCashInflow = salesCash;
+            const physicalCashOutflow = totalGrnOutflow + totalPcVoucherOut;
+            const netPeriodCashMovement = physicalCashInflow - physicalCashOutflow;
 
             wrapper.innerHTML = `
                 <div class="pdf-header text-center">
                     <h3 style="margin:0; font-weight:bold; color:#1a2a6c;">HELLO BUBU RESTAURANT</h3>
-                    <p style="margin:2px 0; font-size:12px;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
-                    <h5 style="margin:8px 0 0 0; font-weight:bold; text-transform:uppercase; color:#d9534f;">Complete Financial Statement & Cash Book</h5>
+                    <p style="margin:2px 0; font-size:11px;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                    <h5 style="margin:8px 0 0 0; font-weight:bold; text-transform:uppercase; color:#d9534f;">MASTER FINANCIAL & STATEMENT OF CASH FLOWS</h5>
                     <small style="color:#555;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong> | Generated On: ${new Date().toLocaleString()}</small>
                 </div>
 
-                <h6 style="font-weight:bold; border-bottom:2px solid #000; padding-bottom:3px; margin-top:15px;">1. FINANCIAL OVERVIEW STATEMENT</h6>
+                <h6 style="font-weight:bold; border-bottom:2px solid #1a2a6c; padding-bottom:3px; margin-top:15px; color:#1a2a6c;">1. OPERATING PROFIT & LOSS STATEMENT</h6>
                 <table class="pdf-table">
                     <thead>
-                        <tr>
-                            <th>Category Description</th>
-                            <th class="text-end">Inflow (+)</th>
-                            <th class="text-end">Outflow (-)</th>
-                            <th class="text-end">Net Balance</th>
+                        <tr style="background:#f4f6f9;">
+                            <th>Financial Component</th>
+                            <th class="text-end">Amount (LKR)</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Total Gross Sales Revenue</strong> (Active Invoices: ${activeSales.length})</td>
+                            <td><strong>Total Gross Sales Revenue</strong> (${activeSales.length} Invoices)</td>
                             <td class="text-end text-success fw-bold">Rs. ${totalSalesGross.toFixed(2)}</td>
-                            <td class="text-end">-</td>
-                            <td class="text-end fw-bold">Rs. ${totalSalesGross.toFixed(2)}</td>
                         </tr>
                         <tr>
-                            <td><strong>Goods Received Notes (GRN) Expenses</strong> (Invoices: ${grnList.length})</td>
-                            <td class="text-end">-</td>
-                            <td class="text-end text-danger fw-bold">Rs. ${totalGrnOutflow.toFixed(2)}</td>
-                            <td class="text-end text-danger fw-bold">- Rs. ${totalGrnOutflow.toFixed(2)}</td>
+                            <td>(-) Cost of Direct Goods Received (GRN Expenses)</td>
+                            <td class="text-end text-danger">Rs. ${totalGrnOutflow.toFixed(2)}</td>
                         </tr>
                         <tr>
-                            <td><strong>Petty Cash Float Top-Ups (Deposits)</strong></td>
-                            <td class="text-end text-success fw-bold">Rs. ${totalPcInflow.toFixed(2)}</td>
-                            <td class="text-end">-</td>
-                            <td class="text-end fw-bold">Rs. ${totalPcInflow.toFixed(2)}</td>
+                            <td>(-) Petty Cash Out-of-Pocket Vouchers</td>
+                            <td class="text-end text-danger">Rs. ${totalPcVoucherOut.toFixed(2)}</td>
+                        </tr>
+                        <tr style="background-color:#fff3cd; font-weight:bold;">
+                            <td>(=) GROSS OPERATING MARGIN (Revenue - Direct Outflows)</td>
+                            <td class="text-end ${operatingProfit >= 0 ? 'text-success' : 'text-danger'}">Rs. ${operatingProfit.toFixed(2)}</td>
                         </tr>
                         <tr>
-                            <td><strong>Petty Cash Vouchers / Out-of-Pocket Expenses</strong></td>
-                            <td class="text-end">-</td>
-                            <td class="text-end text-danger fw-bold">Rs. ${totalPcVoucherOut.toFixed(2)}</td>
-                            <td class="text-end text-danger fw-bold">- Rs. ${totalPcVoucherOut.toFixed(2)}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Kitchen Raw Material Wastage (Non-Cash Loss Value)</strong></td>
-                            <td class="text-end">-</td>
+                            <td>(-) Kitchen Raw Material Wastage Loss (Non-Cash Stock Loss)</td>
                             <td class="text-end text-warning fw-bold">Rs. ${totalWastageLoss.toFixed(2)}</td>
-                            <td class="text-end text-warning fw-bold">- Rs. ${totalWastageLoss.toFixed(2)}</td>
-                        </tr>
-                        <tr style="background-color:#f9f9f9; font-size:12px; font-weight:bold;">
-                            <td>NET ESTIMATED FINANCIAL POSITION (Sales - Total Outflows)</td>
-                            <td class="text-end text-success">Rs. ${totalSalesGross.toFixed(2)}</td>
-                            <td class="text-end text-danger">Rs. ${(totalGrnOutflow + totalPcVoucherOut + totalWastageLoss).toFixed(2)}</td>
-                            <td class="text-end ${netCashPosition >= 0 ? 'text-success' : 'text-danger'}">Rs. ${(totalSalesGross - (totalGrnOutflow + totalPcVoucherOut + totalWastageLoss)).toFixed(2)}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h6 style="font-weight:bold; border-bottom:2px solid #000; padding-bottom:3px; margin-top:20px;">2. REVENUE BREAKDOWN BY PAYMENT METHOD</h6>
-                <table class="pdf-table">
-                    <thead>
-                        <tr>
-                            <th>Payment Channel</th>
-                            <th class="text-end">Total Revenue Received</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Cash Sales (Counter Cash)</td>
-                            <td class="text-end fw-bold">Rs. ${salesCash.toFixed(2)}</td>
-                        </tr>
-                        <tr>
-                            <td>Card Terminal Sales</td>
-                            <td class="text-end fw-bold">Rs. ${salesCard.toFixed(2)}</td>
-                        </tr>
-                        <tr>
-                            <td>Online Transfers / Bank Payments</td>
-                            <td class="text-end fw-bold">Rs. ${salesOnline.toFixed(2)}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h6 style="font-weight:bold; border-bottom:2px solid #000; padding-bottom:3px; margin-top:20px;">3. MASTER CASH BOOK SUMMARY (Liquidity Position)</h6>
-                <table class="pdf-table">
-                    <tbody>
-                        <tr>
-                            <td><strong>Total Physical Cash Received (Cash Sales + Float Top-Ups)</strong></td>
-                            <td class="text-end fw-bold text-success">Rs. ${totalCashInflows.toFixed(2)}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Total Physical Cash Expenses Paid (GRN + Vouchers Out)</strong></td>
-                            <td class="text-end fw-bold text-danger">Rs. ${totalCashOutflows.toFixed(2)}</td>
                         </tr>
                         <tr style="background-color:#e8f5e9; font-size:12px; font-weight:bold;">
-                            <td>NET CASH BOOK BALANCE (Cash Inflows - Cash Outflows)</td>
-                            <td class="text-end ${netCashPosition >= 0 ? 'text-success' : 'text-danger'}">Rs. ${netCashPosition.toFixed(2)}</td>
+                            <td>(=) NET ESTIMATED OPERATING INCOME (After Stock Loss)</td>
+                            <td class="text-end ${netEstimatedIncome >= 0 ? 'text-success' : 'text-danger'}">Rs. ${netEstimatedIncome.toFixed(2)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h6 style="font-weight:bold; border-bottom:2px solid #1a2a6c; padding-bottom:3px; margin-top:20px; color:#1a2a6c;">2. REVENUE BREAKDOWN BY PAYMENT CHANNEL</h6>
+                <table class="pdf-table">
+                    <thead>
+                        <tr style="background:#f4f6f9;">
+                            <th>Payment Channel</th>
+                            <th class="text-end">Collected Amount</th>
+                            <th class="text-end">Percentage Share</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cash Sales (Physical Drawer Cash)</td>
+                            <td class="text-end fw-bold">Rs. ${salesCash.toFixed(2)}</td>
+                            <td class="text-end">${totalSalesGross > 0 ? ((salesCash/totalSalesGross)*100).toFixed(1) : 0}%</td>
+                        </tr>
+                        <tr>
+                            <td>Card Terminal Sales (Bank Direct)</td>
+                            <td class="text-end fw-bold">Rs. ${salesCard.toFixed(2)}</td>
+                            <td class="text-end">${totalSalesGross > 0 ? ((salesCard/totalSalesGross)*100).toFixed(1) : 0}%</td>
+                        </tr>
+                        <tr>
+                            <td>Online Transfers / Direct Bank Receipts</td>
+                            <td class="text-end fw-bold">Rs. ${salesOnline.toFixed(2)}</td>
+                            <td class="text-end">${totalSalesGross > 0 ? ((salesOnline/totalSalesGross)*100).toFixed(1) : 0}%</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h6 style="font-weight:bold; border-bottom:2px solid #1a2a6c; padding-bottom:3px; margin-top:20px; color:#1a2a6c;">3. CASH BOOK & PHYSICAL CASH FLOW STATEMENT</h6>
+                <table class="pdf-table">
+                    <tbody>
+                        <tr>
+                            <td><strong>Physical Cash Inflow</strong> (Counter Cash Sales)</td>
+                            <td class="text-end fw-bold text-success">Rs. ${physicalCashInflow.toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Physical Cash Outflow</strong> (GRN + Petty Cash Payments)</td>
+                            <td class="text-end fw-bold text-danger">Rs. ${physicalCashOutflow.toFixed(2)}</td>
+                        </tr>
+                        <tr style="background-color:#e1f5fe; font-size:12px; font-weight:bold;">
+                            <td>NET PERIOD CASH MOVEMENT (Cash In - Cash Out)</td>
+                            <td class="text-end ${netPeriodCashMovement >= 0 ? 'text-success' : 'text-danger'}">Rs. ${netPeriodCashMovement.toFixed(2)}</td>
+                        </tr>
+                        <tr style="font-size:11px; color:#666;">
+                            <td colspan="2"><em>*Note: Petty Cash Float Deposits (Rs. ${totalPcTopUp.toFixed(2)}) are treated as Internal Transfers and excluded from Income.</em></td>
                         </tr>
                     </tbody>
                 </table>
@@ -5304,11 +5306,11 @@
                 <div style="margin-top:40px; display:flex; justify-content:space-between; font-size:10px;">
                     <div>
                         <p style="margin:0;">................................................</p>
-                        <p style="margin:0;">Prepared By (Manager/Cashier)</p>
+                        <p style="margin:2px 0 0 0; font-weight:bold;">Prepared By (Cashier / Manager)</p>
                     </div>
                     <div>
                         <p style="margin:0;">................................................</p>
-                        <p style="margin:0;">Authorized Signature / Systems.LK</p>
+                        <p style="margin:2px 0 0 0; font-weight:bold;">Authorized Signature (Systems.LK)</p>
                     </div>
                 </div>
             `;
@@ -5318,7 +5320,7 @@
             btnDownload.classList.remove('d-none');
 
         } catch (error) {
-            console.error("Error generating master summary: ", error);
+            console.error("Error generating master financial summary: ", error);
             alert("Failed to generate master financial summary.");
         } finally {
             btnPreview.disabled = false;
@@ -5852,4 +5854,3 @@
 </script>
 </body>
 </html>
-
