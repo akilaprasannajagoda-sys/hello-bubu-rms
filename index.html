@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,10 +34,10 @@
             --secondary-dark: #090d16;
             --sidebar-bg: #070a12;
             --sidebar-card: #0f172a;
-            --sidebar-hover: rgba(255, 255, 255, 0.07);
+            --sidebar-hover: rgba(255, 255, 255, 0.08);
             --sidebar-border: rgba(255, 255, 255, 0.08);
 
-            --bg-body: #f1f5f9;
+            --bg-body: #f8fafc;
             --card-bg: #ffffff;
             --card-border: #e2e8f0;
             --text-main: #0f172a;
@@ -58,11 +59,11 @@
             --radius-xl: 24px;
             
             --shadow-subtle: 0 2px 5px 0 rgba(0, 0, 0, 0.03);
-            --shadow-card: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 6px -2px rgba(15, 23, 42, 0.02);
+            --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
             --shadow-float: 0 20px 35px -10px rgba(79, 70, 229, 0.15);
         }
 
-        /* 100% SCREEN AUTO-FIT VIEWPORT ARCHITECTURE */
+        /* 100% SCREEN AUTO-FIT VIEWPORT */
         html, body {
             height: 100vh !important;
             height: 100dvh !important;
@@ -76,13 +77,11 @@
             letter-spacing: -0.015em;
         }
 
-        /* Modern Sleek Scrollbars */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.02); }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Typography & Form Controls */
         .form-control, .form-select {
             border-radius: var(--radius-md);
             border: 1.5px solid var(--card-border);
@@ -151,7 +150,17 @@
             color: #ffffff;
         }
 
-        /* LOGIN SCREEN DESIGN */
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border: none;
+            box-shadow: 0 4px 14px var(--accent-amber-glow);
+            color: #ffffff;
+        }
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            color: #ffffff;
+        }
+
         #login-screen {
             min-height: 100vh;
             display: flex;
@@ -174,18 +183,19 @@
             backdrop-filter: blur(25px);
         }
 
-        /* MAIN APP SHELL */
         #main-app-container {
             height: 100vh !important;
             height: 100dvh !important;
+            width: 100vw !important;
             overflow: hidden !important;
         }
         #main-app-container > .row {
             height: 100vh !important;
             height: 100dvh !important;
+            margin: 0 !important;
         }
 
-        /* EXECUTIVE SIDEBAR */
+        /* FIXED FULL-BLEED SIDEBAR */
         .sidebar {
             height: 100vh !important;
             height: 100dvh !important;
@@ -198,17 +208,17 @@
             z-index: 100;
             border-right: 1px solid var(--sidebar-border);
             box-shadow: 4px 0 30px rgba(0, 0, 0, 0.25);
-            padding: 1rem 0.85rem !important;
+            padding: 0.9rem 0.85rem !important;
         }
         .sidebar .nav-link {
             color: #94a3b8;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
             border-radius: var(--radius-md);
             cursor: pointer;
             transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 600;
-            font-size: 0.83rem;
-            padding: 8px 12px;
+            font-size: 0.84rem;
+            padding: 9px 12px;
             display: flex;
             align-items: center;
             border: 1px solid transparent;
@@ -228,17 +238,16 @@
             border-color: rgba(255, 255, 255, 0.2);
         }
 
-        /* MAIN CONTENT AREA - NO BODY OVERFLOW */
         .content-area {
             height: 100vh !important;
             height: 100dvh !important;
             overflow: hidden !important;
             display: flex;
             flex-direction: column;
-            padding: 14px 20px !important;
+            padding: 12px 18px !important;
+            background: #f8fafc;
         }
 
-        /* CARD STYLES */
         .card-custom {
             border: 1px solid var(--card-border);
             border-radius: var(--radius-lg);
@@ -251,11 +260,11 @@
         .page-section.active-page { display: flex; flex-direction: column; height: 100%; min-height: 0; }
 
         @keyframes modernFadeIn {
-            from { opacity: 0; transform: translateY(5px); }
+            from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 500% MODERN DASHBOARD STAT CARDS */
+        /* 100% DASHBOARD STAT CARDS */
         .dash-card-stat {
             border: none;
             border-radius: var(--radius-lg);
@@ -266,7 +275,7 @@
             min-height: 105px;
         }
         .dash-card-stat:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
         .bg-grad-sales {
             background: linear-gradient(135deg, #10b981 0%, #047857 100%);
@@ -322,7 +331,6 @@
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
 
-        /* POS PRODUCT CARD */
         .pos-product-card {
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -339,7 +347,6 @@
         }
         .pos-product-card:active { transform: scale(0.96); }
 
-        /* TABLES */
         .table { --bs-table-bg: transparent; font-size: 0.83rem; }
         .table thead th {
             font-size: 0.72rem;
@@ -391,16 +398,6 @@
 
         #receipt-print-area, #zreport-print-area { display: none; }
 
-        /* ==========================================================================
-           ULTRA HIGH-DENSITY 80MM THERMAL MONOCHROME PRINT CSS (NO FAINT INK)
-           ========================================================================== */
-      /* ==========================================================================
-           /* ==========================================================================
-           FULL-WIDTH 80MM SOLID JET-BLACK THERMAL RECEIPT CSS
-           ========================================================================== */
-     /* ==========================================================================
-           ULTRA CRISP SOLID JET-BLACK 80MM THERMAL RECEIPT CSS (FIXED)
-           ========================================================================== */
         @media print {
             @page { 
                 size: 80mm auto; 
@@ -412,7 +409,6 @@
                 color: #000000 !important;
                 background: transparent !important;
                 text-shadow: none !important;
-                -webkit-text-stroke: 0px !important;
                 filter: none !important;
             }
 
@@ -424,7 +420,6 @@
                 color: #000000 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                -webkit-font-smoothing: antialiased;
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif !important;
             }
 
@@ -454,11 +449,6 @@
                 font-size: 17px !important;
                 font-weight: 900 !important;
                 margin-bottom: 2px !important;
-            }
-
-            #receipt-print-area h4, #zreport-print-area h4 {
-                font-size: 13px !important;
-                font-weight: 900 !important;
             }
 
             #receipt-print-area table, #zreport-print-area table {
@@ -672,7 +662,7 @@
             <div class="d-flex flex-column justify-content-between h-100">
                 <div>
                     <div class="text-center py-2 border-bottom border-secondary border-opacity-25 mb-3">
-                        <img src="logo.png" alt="Hello Bubu" class="img-fluid rounded-circle mb-1 shadow-sm" onerror="this.style.display='none'" style="max-height: 52px; width: auto; object-fit: cover; border: 2px solid rgba(255,255,255,0.18);">
+                        <img src="logo.png" alt="Hello Bubu" class="img-fluid rounded-circle mb-1 shadow-sm" onerror="this.style.display='none'" style="max-height: 48px; width: auto; object-fit: cover; border: 2px solid rgba(255,255,255,0.18);">
                         <h6 class="text-white mb-0 fw-bold" style="letter-spacing: 0.5px;">Hello Bubu</h6>
                         <span class="badge bg-primary bg-opacity-20 text-info border border-info border-opacity-25 mt-1 small py-0.5 px-2" id="user-role-badge" style="font-size: 0.72rem;">Role: -</span>
                     </div>
@@ -699,8 +689,8 @@
                             </a>
                         </li>
                         <li class="nav-item" id="nav-btn-wastage">
-                            <a class="nav-link" onclick="switchPage('wastage', 'Wastage Tracker')">
-                                <i class="bi bi-trash3"></i> Wastage
+                            <a class="nav-link" onclick="switchPage('wastage', 'Kitchen Wastage')">
+                                <i class="bi bi-trash3"></i> Wastage Notes
                             </a>
                         </li>
                         <li class="nav-item" id="nav-btn-reports">
@@ -758,40 +748,42 @@
             </div>
 
             <!-- =========================================================================
-                 1. DASHBOARD PAGE (500% ULTRA-MODERN LUXURY OVERHAUL)
+                 1. DASHBOARD PAGE (100% SCREEN-FIT FULL HEIGHT OVERHAUL)
                  ========================================================================= -->
             <div id="page-dashboard" class="page-section active-page">
-                <div class="card card-custom bg-white p-3 mb-2.5 border-start border-4 border-primary flex-shrink-0">
+                <!-- Welcome Bar -->
+                <div class="card card-custom bg-white p-2.5 mb-2 border-start border-4 border-primary flex-shrink-0 shadow-sm">
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <div>
-                            <h5 class="fw-bold mb-1 text-dark" id="dash-welcome-text">Welcome back, Hello Bubu RMS 👋</h5>
-                            <p class="text-muted mb-0 small">Here's a live overview of your restaurant's business performance today.</p>
+                            <h6 class="fw-bold mb-0.5 text-dark" id="dash-welcome-text">Welcome back, Hello Bubu RMS 👋</h6>
+                            <small class="text-muted">Live overview of your restaurant's business performance & financial pulse today.</small>
                         </div>
                         <div>
-                            <button class="btn btn-primary btn-sm fw-bold me-2 shadow-sm rounded-3 px-3" onclick="switchPage('billing', 'Billing (POS)')">
+                            <button class="btn btn-primary btn-sm fw-bold me-2 shadow-sm rounded-pill px-3" onclick="switchPage('billing', 'Billing (POS)')">
                                 <i class="bi bi-cart-plus me-1"></i> Open POS
                             </button>
-                            <button class="btn btn-outline-danger btn-sm fw-bold shadow-sm rounded-3 px-3" onclick="switchPage('expenses', 'Expenses & GRN')">
+                            <button class="btn btn-outline-danger btn-sm fw-bold shadow-sm rounded-pill px-3" onclick="switchPage('expenses', 'Expenses & GRN')">
                                 <i class="bi bi-file-earmark-plus me-1"></i> Create GRN
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="card card-custom bg-white p-2.5 mb-2.5 border flex-shrink-0" id="dash-notification-card">
-                    <div class="d-flex justify-content-between align-items-center border-bottom pb-1.5 mb-1.5">
+                <!-- Notifications & Alerts Bar -->
+                <div class="card card-custom bg-white p-2 mb-2 border flex-shrink-0 shadow-sm" id="dash-notification-card">
+                    <div class="d-flex justify-content-between align-items-center border-bottom pb-1 mb-1">
                         <h6 class="fw-bold text-dark mb-0 small">
                             <i class="bi bi-bell-fill me-1 text-warning"></i> System Notifications & Live Alerts
                         </h6>
                         <span class="badge bg-secondary small" id="notif-count-badge">0 Alerts</span>
                     </div>
-                    <div id="dash-notification-list" class="d-flex flex-column gap-1.5" style="max-height: 95px; overflow-y: auto;">
-                        <small class="text-muted text-center py-1.5"><i class="bi bi-check-circle text-success me-1"></i> No critical alerts. All systems running smoothly.</small>
+                    <div id="dash-notification-list" class="d-flex flex-column gap-1" style="max-height: 68px; overflow-y: auto;">
+                        <small class="text-muted text-center py-1"><i class="bi bi-check-circle text-success me-1"></i> No critical alerts. All systems running smoothly.</small>
                     </div>
                 </div>
 
-                <!-- STAT CARDS -->
-                <div class="row g-2.5 mb-2.5 flex-shrink-0">
+                <!-- 4 MAIN STAT CARDS -->
+                <div class="row g-2 mb-2 flex-shrink-0">
                     <div class="col-lg-3 col-md-6">
                         <div class="card dash-card-stat bg-grad-sales p-3">
                             <div class="d-flex flex-column justify-content-between h-100">
@@ -845,50 +837,65 @@
                     </div>
                 </div>
 
-                <div class="row g-2.5 flex-grow-1" style="min-height: 0;">
+                <!-- BOTTOM EXPANDED EXECUTIVE FINANCIAL & HEALTH PANELS (FULL FILL) -->
+                <div class="row g-2 flex-grow-1" style="min-height: 0;">
                     <div class="col-lg-8 col-md-12 d-flex flex-column h-100">
-                        <div class="card card-custom bg-white p-3 h-100 d-flex flex-column justify-content-between">
-                            <h6 class="fw-bold text-dark mb-2"><i class="bi bi-pie-chart me-1 text-primary"></i> Today's Estimated Net Position</h6>
-                            <div class="row g-3 align-items-center">
-                                <div class="col-md-6 border-end">
-                                    <div class="p-3 bg-light rounded-3">
-                                        <small class="text-muted fw-bold d-block mb-1">Estimated Net Cash Flow (Sales - Expenses)</small>
-                                        <h3 class="fw-bold mb-0 text-success" id="dash-net-position-val">Rs. 0.00</h3>
-                                        <small class="text-secondary" style="font-size: 0.75rem;">Calculated dynamically from today's active transactions.</small>
+                        <div class="card card-custom bg-white p-3 h-100 d-flex flex-column justify-content-between shadow-sm">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-pie-chart-fill me-1.5 text-primary"></i> Today's Financial Health & Net Cash Flow</h6>
+                                    <span class="badge bg-primary-subtle text-primary border border-primary border-opacity-25 px-2 py-1">Real-time Pulse</span>
+                                </div>
+                                
+                                <div class="row g-3 align-items-center my-auto">
+                                    <div class="col-md-5 border-end">
+                                        <div class="p-3 bg-light rounded-3 text-center border">
+                                            <span class="text-muted fw-bold d-block small mb-1">Estimated Net Cash Flow</span>
+                                            <h2 class="fw-bold mb-1 text-success" id="dash-net-position-val" style="font-size: 1.8rem;">Rs. 0.00</h2>
+                                            <small class="text-secondary d-block" style="font-size: 0.72rem;">(Net = Total Sales - Total Expenses)</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="d-flex justify-content-between align-items-center p-2 mb-1.5 bg-success-subtle text-success rounded-3">
+                                            <span class="fw-bold small"><i class="bi bi-arrow-down-left-circle-fill me-1"></i> Gross Sales Collections:</span>
+                                            <strong class="fs-6" id="dash-net-sales-summary">Rs. 0.00</strong>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center p-2 mb-1.5 bg-danger-subtle text-danger rounded-3">
+                                            <span class="fw-bold small"><i class="bi bi-arrow-up-right-circle-fill me-1"></i> Total Operating Outflows:</span>
+                                            <strong class="fs-6" id="dash-net-expense-summary">Rs. 0.00</strong>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center p-2 bg-warning-subtle text-warning-emphasis rounded-3">
+                                            <span class="fw-bold small"><i class="bi bi-trash3-fill me-1"></i> Kitchen Wastage Valuation:</span>
+                                            <strong class="fs-6" id="dash-net-wastage-summary">Rs. 0.00</strong>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 small">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span class="text-muted"><i class="bi bi-circle-fill text-success me-1"></i> Gross Sales:</span>
-                                        <strong id="dash-net-sales-summary">Rs. 0.00</strong>
-                                    </div>
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span class="text-muted"><i class="bi bi-circle-fill text-danger me-1"></i> Total Outflows:</span>
-                                        <strong id="dash-net-expense-summary">Rs. 0.00</strong>
-                                    </div>
-                                    <div class="d-flex justify-content-between border-top pt-2">
-                                        <span class="text-muted"><i class="bi bi-circle-fill text-warning me-1"></i> Kitchen Wastage:</span>
-                                        <strong id="dash-net-wastage-summary">Rs. 0.00</strong>
-                                    </div>
-                                </div>
+                            </div>
+
+                            <div class="border-top pt-2 mt-2 d-flex justify-content-between align-items-center text-muted small">
+                                <span><i class="bi bi-shield-check text-success me-1"></i> All POS transactions, GRN purchases & vouchers are synchronized live with cloud.</span>
+                                <button class="btn btn-sm btn-link text-primary p-0 fw-bold text-decoration-none" onclick="switchPage('reports', 'Reports & PDF')">View Master P&L Statement →</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-lg-4 col-md-12 d-flex flex-column h-100">
-                        <div class="card card-custom bg-white p-3 h-100 d-flex flex-column justify-content-between text-center">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <h6 class="fw-bold text-dark mb-0"><i class="bi bi-speedometer2 me-1 text-info"></i> System Latency</h6>
+                        <div class="card card-custom bg-white p-3 h-100 d-flex flex-column justify-content-between text-center shadow-sm">
+                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-1">
+                                <h6 class="fw-bold text-dark mb-0"><i class="bi bi-speedometer2 me-1 text-info"></i> System Latency & Link</h6>
                                 <button class="btn btn-sm btn-outline-secondary p-1 border-0" onclick="checkSystemLatency()" title="Test Speed">
                                     <i class="bi bi-arrow-clockwise"></i>
                                 </button>
                             </div>
-                            <div class="py-1">
-                                <div class="p-2 bg-primary-subtle text-primary rounded-circle d-inline-block mb-1" id="latency-icon-box">
-                                    <i class="bi bi-wifi fs-4"></i>
+                            <div class="py-2 my-auto">
+                                <div class="p-3 bg-primary-subtle text-primary rounded-circle d-inline-block mb-2 shadow-sm" id="latency-icon-box">
+                                    <i class="bi bi-wifi fs-2"></i>
                                 </div>
-                                <h4 class="fw-bold mb-1 text-dark" id="dash-latency-val">-- ms</h4>
-                                <span class="badge bg-secondary px-3 py-1 fs-6 rounded-pill" id="dash-latency-status">Testing Link...</span>
+                                <h3 class="fw-bold mb-1 text-dark" id="dash-latency-val">-- ms</h3>
+                                <span class="badge bg-secondary px-3 py-1.5 fs-6 rounded-pill" id="dash-latency-status">Testing Link...</span>
+                            </div>
+                            <div class="border-top pt-2 text-center text-muted" style="font-size: 0.72rem;">
+                                <span>Hello Bubu RMS • Developed by Systems.LK</span>
                             </div>
                         </div>
                     </div>
@@ -896,7 +903,7 @@
             </div>
 
             <!-- =========================================================================
-                 2. BILLING (POS) PAGE - SCREEN-FIT WITH LOCKED BOTTOM ACTIONS
+                 2. BILLING (POS) PAGE
                  ========================================================================= -->
             <div id="page-billing" class="page-section">
                 <div class="d-flex justify-content-between align-items-center bg-white p-2 rounded-3 card-custom mb-2 border flex-shrink-0">
@@ -933,7 +940,7 @@
                         </div>
                     </div>
 
-                    <!-- Cart Column - FIXED BOTTOM CALCULATION & PRINT BUTTON -->
+                    <!-- Cart Column -->
                     <div class="col-md-5 d-flex flex-column h-100" style="min-height: 0;">
                         <div class="card card-custom bg-white p-2.5 h-100 d-flex flex-column" style="min-height: 0;">
                             <div class="d-flex justify-content-between align-items-center border-bottom pb-1.5 mb-1.5 flex-shrink-0">
@@ -1413,70 +1420,117 @@
             </div>
 
             <!-- =========================================================================
-                 5. WASTAGE PAGE
+                 5. WASTAGE PAGE (MULTI-ITEM WASTAGE NOTE & PDF SYSTEM)
                  ========================================================================= -->
             <div id="page-wastage" class="page-section">
                 <div class="row g-2.5 flex-grow-1" style="min-height: 0;">
-                    <div class="col-lg-4 col-md-12 d-flex flex-column h-100">
-                        <div class="card card-custom bg-white p-3 h-100">
-                            <h6 class="mb-2 border-bottom pb-2 fw-bold text-warning" id="form-wastage-title"><i class="bi bi-trash3 me-1"></i> Log Kitchen Wastage</h6>
-                            <form id="wastage-form" onsubmit="saveWastage(event)">
-                                <input type="hidden" id="wastage-id">
-                                
-                                <div class="mb-2">
-                                    <label class="form-label small fw-bold text-dark mb-0">Raw Material Item</label>
-                                    <input class="form-control form-control-sm" list="raw-materials-datalist" id="wastage-item-search-input" placeholder="Search raw material..." oninput="onWastageRawMaterialSearchInput()" required>
-                                    <input type="hidden" id="wastage-item-selected-id">
-                                </div>
-
+                    <!-- Create Multi-Item Wastage Note -->
+                    <div class="col-lg-5 col-md-12 d-flex flex-column h-100" style="overflow-y: auto;">
+                        <div class="card card-custom bg-white p-3 mb-2.5">
+                            <h6 class="mb-2 border-bottom pb-2 fw-bold text-warning" id="form-wastage-title">
+                                <i class="bi bi-trash3 me-1"></i> Create Kitchen Wastage Note
+                            </h6>
+                            <form id="wastage-form" onsubmit="saveWastageNote(event)">
                                 <div class="row g-2 mb-2">
                                     <div class="col-6">
-                                        <label class="form-label small fw-bold text-dark mb-0">Wasted Qty</label>
-                                        <div class="input-group input-group-sm">
-                                            <input type="number" step="0.001" class="form-control" id="wastage-qty" placeholder="0.00" oninput="calculateWastageTotal()" required min="0.001">
-                                            <span class="input-group-text px-1" id="wastage-unit-display" style="font-size: 0.72rem;">Qty</span>
-                                        </div>
+                                        <label class="form-label small fw-bold text-dark mb-0">Wastage Note No</label>
+                                        <input type="text" class="form-control form-control-sm bg-light fw-bold" id="wastage-note-no" readonly placeholder="Auto Generated">
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label small fw-bold text-dark mb-0">Unit Cost (GRN)</label>
-                                        <input type="number" step="0.01" class="form-control form-control-sm" id="wastage-unit-cost" placeholder="0.00" readonly>
+                                        <label class="form-label small fw-bold text-dark mb-0">Wastage Date</label>
+                                        <input type="date" class="form-control form-control-sm" id="wastage-date" required>
                                     </div>
                                 </div>
 
                                 <div class="mb-2">
-                                    <label class="form-label small fw-bold text-dark mb-0">Calculated Loss Value (Rs.)</label>
-                                    <input type="number" step="0.01" class="form-control form-control-sm fw-bold text-danger bg-light" id="wastage-amount" readonly placeholder="0.00" required>
+                                    <label class="form-label small fw-bold text-dark mb-0">Wastage Reason / Department</label>
+                                    <input type="text" class="form-control form-control-sm" id="wastage-reason" placeholder="e.g. Kitchen Spoilage / Expired / Preparation Loss" required>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold text-dark mb-0">Wastage Date</label>
-                                    <input type="date" class="form-control form-control-sm" id="wastage-date" required>
+                                <!-- Add Multi-Items Box -->
+                                <div class="bg-light p-2 rounded-3 mb-2 border">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="fw-bold small text-secondary"><i class="bi bi-box-seam me-1"></i> Add Wasted Items</span>
+                                        <span class="badge bg-warning text-dark" style="font-size: 0.65rem;">Cost-Linked</span>
+                                    </div>
+
+                                    <div class="row g-1 align-items-end mb-1">
+                                        <div class="col-12">
+                                            <input class="form-control form-control-sm" list="raw-materials-datalist" id="wastage-item-search-input" placeholder="Type raw material name..." oninput="onWastageRawMaterialSearchInput()">
+                                            <input type="hidden" id="wastage-item-selected-id">
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="input-group input-group-sm">
+                                                <input type="number" step="0.001" class="form-control" id="wastage-qty" placeholder="Qty" onkeydown="if(event.key==='Enter'){ event.preventDefault(); addWastageItemRow(); }">
+                                                <span class="input-group-text px-1" id="wastage-unit-display" style="font-size: 0.72rem;">Qty</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <input type="number" step="0.01" class="form-control form-control-sm" id="wastage-unit-cost" placeholder="Unit Rate" onkeydown="if(event.key==='Enter'){ event.preventDefault(); addWastageItemRow(); }">
+                                        </div>
+                                        <div class="col-2">
+                                            <button type="button" class="btn btn-sm btn-warning w-100 text-dark" onclick="addWastageItemRow()"><i class="bi bi-plus-lg"></i></button>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive" style="max-height: 110px; overflow-y: auto;">
+                                        <table class="table table-sm align-middle mb-0 bg-white border rounded">
+                                            <thead class="table-secondary small">
+                                                <tr>
+                                                    <th>Item</th>
+                                                    <th class="text-center">Qty</th>
+                                                    <th class="text-end">Rate</th>
+                                                    <th class="text-end">Loss</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="wastage-items-table-body" class="small">
+                                                <tr>
+                                                    <td colspan="5" class="text-center text-muted">No items added to note.</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-warning btn-sm w-100 fw-bold py-1.5 shadow-sm rounded-3 text-dark" id="btn-wastage-submit">Save Wastage Record</button>
-                                <button type="button" class="btn btn-secondary btn-sm w-100 mt-1 d-none" id="btn-wastage-cancel" onclick="clearWastageForm()">Cancel Edit</button>
+                                <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-warning-subtle text-warning-emphasis rounded-3 fw-bold small">
+                                    <span>TOTAL WASTAGE LOSS:</span>
+                                    <span class="fs-6 text-danger" id="wastage-net-total-display">Rs. 0.00</span>
+                                </div>
+
+                                <div class="mb-2">
+                                    <input type="text" class="form-control form-control-sm" id="wastage-notes" placeholder="Optional notes / recorded by...">
+                                </div>
+
+                                <button type="submit" class="btn btn-warning btn-sm w-100 fw-bold py-1.5 shadow-sm rounded-3 text-dark" id="btn-wastage-submit">
+                                    <i class="bi bi-save me-1"></i> Save Wastage Note
+                                </button>
                             </form>
                         </div>
                     </div>
 
-                    <div class="col-lg-8 col-md-12 d-flex flex-column h-100">
+                    <!-- Wastage History & Filter Table -->
+                    <div class="col-lg-7 col-md-12 d-flex flex-column h-100">
                         <div class="card card-custom bg-white p-3 h-100 d-flex flex-column">
                             <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2 flex-shrink-0">
-                                <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-journal-text me-1 text-warning"></i> Kitchen Wastage History</h6>
-                                <span class="badge bg-secondary" style="font-size: 0.68rem;">GRN Cost Linked</span>
+                                <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-journal-text me-1 text-warning"></i> Kitchen Wastage Notes History</h6>
+                                <span class="badge bg-secondary" style="font-size: 0.68rem;">Live Database</span>
                             </div>
 
                             <div class="row g-2 mb-2 align-items-end bg-light p-2 rounded-3 border flex-shrink-0">
-                                <div class="col-4">
+                                <div class="col-3">
                                     <label class="small text-muted fw-bold" style="font-size: 0.7rem;">From Date</label>
                                     <input type="date" class="form-control form-control-sm py-0.5" id="wastage-filter-start">
                                 </div>
-                                <div class="col-4">
+                                <div class="col-3">
                                     <label class="small text-muted fw-bold" style="font-size: 0.7rem;">To Date</label>
                                     <input type="date" class="form-control form-control-sm py-0.5" id="wastage-filter-end">
                                 </div>
-                                <div class="col-4">
-                                    <button class="btn btn-sm btn-warning w-100 fw-bold py-1 text-dark" onclick="loadWastageClicked(true)">Filter Records</button>
+                                <div class="col-3">
+                                    <button class="btn btn-sm btn-warning w-100 fw-bold py-1 text-dark" onclick="loadWastageClicked(true)">Filter</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-sm btn-outline-danger w-100 fw-bold py-1" onclick="downloadWastageSummaryPDF()">PDF</button>
                                 </div>
                             </div>
 
@@ -1485,11 +1539,10 @@
                                     <table class="table table-hover align-middle">
                                         <thead class="table-light sticky-top">
                                             <tr>
-                                                <th>Item</th>
-                                                <th class="text-center">Wasted Qty</th>
-                                                <th class="text-end">Unit Rate</th>
-                                                <th class="text-end">Loss Value</th>
+                                                <th>Note # / Reason</th>
                                                 <th>Date</th>
+                                                <th class="text-center">Items</th>
+                                                <th class="text-end">Loss Value</th>
                                                 <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
@@ -1501,8 +1554,8 @@
                                 </nav>
                             </div>
                             <div id="wastage-load-placeholder" class="text-center py-5 text-muted flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-                                <i class="bi bi-trash fs-1 d-block mb-2 text-secondary"></i>
-                                Select date range and click "Filter Records" to view wastage logs.
+                                <i class="bi bi-trash3 fs-1 d-block mb-2 text-secondary"></i>
+                                Click "Filter" to fetch Kitchen Wastage Notes.
                             </div>
                         </div>
                     </div>
@@ -1510,7 +1563,7 @@
             </div>
 
             <!-- =========================================================================
-                 6. REPORTS PAGE - 100% COMPREHENSIVE FINANCIAL STATEMENTS & PDFS
+                 6. REPORTS PAGE
                  ========================================================================= -->
             <div id="page-reports" class="page-section">
                 <ul class="nav nav-tabs mb-2 border-bottom flex-shrink-0" id="reportTabs" role="tablist">
@@ -1537,7 +1590,7 @@
                 </ul>
 
                 <div class="tab-content flex-grow-1 d-flex flex-column" id="reportTabsContent" style="min-height: 0; overflow-y: auto;">
-                    <!-- 1. MASTER 100% COMPREHENSIVE PDF PANEL -->
+                    <!-- 1. MASTER PDF PANEL -->
                     <div class="tab-pane fade show active h-100" id="master-pdf-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-3 h-100 d-flex flex-column">
                             <div class="row g-2 align-items-end mb-2 bg-light p-2 rounded-3 border flex-shrink-0">
@@ -1565,7 +1618,7 @@
 
                             <div id="pdf-load-placeholder" class="text-center py-5 text-muted flex-grow-1 d-flex flex-column align-items-center justify-content-center">
                                 <i class="bi bi-file-pdf fs-1 d-block mb-2 text-secondary"></i>
-                                Select date range and click "Preview" to generate 100% Master Financial Statement.
+                                Select date range and click "Preview" to generate Master Financial Statement.
                             </div>
                         </div>
                     </div>
@@ -2003,7 +2056,7 @@
             </div>
 
             <!-- =========================================================================
-                 MODALS: DAY START, CASHIER SHIFT, MID-DAY CASH, PETTY CASH & RAW MATERIALS
+                 MODALS: DAY START, CASHIER SHIFT, MID-DAY CASH, PETTY CASH, WASTAGE & RAW MATERIALS
                  ========================================================================= -->
             <!-- 1. DAY START MODAL -->
             <div class="modal fade" id="dayStartModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
@@ -2226,7 +2279,28 @@
                 </div>
             </div>
 
-            <!-- 7. ADD / EDIT RAW MATERIAL MODAL -->
+            <!-- 7. WASTAGE NOTE DETAILS MODAL -->
+            <div class="modal fade" id="wastageDetailsModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg rounded-4">
+                        <div class="modal-header bg-warning text-dark">
+                            <h5 class="modal-title fw-bold" id="wastageModalTitle">Kitchen Wastage Note</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <div id="wastage-modal-content"></div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-outline-danger fw-bold rounded-pill px-3" id="btn-download-single-wastage-pdf">
+                                <i class="bi bi-file-earmark-pdf me-1"></i> Download Note PDF
+                            </button>
+                            <button type="button" class="btn btn-secondary rounded-pill px-3" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. ADD / EDIT RAW MATERIAL MODAL -->
             <div class="modal fade" id="newRawMaterialModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -2269,7 +2343,7 @@
                 </div>
             </div>
 
-            <!-- 8. MANAGE RAW MATERIALS MODAL -->
+            <!-- 9. MANAGE RAW MATERIALS MODAL -->
             <div class="modal fade" id="manageRawMaterialsModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -2363,7 +2437,8 @@
     let rawMaterialsMap = {}; 
     let expenseCategories = [];
     let expenses = []; 
-    let wastage = [];
+    let wastageNotes = [];
+    let wastageItemsList = [];
     let updates = [];
     let cart = [];
     let userAccountsList = [];
@@ -2649,7 +2724,7 @@
             try {
                 await auth.signOut();
                 categories = []; products = []; rawMaterials = []; rawMaterialsMap = {}; expenseCategories = [];
-                expenses = []; wastage = []; updates = []; cart = []; userAccountsList = [];
+                expenses = []; wastageNotes = []; wastageItemsList = []; updates = []; cart = []; userAccountsList = [];
                 currentUserPermissions = null; todayExpectedSales = { cash: 0, card: 0, online: 0 };
                 currentPettyCashBalance = 0; pettyCashLogsList = []; recipeBuilderList = [];
                 isDayStarted = false; todayOpeningFloat = 0; currentCashierSession = null;
@@ -3092,6 +3167,7 @@
             populateRawMaterialsDropdown();
         } else if (pageId === 'wastage') {
             populateRawMaterialsDropdown();
+            generateNewWastageNoteNo();
         } else if (pageId === 'reports') {
             generateSalesReport();
             generateExpensesReport();
@@ -3114,13 +3190,13 @@
         if (isYesterdayShiftUnclosed) {
             count++;
             itemsHtml += `
-                <div class="alert alert-danger mb-0 p-2 d-flex justify-content-between align-items-center rounded small">
+                <div class="alert alert-danger mb-0 p-1.5 d-flex justify-content-between align-items-center rounded small">
                     <div>
                         <strong class="d-block"><i class="bi bi-exclamation-triangle-fill me-1"></i> Unclosed Shift Alert!</strong>
                         <span>Yesterday's shift (${yesterdayDateStr}) was not reconciled / closed.</span>
                     </div>
-                    <button class="btn btn-sm btn-danger fw-bold ms-2 py-1 text-nowrap rounded-pill px-3" onclick="jumpToDayEndForUnclosedShift('${yesterdayDateStr}')">
-                        Close Shift Now
+                    <button class="btn btn-sm btn-danger fw-bold ms-2 py-0.5 text-nowrap rounded-pill px-3" onclick="switchPage('dayend', 'Day End (Z-Report)')">
+                        Close Shift
                     </button>
                 </div>
             `;
@@ -3129,12 +3205,12 @@
         if (currentPettyCashBalance < 1000) {
             count++;
             itemsHtml += `
-                <div class="alert alert-warning mb-0 p-2 d-flex justify-content-between align-items-center rounded small">
+                <div class="alert alert-warning mb-0 p-1.5 d-flex justify-content-between align-items-center rounded small">
                     <div>
-                        <strong class="d-block"><i class="bi bi-wallet2 me-1"></i> Low Petty Cash Balance!</strong>
+                        <strong><i class="bi bi-wallet2 me-1"></i> Low Petty Cash:</strong>
                         <span>Current float is <strong>Rs. ${currentPettyCashBalance.toFixed(2)}</strong>.</span>
                     </div>
-                    <button class="btn btn-sm btn-outline-dark fw-bold ms-2 py-1 text-nowrap rounded-pill px-3" onclick="switchPage('expenses', 'Expenses & GRN')">
+                    <button class="btn btn-sm btn-outline-dark fw-bold ms-2 py-0.5 text-nowrap rounded-pill px-3" onclick="switchPage('expenses', 'Expenses & GRN')">
                         Top Up
                     </button>
                 </div>
@@ -3143,7 +3219,7 @@
 
         if (isDayStarted) {
             itemsHtml += `
-                <div class="alert alert-success mb-0 p-2 d-flex justify-content-between align-items-center rounded small">
+                <div class="alert alert-success mb-0 p-1.5 d-flex justify-content-between align-items-center rounded small">
                     <div>
                         <strong><i class="bi bi-check-circle-fill me-1"></i> Today's POS Shift Active</strong>
                         <span class="ms-2">Opening Float: <strong>Rs. ${todayOpeningFloat.toFixed(2)}</strong></span>
@@ -3154,12 +3230,12 @@
         } else {
             count++;
             itemsHtml += `
-                <div class="alert alert-secondary mb-0 p-2 d-flex justify-content-between align-items-center rounded small">
+                <div class="alert alert-secondary mb-0 p-1.5 d-flex justify-content-between align-items-center rounded small">
                     <div>
                         <strong><i class="bi bi-play-circle me-1"></i> Today's Shift Not Started</strong>
                         <span class="ms-2">Please start shift before billing in POS.</span>
                     </div>
-                    <button class="btn btn-sm btn-primary fw-bold ms-2 py-1 text-nowrap rounded-pill px-3" onclick="switchPage('billing', 'Billing (POS)')">
+                    <button class="btn btn-sm btn-primary fw-bold ms-2 py-0.5 text-nowrap rounded-pill px-3" onclick="switchPage('billing', 'Billing (POS)')">
                         Start Shift
                     </button>
                 </div>
@@ -3169,9 +3245,9 @@
         if (updates && updates.length > 0) {
             const latest = updates[0];
             itemsHtml += `
-                <div class="alert alert-info mb-0 p-2 d-flex justify-content-between align-items-center rounded small">
+                <div class="alert alert-info mb-0 p-1.5 d-flex justify-content-between align-items-center rounded small">
                     <div>
-                        <strong><i class="bi bi-arrow-up-circle me-1"></i> Latest Update Logged (${latest.date}):</strong>
+                        <strong><i class="bi bi-arrow-up-circle me-1"></i> Latest Update (${latest.date}):</strong>
                         <span class="ms-1">${latest.version} - ${latest.type}</span>
                     </div>
                     <button class="btn btn-sm btn-link text-info p-0 ms-2 text-nowrap" onclick="switchPage('updates', 'System Updates')">Details</button>
@@ -3181,10 +3257,10 @@
 
         if (badgeEl) {
             badgeEl.innerText = `${count} Alert${count !== 1 ? 's' : ''}`;
-            badgeEl.className = count > 0 ? "badge bg-danger p-2" : "badge bg-secondary p-2";
+            badgeEl.className = count > 0 ? "badge bg-danger p-1" : "badge bg-secondary p-1";
         }
 
-        listEl.innerHTML = itemsHtml || `<small class="text-muted text-center py-2"><i class="bi bi-check-circle text-success me-1"></i> No critical alerts. All systems running smoothly.</small>`;
+        listEl.innerHTML = itemsHtml || `<small class="text-muted text-center py-1"><i class="bi bi-check-circle text-success me-1"></i> No critical alerts. All systems running smoothly.</small>`;
     }
 
     async function updateDashboardData() {
@@ -3206,7 +3282,7 @@
             const netPosEl = document.getElementById('dash-net-position-val');
             if (netPosEl) {
                 netPosEl.innerText = `Rs. ${netPosition.toFixed(2)}`;
-                netPosEl.className = netPosition >= 0 ? "fw-bold mb-0 text-success" : "fw-bold mb-0 text-danger";
+                netPosEl.className = netPosition >= 0 ? "fw-bold mb-1 text-success" : "fw-bold mb-1 text-danger";
             }
 
             document.getElementById('dash-net-sales-summary').innerText = `Rs. ${salesTotal.toFixed(2)}`;
@@ -3346,25 +3422,7 @@
         }
     }
 
-    function onWastageRawMaterialSearchInput() {
-        const inputVal = document.getElementById('wastage-item-search-input').value.trim();
-        const unitCostInput = document.getElementById('wastage-unit-cost');
-        const unitDisplay = document.getElementById('wastage-unit-display');
-        const hiddenId = document.getElementById('wastage-item-selected-id');
-
-        const mat = rawMaterials.find(m => m.name.toLowerCase() === inputVal.toLowerCase());
-        if (mat) {
-            unitCostInput.value = parseFloat(mat.unitCost || 0).toFixed(2);
-            unitDisplay.innerText = mat.unit || 'Qty';
-            hiddenId.value = mat.id;
-        } else {
-            unitCostInput.value = '0.00';
-            unitDisplay.innerText = 'Qty';
-            hiddenId.value = '';
-        }
-        calculateWastageTotal();
-    }
-
+    /* RAW MATERIALS MANAGEMENT */
     function openManageRawMaterialsModal() {
         displayManageRawMaterialsTable();
         new bootstrap.Modal(document.getElementById('manageRawMaterialsModal')).show();
@@ -3734,6 +3792,7 @@
         document.getElementById('btn-product-cancel').classList.add('d-none');
     }
 
+    /* EXPENSES & GRN ENGINE */
     function displayExpenseCategories() {
         const dropdown = document.getElementById('expense-category');
         const badgeContainer = document.getElementById('expense-category-badges-container');
@@ -3993,13 +4052,12 @@
     }
 
     function viewGrnDetails(id) {
-        const exp = expenses.find(e => e.id === id);
-        if (!exp) return;
-
-        const title = document.getElementById('grnModalTitle');
-        const body = document.getElementById('grn-modal-content');
-        title.innerText = exp.invoiceNo ? `GRN Invoice: #${exp.invoiceNo}` : `Expense Details`;
-
+    const exp = expenses.find(e => e.id === id);
+    if (!exp) return;
+    
+    const title = document.getElementById('grnModalTitle');
+    const body = document.getElementById('grn-modal-content');
+    title.innerText = exp.invoiceNo ? `GRN Invoice: #${exp.invoiceNo}` : `Expense Details`;
         let itemsHtml = '';
         if (exp.items && Array.isArray(exp.items)) {
             exp.items.forEach(item => {
@@ -4061,6 +4119,7 @@
         }
     }
 
+    /* PETTY CASH SYSTEM */
     async function loadPettyCashBalance() {
         try {
             const snapshot = await rtdb.ref('petty_cash_float/current_balance').once('value');
@@ -4292,12 +4351,6 @@
         }
     }
 
-    /* 100% COMPREHENSIVE PETTY CASH PDF */
-
-
-    /* =========================================================================
-       100% COMPREHENSIVE PETTY CASH PDF STATEMENT
-       ========================================================================= */
     async function generatePettyCashPDF() {
         const startDate = document.getElementById('pc-filter-start').value;
         const endDate = document.getElementById('pc-filter-end').value;
@@ -4386,7 +4439,6 @@
                     <small style="font-size:9.5px; color:#64748b;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong> | Generated on: ${formatDateTime(new Date())}</small>
                 </div>
 
-                <!-- Summary Cards -->
                 <div style="display:flex; justify-content:space-between; margin-bottom:12px; gap:8px;">
                     <div style="flex:1; border:1px solid #10b981; background:#ecfdf5; padding:6px 10px; border-radius:6px;">
                         <span style="font-size:9px; color:#047857; font-weight:bold; display:block; text-transform:uppercase;">Total Float Inflows</span>
@@ -4422,7 +4474,6 @@
                     <tbody>${tableRowsHtml}</tbody>
                 </table>
 
-                <!-- Category Breakdown Table -->
                 <div style="display:flex; justify-content:space-between; gap:20px; page-break-inside:avoid;">
                     <div style="flex:1;">
                         <h5 style="margin:0 0 5px 0; font-size:10.5px; font-weight:bold;">Expense Breakdown by Category:</h5>
@@ -4467,12 +4518,162 @@
     }
 
     /* =========================================================================
-       WASTAGE TRACKER ENGINE
+       5. MULTI-ITEM KITCHEN WASTAGE ENGINE & PDF GENERATOR
        ========================================================================= */
-    function calculateWastageTotal() {
-        const qty = parseFloat(document.getElementById('wastage-qty').value) || 0;
-        const unitCost = parseFloat(document.getElementById('wastage-unit-cost').value) || 0;
-        document.getElementById('wastage-amount').value = (qty * unitCost).toFixed(2);
+    function generateNewWastageNoteNo() {
+        const noteField = document.getElementById('wastage-note-no');
+        if (noteField) {
+            noteField.value = 'WST-' + Date.now().toString().slice(-6);
+        }
+    }
+
+    function onWastageRawMaterialSearchInput() {
+        const inputVal = document.getElementById('wastage-item-search-input').value.trim();
+        const unitCostInput = document.getElementById('wastage-unit-cost');
+        const unitDisplay = document.getElementById('wastage-unit-display');
+        const hiddenId = document.getElementById('wastage-item-selected-id');
+
+        const mat = rawMaterials.find(m => m.name.toLowerCase() === inputVal.toLowerCase());
+        if (mat) {
+            unitCostInput.value = parseFloat(mat.unitCost || 0).toFixed(2);
+            unitDisplay.innerText = mat.unit || 'Qty';
+            hiddenId.value = mat.id;
+        } else {
+            unitCostInput.value = '';
+            unitDisplay.innerText = 'Qty';
+            hiddenId.value = '';
+        }
+    }
+
+    function addWastageItemRow() {
+        const nameInput = document.getElementById('wastage-item-search-input');
+        const inputVal = nameInput.value.trim();
+        const selectedId = document.getElementById('wastage-item-selected-id').value;
+
+        const qtyInput = document.getElementById('wastage-qty');
+        const costInput = document.getElementById('wastage-unit-cost');
+
+        let mat = rawMaterialsMap[selectedId] || rawMaterials.find(m => m.name.toLowerCase() === inputVal.toLowerCase());
+        const qty = parseFloat(qtyInput.value) || 0;
+        const unitRate = parseFloat(costInput.value) || 0;
+
+        if (!mat || qty <= 0 || unitRate <= 0) {
+            alert("Please select a valid Raw Material and enter valid Qty and Unit Rate!");
+            return;
+        }
+
+        const lineTotal = qty * unitRate;
+        wastageItemsList.push({
+            materialId: mat.id,
+            name: mat.name,
+            unit: mat.unit || 'Unit',
+            qty: qty,
+            unitCost: unitRate,
+            total: lineTotal
+        });
+
+        nameInput.value = '';
+        document.getElementById('wastage-item-selected-id').value = '';
+        qtyInput.value = '';
+        costInput.value = '';
+        document.getElementById('wastage-unit-display').innerText = 'Qty';
+
+        displayWastageItemsTable();
+    }
+
+    function removeWastageItemRow(index) {
+        wastageItemsList.splice(index, 1);
+        displayWastageItemsTable();
+    }
+
+    function displayWastageItemsTable() {
+        const tbody = document.getElementById('wastage-items-table-body');
+        const totalDisplay = document.getElementById('wastage-net-total-display');
+        tbody.innerHTML = '';
+
+        if (wastageItemsList.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No items added to note.</td></tr>`;
+            totalDisplay.innerText = "Rs. 0.00";
+            return;
+        }
+
+        let grandLoss = 0;
+        let html = '';
+        wastageItemsList.forEach((item, index) => {
+            grandLoss += item.total;
+            html += `
+                <tr>
+                    <td><strong>${item.name}</strong> <small class="text-muted">(${item.unit})</small></td>
+                    <td class="text-center">${item.qty}</td>
+                    <td class="text-end">Rs. ${item.unitCost.toFixed(2)}</td>
+                    <td class="text-end text-danger fw-bold">Rs. ${item.total.toFixed(2)}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm text-danger p-0 border-0" onclick="removeWastageItemRow(${index})"><i class="bi bi-x-circle-fill"></i></button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = html;
+        totalDisplay.innerText = `Rs. ${grandLoss.toFixed(2)}`;
+    }
+
+    async function saveWastageNote(event) {
+        event.preventDefault();
+        if (wastageItemsList.length === 0) {
+            alert("Please add at least one raw material item to the Wastage Note!");
+            return;
+        }
+
+        const noteNo = document.getElementById('wastage-note-no').value.trim() || ('WST-' + Date.now().toString().slice(-6));
+        const date = document.getElementById('wastage-date').value;
+        const reason = document.getElementById('wastage-reason').value.trim();
+        const notes = document.getElementById('wastage-notes').value.trim();
+
+        let netTotalLoss = 0;
+        wastageItemsList.forEach(i => netTotalLoss += i.total);
+
+        const now = new Date();
+        const timeStr = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+        const dateTimeFormatted = `${date} ${timeStr}`;
+        const userStr = auth.currentUser ? (auth.currentUser.email.split('@')[0]) : 'system';
+
+        const wastageRecord = {
+            noteNo,
+            date,
+            dateTime: dateTimeFormatted,
+            reason,
+            recordedBy: userStr,
+            items: JSON.parse(JSON.stringify(wastageItemsList)),
+            totalLoss: netTotalLoss,
+            notes: notes || "N/A",
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        try {
+            const newRef = rtdb.ref('wastage_notes').push();
+            const updatesMap = {};
+            updatesMap[`wastage_notes/${newRef.key}`] = wastageRecord;
+            updatesMap[`daily_summaries/${date}/wastage_total`] = firebase.database.ServerValue.increment(netTotalLoss);
+
+            await rtdb.ref().update(updatesMap);
+
+            alert(`Wastage Note #${noteNo} saved successfully! Total Loss: Rs. ${netTotalLoss.toFixed(2)}`);
+
+            document.getElementById('wastage-form').reset();
+            document.getElementById('wastage-date').value = todayStr;
+            document.getElementById('wastage-item-search-input').value = '';
+            document.getElementById('wastage-item-selected-id').value = '';
+            wastageItemsList = [];
+            displayWastageItemsTable();
+            generateNewWastageNoteNo();
+
+            if (isWastageLoaded) await loadWastageClicked(true);
+            updateDashboardData();
+        } catch (error) {
+            console.error("Error saving Wastage Note: ", error);
+            alert("Failed to save Wastage Note: " + error.message);
+        }
     }
 
     async function loadWastageClicked(forceFilter = false) {
@@ -4485,13 +4686,13 @@
         
         try {
             let queryRef = (forceFilter && startFilter && endFilter)
-                ? rtdb.ref('wastage').orderByChild('date').startAt(startFilter).endAt(endFilter).limitToLast(200)
-                : rtdb.ref('wastage').limitToLast(50);
+                ? rtdb.ref('wastage_notes').orderByChild('date').startAt(startFilter).endAt(endFilter).limitToLast(200)
+                : rtdb.ref('wastage_notes').limitToLast(50);
 
             const snapshot = await queryRef.once('value');
             const data = snapshot.val();
-            wastage = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
-            wastage.sort((a,b) => b.date.localeCompare(a.date));
+            wastageNotes = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
+            wastageNotes.sort((a,b) => (b.dateTime || b.date).localeCompare(a.dateTime || a.date));
             displayWastage();
         } catch (error) {
             console.error("Error loading wastage records: ", error);
@@ -4503,34 +4704,36 @@
         const tableBody = document.getElementById('wastage-table-body');
         tableBody.innerHTML = '';
 
-        if (wastage.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">No wastage tracker records found.</td></tr>`;
+        if (wastageNotes.length === 0) {
+            tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">No wastage notes found for selected period.</td></tr>`;
             document.getElementById('wastage-pagination').innerHTML = '';
             return;
         }
 
-        const totalPages = Math.ceil(wastage.length / wastagePerPage);
+        const totalPages = Math.ceil(wastageNotes.length / wastagePerPage);
         if (currentWastagePage > totalPages) currentWastagePage = totalPages;
         if (currentWastagePage < 1) currentWastagePage = 1;
 
         const startIdx = (currentWastagePage - 1) * wastagePerPage;
-        const paginatedWastage = wastage.slice(startIdx, startIdx + wastagePerPage);
+        const paginatedWastage = wastageNotes.slice(startIdx, startIdx + wastagePerPage);
 
         let tableHtml = '';
-        paginatedWastage.forEach(record => {
-            const itemName = record.item || 'Raw Material';
-            const qtyText = record.qty ? `${record.qty} ${record.unit || ''}` : 'N/A';
-            const unitCostText = record.unitCost ? `Rs. ${parseFloat(record.unitCost).toFixed(2)}` : 'N/A';
+        paginatedWastage.forEach(note => {
+            const itemsCount = (note.items && Array.isArray(note.items)) ? note.items.length : 1;
+            const lossVal = parseFloat(note.totalLoss || note.amount || 0);
 
             tableHtml += `
                 <tr>
-                    <td><strong>${itemName}</strong></td>
-                    <td class="text-center fw-bold">${qtyText}</td>
-                    <td class="text-end text-secondary">${unitCostText}</td>
-                    <td class="text-end text-danger fw-bold">Rs. ${parseFloat(record.amount || 0).toFixed(2)}</td>
-                    <td><small class="fw-bold">${record.date}</small></td>
+                    <td>
+                        <strong>#${note.noteNo || 'N/A'}</strong>
+                        <br><small class="text-muted">${note.reason || 'General Spoilage'}</small>
+                    </td>
+                    <td><small class="fw-bold">${note.dateTime || note.date}</small></td>
+                    <td class="text-center"><span class="badge bg-secondary">${itemsCount} items</span></td>
+                    <td class="text-end text-danger fw-bold">Rs. ${lossVal.toFixed(2)}</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteWastage('${record.id}')"><i class="bi bi-trash"></i></button>
+                        <button class="btn btn-sm btn-outline-warning text-dark py-0 px-2 me-1" onclick="viewWastageNoteDetails('${note.id}')" title="View Note"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteWastageNote('${note.id}')" title="Delete Note"><i class="bi bi-trash"></i></button>
                     </td>
                 </tr>
             `;
@@ -4545,70 +4748,273 @@
         displayWastage();
     }
 
-    async function saveWastage(event) {
-        event.preventDefault();
-        const matSearchInput = document.getElementById('wastage-item-search-input').value.trim();
-        const selectedId = document.getElementById('wastage-item-selected-id').value;
-        const mat = rawMaterialsMap[selectedId] || rawMaterials.find(m => m.name.toLowerCase() === matSearchInput.toLowerCase());
-        const qty = parseFloat(document.getElementById('wastage-qty').value) || 0;
-        const unitCost = parseFloat(document.getElementById('wastage-unit-cost').value) || 0;
-        const totalLoss = parseFloat(document.getElementById('wastage-amount').value) || 0;
-        const date = document.getElementById('wastage-date').value;
+    function viewWastageNoteDetails(noteId) {
+        const note = wastageNotes.find(w => w.id === noteId);
+        if (!note) return;
 
-        if (!mat || qty <= 0 || totalLoss <= 0) {
-            alert("Please select a Raw Material and enter Wasted Qty!");
-            return;
+        document.getElementById('wastageModalTitle').innerText = `Wastage Note #${note.noteNo || 'N/A'}`;
+        const body = document.getElementById('wastage-modal-content');
+
+        let itemsRows = '';
+        if (note.items && Array.isArray(note.items)) {
+            note.items.forEach((item, index) => {
+                itemsRows += `
+                    <tr>
+                        <td class="text-center">${index + 1}</td>
+                        <td><strong>${item.name}</strong> <small class="text-muted">(${item.unit || 'Unit'})</small></td>
+                        <td class="text-center">${item.qty}</td>
+                        <td class="text-end">Rs. ${parseFloat(item.unitCost).toFixed(2)}</td>
+                        <td class="text-end fw-bold text-danger">Rs. ${parseFloat(item.total).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        } else {
+            itemsRows = `
+                <tr>
+                    <td class="text-center">1</td>
+                    <td><strong>${note.item || 'Wasted Material'}</strong></td>
+                    <td class="text-center">${note.qty || 1} ${note.unit || ''}</td>
+                    <td class="text-end">Rs. ${parseFloat(note.unitCost || note.amount || 0).toFixed(2)}</td>
+                    <td class="text-end fw-bold text-danger">Rs. ${parseFloat(note.amount || 0).toFixed(2)}</td>
+                </tr>
+            `;
         }
 
-        const wastageRecord = {
-            materialId: mat.id, item: mat.name, qty, unit: mat.unit || 'Unit', unitCost, amount: totalLoss, date, timestamp: firebase.database.ServerValue.TIMESTAMP
-        };
+        const totalLossVal = parseFloat(note.totalLoss || note.amount || 0);
 
-        try {
-            const newRef = rtdb.ref('wastage').push();
-            const updatesMap = {};
-            updatesMap[`wastage/${newRef.key}`] = wastageRecord;
-            updatesMap[`daily_summaries/${date}/wastage_total`] = firebase.database.ServerValue.increment(totalLoss);
+        body.innerHTML = `
+            <div class="mb-3 border-bottom pb-2">
+                <p class="mb-1"><strong>Reason / Dept:</strong> <span class="badge bg-warning text-dark">${note.reason || 'General Spoilage'}</span></p>
+                <p class="mb-1"><strong>Recorded Date & Time:</strong> ${note.dateTime || note.date}</p>
+                <p class="mb-1"><strong>Recorded By:</strong> ${note.recordedBy || 'Admin'}</p>
+                <p class="mb-1"><strong>Notes / Remarks:</strong> ${note.notes || 'N/A'}</p>
+            </div>
+            <h6 class="fw-bold mb-2">Itemized Wasted Materials:</h6>
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr><th class="text-center">#</th><th>Material</th><th class="text-center">Qty</th><th class="text-end">Unit Rate</th><th class="text-end">Loss</th></tr>
+                    </thead>
+                    <tbody>${itemsRows}</tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-between fs-5 fw-bold text-danger border-top pt-2 mt-2">
+                <span>TOTAL LOSS VALUATION:</span>
+                <span>Rs. ${totalLossVal.toFixed(2)}</span>
+            </div>
+        `;
 
-            await rtdb.ref().update(updatesMap);
-            alert("Kitchen Wastage log saved successfully!");
-            clearWastageForm();
-            if (isWastageLoaded) await loadWastageClicked(true);
-            updateDashboardData();
-        } catch (error) {
-            console.error("Error saving wastage: ", error);
-            alert("Failed to save wastage record.");
-        }
+        document.getElementById('btn-download-single-wastage-pdf').onclick = () => downloadSingleWastageNotePDF(note);
+
+        new bootstrap.Modal(document.getElementById('wastageDetailsModal')).show();
     }
 
-    async function deleteWastage(id) {
-        const record = wastage.find(w => w.id === id);
-        if (!record) return;
+    async function deleteWastageNote(id) {
+        const note = wastageNotes.find(w => w.id === id);
+        if (!note) return;
 
-        if (confirm("Are you sure you want to delete this wastage record?")) {
+        if (confirm(`Are you sure you want to delete Wastage Note #${note.noteNo || ''}?`)) {
             try {
+                const totalLoss = parseFloat(note.totalLoss || note.amount || 0);
                 const updatesMap = {};
-                updatesMap[`wastage/${id}`] = null;
-                updatesMap[`daily_summaries/${record.date}/wastage_total`] = firebase.database.ServerValue.increment(-record.amount);
+                updatesMap[`wastage_notes/${id}`] = null;
+                updatesMap[`daily_summaries/${note.date}/wastage_total`] = firebase.database.ServerValue.increment(-totalLoss);
 
                 await rtdb.ref().update(updatesMap);
                 await loadWastageClicked(true);
                 updateDashboardData();
+                alert("Wastage Note deleted successfully.");
             } catch (error) {
-                console.error("Error deleting wastage record: ", error);
+                console.error("Error deleting wastage note: ", error);
             }
         }
     }
 
-    function clearWastageForm() {
-        document.getElementById('wastage-id').value = '';
-        document.getElementById('wastage-form').reset();
-        document.getElementById('wastage-item-search-input').value = '';
-        document.getElementById('wastage-item-selected-id').value = '';
-        document.getElementById('wastage-date').value = todayStr;
-        document.getElementById('wastage-unit-display').innerText = 'Qty';
-        document.getElementById('wastage-unit-cost').value = '0.00';
-        document.getElementById('wastage-amount').value = '0.00';
+    function downloadSingleWastageNotePDF(note) {
+        let itemsHtml = '';
+        if (note.items && Array.isArray(note.items)) {
+            note.items.forEach((item, index) => {
+                itemsHtml += `
+                    <tr>
+                        <td style="padding:6px; border:1px solid #cbd5e1; text-align:center;">${index + 1}</td>
+                        <td style="padding:6px; border:1px solid #cbd5e1;"><strong>${item.name}</strong> <small>(${item.unit || 'Unit'})</small></td>
+                        <td style="padding:6px; border:1px solid #cbd5e1; text-align:center; font-weight:bold;">${item.qty}</td>
+                        <td style="padding:6px; border:1px solid #cbd5e1; text-align:right;">Rs. ${parseFloat(item.unitCost).toFixed(2)}</td>
+                        <td style="padding:6px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#be123c;">Rs. ${parseFloat(item.total).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        const totalLossVal = parseFloat(note.totalLoss || note.amount || 0);
+
+        const printElement = document.createElement('div');
+        printElement.style.padding = '15px';
+        printElement.style.fontFamily = 'Arial, sans-serif';
+        printElement.style.color = '#0f172a';
+
+        printElement.innerHTML = `
+            <div style="text-align:center; border-bottom:2.5px solid #0f172a; padding-bottom:8px; margin-bottom:12px;">
+                <h2 style="margin:0; font-size:18px; font-weight:900; color:#0f172a;">HELLO BUBU RESTAURANT</h2>
+                <p style="margin:2px 0; font-size:10px; color:#475569;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                <h4 style="margin:5px 0 0 0; font-size:13px; font-weight:900; color:#d97706; text-transform:uppercase;">KITCHEN WASTAGE VOUCHER / NOTE</h4>
+                <p style="margin:2px 0; font-size:9.5px; color:#64748b;">Note No: <strong>#${note.noteNo || 'N/A'}</strong> | Date & Time: <strong>${note.dateTime || note.date}</strong></p>
+            </div>
+
+            <div style="background:#fffbeb; border:1px solid #fde68a; padding:8px 12px; border-radius:6px; margin-bottom:12px; font-size:10px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <span><strong>Reason / Department:</strong> ${note.reason || 'Kitchen Spoilage'}</span>
+                    <span><strong>Recorded By:</strong> ${note.recordedBy || 'Admin'}</span>
+                </div>
+                <div><strong>Notes / Remarks:</strong> ${note.notes || 'N/A'}</div>
+            </div>
+
+            <table style="width:100%; border-collapse:collapse; font-size:10px; margin-bottom:12px;" cellpadding="4">
+                <thead>
+                    <tr style="background:#0f172a; color:#ffffff;">
+                        <th style="border:1px solid #0f172a; width:5%; text-align:center;">#</th>
+                        <th style="border:1px solid #0f172a; width:45%; text-align:left;">Raw Material Item</th>
+                        <th style="border:1px solid #0f172a; width:15%; text-align:center;">Wasted Qty</th>
+                        <th style="border:1px solid #0f172a; width:15%; text-align:right;">Unit Rate</th>
+                        <th style="border:1px solid #0f172a; width:20%; text-align:right;">Loss Valuation</th>
+                    </tr>
+                </thead>
+                <tbody>${itemsHtml}</tbody>
+            </table>
+
+            <div style="display:flex; justify-content:space-between; background:#fff1f2; border:1px solid #fecdd3; padding:8px 12px; border-radius:6px; font-weight:900; font-size:13px; color:#be123c; margin-bottom:25px;">
+                <span>TOTAL LOSS VALUATION:</span>
+                <span>Rs. ${totalLossVal.toFixed(2)}</span>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-top:35px; font-size:9.5px;">
+                <div style="text-align:center; width:30%;"><p style="margin:0; border-top:1px solid #333; padding-top:3px;">Kitchen Head / Chef</p></div>
+                <div style="text-align:center; width:30%;"><p style="margin:0; border-top:1px solid #333; padding-top:3px;">Restaurant Manager</p></div>
+                <div style="text-align:center; width:30%;"><p style="margin:0; border-top:1px solid #333; padding-top:3px;">Director Approval</p></div>
+            </div>
+
+            <div style="text-align:center; font-size:8px; color:#64748b; margin-top:15px; border-top:1px solid #e2e8f0; padding-top:4px;">
+                Hello Bubu Restaurant Management System • Developed by Systems.LK (0760672029)
+            </div>
+        `;
+
+        const opt = {
+            margin: 6,
+            filename: `Wastage_Note_${note.noteNo || 'N_A'}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(printElement).save();
+    }
+
+    async function downloadWastageSummaryPDF() {
+        const startDate = document.getElementById('wastage-filter-start').value;
+        const endDate = document.getElementById('wastage-filter-end').value;
+
+        if (!startDate || !endDate) {
+            alert("Please select both From Date and To Date!");
+            return;
+        }
+
+        try {
+            const snapshot = await rtdb.ref('wastage_notes').orderByChild('date').startAt(startDate).endAt(endDate).once('value');
+            const data = snapshot.val() || {};
+            const list = Object.keys(data).map(k => ({ id: k, ...data[k] }));
+
+            if (list.length === 0) {
+                alert("No Wastage Notes found for the selected period!");
+                return;
+            }
+
+            list.sort((a,b) => (a.dateTime || a.date).localeCompare(b.dateTime || b.date));
+
+            let totalPeriodLoss = 0;
+            let rowsHtml = '';
+
+            list.forEach((note, index) => {
+                const loss = parseFloat(note.totalLoss || note.amount || 0);
+                totalPeriodLoss += loss;
+
+                let itemsSummary = '';
+                if (note.items && Array.isArray(note.items)) {
+                    itemsSummary = note.items.map(i => `${i.name} (${i.qty}${i.unit||''})`).join(', ');
+                }
+
+                rowsHtml += `
+                    <tr style="page-break-inside: avoid;">
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:center;">${index + 1}</td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;"><small>${note.dateTime || note.date}</small></td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;"><strong>#${note.noteNo || 'N/A'}</strong></td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;"><span style="background:#fef3c7; padding:2px 5px; border-radius:4px; font-size:9px;">${note.reason || 'General'}</span></td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1; font-size:9px; color:#475569;">${itemsSummary || '-'}</td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#be123c;">Rs. ${loss.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            const printElement = document.createElement('div');
+            printElement.style.padding = '12px';
+            printElement.style.fontFamily = 'Arial, sans-serif';
+            printElement.style.color = '#0f172a';
+
+            printElement.innerHTML = `
+                <div style="text-align:center; border-bottom:2.5px solid #0f172a; padding-bottom:8px; margin-bottom:12px;">
+                    <h2 style="margin:0; font-size:18px; font-weight:900; color:#0f172a;">HELLO BUBU RESTAURANT</h2>
+                    <p style="margin:2px 0; font-size:10px; color:#475569;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                    <h4 style="margin:4px 0 0 0; color:#d97706; font-size:13px; font-weight:900; text-transform:uppercase;">KITCHEN WASTAGE NOTES SUMMARY STATEMENT</h4>
+                    <p style="margin:2px 0; font-size:9.5px; color:#64748b;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong> | Total Wastage Notes: <strong>${list.length}</strong></p>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px; gap:10px;">
+                    <div style="flex:1; border:1px solid #f59e0b; background:#fffbeb; padding:6px 12px; border-radius:6px;">
+                        <span style="font-size:9px; color:#b45309; font-weight:bold; display:block; text-transform:uppercase;">Total Kitchen Loss Value</span>
+                        <strong style="font-size:15px; color:#b45309;">Rs. ${totalPeriodLoss.toFixed(2)}</strong>
+                    </div>
+                    <div style="flex:1; border:1px solid #0f172a; background:#f8fafc; padding:6px 12px; border-radius:6px;">
+                        <span style="font-size:9px; color:#0f172a; font-weight:bold; display:block; text-transform:uppercase;">Total Notes Processed</span>
+                        <strong style="font-size:15px; color:#0f172a;">${list.length} Notes</strong>
+                    </div>
+                </div>
+
+                <table style="width:100%; border-collapse:collapse; font-size:9.5px; margin-bottom:12px;" cellpadding="4">
+                    <thead>
+                        <tr style="background:#0f172a; color:#ffffff;">
+                            <th style="border:1px solid #0f172a; width:4%; text-align:center;">#</th>
+                            <th style="border:1px solid #0f172a; width:16%; text-align:left;">Date & Time</th>
+                            <th style="border:1px solid #0f172a; width:16%; text-align:left;">Note No</th>
+                            <th style="border:1px solid #0f172a; width:18%; text-align:left;">Reason / Dept</th>
+                            <th style="border:1px solid #0f172a; width:33%; text-align:left;">Wasted Items</th>
+                            <th style="border:1px solid #0f172a; width:13%; text-align:right;">Loss Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rowsHtml}</tbody>
+                </table>
+
+                <div style="display:flex; justify-content:space-between; margin-top:30px; font-size:9px; page-break-inside:avoid;">
+                    <div style="text-align:center; width:30%;"><p style="margin:0; border-top:1px solid #333; padding-top:2px;">Head Chef</p></div>
+                    <div style="text-align:center; width:30%;"><p style="margin:0; border-top:1px solid #333; padding-top:2px;">Cost Controller / Manager</p></div>
+                    <div style="text-align:center; width:30%;"><p style="margin:0; border-top:1px solid #333; padding-top:2px;">Director Approval</p></div>
+                </div>
+
+                <div style="text-align:center; font-size:8px; color:#64748b; margin-top:12px; border-top:1px solid #e2e8f0; padding-top:4px;">
+                    Hello Bubu Restaurant Management System • Developed by Systems.LK (0760672029)
+                </div>
+            `;
+
+            const opt = {
+                margin: 6,
+                filename: `Kitchen_Wastage_Summary_${startDate}_to_${endDate}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(printElement).save();
+        } catch (error) {
+            console.error("Error generating Wastage PDF: ", error);
+        }
     }
 
     /* =========================================================================
@@ -4883,7 +5289,7 @@
         }
     }
 
-    /* POS CHECKOUT: DATABASE SYNC BEFORE WINDOW PRINT */
+    /* POS CHECKOUT */
     async function checkoutAndPrintReceipt() {
         if (!isDayStarted) {
             alert("⚠️ SECURITY BLOCK: POS Shift is NOT started! Please enter Opening Cash Float.");
@@ -5001,9 +5407,7 @@
         }
     }
 
-    /* =========================================================================
-       INVOICE LOOKUP & HISTORY
-       ========================================================================= */
+    /* INVOICE LOOKUP & HISTORY */
     async function loadRecentSales() {
         const tbody = document.getElementById('pos-history-table-body');
         tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted"><span class="spinner-border spinner-border-sm me-2"></span> Fetching recent invoices...</td></tr>`;
@@ -5213,7 +5617,7 @@
     }
 
     /* =========================================================================
-       100% COMPREHENSIVE ITEM-WISE SALES REPORTS & PDF
+       ITEM-WISE SALES REPORTS & PDF
        ========================================================================= */
     async function fetchFilteredItemWiseSalesData() {
         const startVal = document.getElementById('sales-start-date').value;
@@ -5410,7 +5814,6 @@
                     <p style="margin:2px 0; font-size:9.5px; color:#64748b;">Period: <strong>${reportData.startValFormatted}</strong> to <strong>${reportData.endValFormatted}</strong></p>
                 </div>
 
-                <!-- KPI Metric Bar -->
                 <div style="display:flex; justify-content:space-between; margin-bottom:12px; gap:8px;">
                     <div style="flex:1; border:1px solid #10b981; background:#ecfdf5; padding:6px 10px; border-radius:6px;">
                         <span style="font-size:9px; color:#047857; font-weight:bold; display:block; text-transform:uppercase;">Gross Sales Revenue</span>
@@ -5488,9 +5891,7 @@
         }
     }
 
-    /* =========================================================================
-       100% COMPREHENSIVE GRN & EXPENSES REPORT & PDF
-       ========================================================================= */
+    /* GRN SUMMARY PDF & REPORT */
     async function generateExpensesReport() {
         const startDate = document.getElementById('expenses-start-date').value;
         const endDate = document.getElementById('expenses-end-date').value;
@@ -5664,7 +6065,7 @@
     }
 
     /* =========================================================================
-       100% COMPREHENSIVE MASTER FINANCIAL P&L STATEMENT
+       MASTER FINANCIAL P&L STATEMENT
        ========================================================================= */
     async function generateMasterFinancialSummary() {
         const startDate = document.getElementById('pdf-start-date').value;
@@ -5685,7 +6086,7 @@
                 rtdb.ref('sales').orderByChild('date').startAt(startDate).endAt(endDate).once('value'),
                 rtdb.ref('expenses').orderByChild('date').startAt(startDate).endAt(endDate).once('value'),
                 rtdb.ref('petty_cash_logs').orderByChild('date').startAt(startDate).endAt(endDate).once('value'),
-                rtdb.ref('wastage').orderByChild('date').startAt(startDate).endAt(endDate).once('value')
+                rtdb.ref('wastage_notes').orderByChild('date').startAt(startDate).endAt(endDate).once('value')
             ]);
 
             const activeSales = Object.values(salesSnap.val() || {}).filter(s => s.status !== 'Reversed');
@@ -5726,7 +6127,7 @@
 
             const wastageList = Object.values(wastageSnap.val() || {});
             let totalWastageLoss = 0;
-            wastageList.forEach(w => { totalWastageLoss += parseFloat(w.amount || 0); });
+            wastageList.forEach(w => { totalWastageLoss += parseFloat(w.totalLoss || w.amount || 0); });
 
             const totalOperatingExpenses = totalGrnOutflow + totalPcVoucherOut;
             const grossOperatingProfit = totalSalesNet - totalOperatingExpenses;
@@ -5746,7 +6147,6 @@
                     <small style="color:#64748b; font-size:9.5px;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong> | Report Generated: ${formatDateTime(new Date())}</small>
                 </div>
 
-                <!-- KPI Metric Bar -->
                 <div style="display:flex; justify-content:space-between; margin-bottom:14px; gap:8px;">
                     <div style="flex:1; border:1px solid #10b981; background:#ecfdf5; padding:6px 8px; border-radius:6px; text-align:center;">
                         <span style="font-size:8.5px; color:#047857; font-weight:bold; display:block; text-transform:uppercase;">Net Sales Revenue</span>
@@ -5767,7 +6167,7 @@
                 </div>
 
                 <h6 style="font-weight:bold; color:#0f172a; margin-top:10px; font-size:11.5px;">1. REVENUE BREAKDOWN</h6>
-                <table class="pdf-table">
+                <table class="table table-sm table-bordered" style="font-size: 10px;">
                     <tbody>
                         <tr><td>Gross Menu Sales</td><td class="text-end fw-bold">Rs. ${totalSalesGross.toFixed(2)}</td></tr>
                         <tr><td>(-) Total Customer Discounts Granted</td><td class="text-end text-danger">Rs. ${totalSalesDiscounts.toFixed(2)}</td></tr>
@@ -5779,7 +6179,7 @@
                 </table>
 
                 <h6 style="font-weight:bold; color:#0f172a; margin-top:10px; font-size:11.5px;">2. OPERATING EXPENSES & OUTFLOWS (COGS & VOUCHERS)</h6>
-                <table class="pdf-table">
+                <table class="table table-sm table-bordered" style="font-size: 10px;">
                     <tbody>
                         <tr><td><strong>Goods Received Notes (GRN Purchases)</strong></td><td class="text-end text-danger fw-bold">Rs. ${totalGrnOutflow.toFixed(2)}</td></tr>
                         ${grnCatRows}
@@ -5789,7 +6189,7 @@
                 </table>
 
                 <h6 style="font-weight:bold; color:#0f172a; margin-top:10px; font-size:11.5px;">3. PROFITABILITY & LOSS ADJUSTMENTS</h6>
-                <table class="pdf-table">
+                <table class="table table-sm table-bordered" style="font-size: 10px;">
                     <tbody>
                         <tr style="background:#fffbeb; font-weight:bold;"><td>GROSS OPERATING PROFIT (Net Revenue - Operating Expenses)</td><td class="text-end text-dark">Rs. ${grossOperatingProfit.toFixed(2)}</td></tr>
                         <tr><td>(-) Kitchen Wastage Loss Valuation</td><td class="text-end text-warning fw-bold">Rs. ${totalWastageLoss.toFixed(2)}</td></tr>
@@ -6110,7 +6510,7 @@
     }
 
     /* =========================================================================
-       USER MANAGEMENT & PERMISSIONS ENGINE
+       USER MANAGEMENT ENGINE
        ========================================================================= */
     async function loadAllUsers() {
         const tbody = document.getElementById('users-table-body');
@@ -6377,4 +6777,3 @@
 </script>
 </body>
 </html>
-
