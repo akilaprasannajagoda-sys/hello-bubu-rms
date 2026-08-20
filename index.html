@@ -2,24 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello Bubu - Restaurant Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hello Bubu - Restaurant Management System (RMS)</title>
     
     <!-- Meta Tags -->
     <meta name="author" content="Systems.LK">
     <meta name="copyright" content="Copyright © 2026 Systems.LK. All Rights Reserved.">
     <meta name="description" content="Hello Bubu Restaurant Management System developed by Systems.LK (Tel: 0760672029)">
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     
-    <!-- html2pdf CDN -->
+    <!-- html2pdf.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
@@ -27,208 +28,269 @@
             --primary: #4f46e5;
             --primary-hover: #4338ca;
             --primary-subtle: #eef2ff;
-            --secondary-dark: #0f172a;
-            --sidebar-bg: #0b0f19;
-            --sidebar-hover: rgba(255, 255, 255, 0.06);
-            --bg-body: #f8fafc;
+            --primary-glow: rgba(79, 70, 229, 0.25);
+            
+            --secondary-dark: #090d16;
+            --sidebar-bg: #070a12;
+            --sidebar-card: #0f172a;
+            --sidebar-hover: rgba(255, 255, 255, 0.07);
+            --sidebar-border: rgba(255, 255, 255, 0.08);
+
+            --bg-body: #f1f5f9;
             --card-bg: #ffffff;
+            --card-border: #e2e8f0;
             --text-main: #0f172a;
             --text-muted: #64748b;
+
             --accent-emerald: #10b981;
+            --accent-emerald-glow: rgba(16, 185, 129, 0.25);
             --accent-rose: #f43f5e;
+            --accent-rose-glow: rgba(244, 63, 94, 0.25);
             --accent-amber: #f59e0b;
-            --accent-sky: #0ea5e9;
-            --radius-sm: 8px;
-            --radius-md: 12px;
+            --accent-amber-glow: rgba(245, 158, 11, 0.25);
+            --accent-cyan: #06b6d4;
+            --accent-indigo: #6366f1;
+
+            --radius-xs: 6px;
+            --radius-sm: 10px;
+            --radius-md: 14px;
             --radius-lg: 18px;
             --radius-xl: 24px;
-            --shadow-subtle: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-            --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.02);
+            
+            --shadow-subtle: 0 2px 5px 0 rgba(0, 0, 0, 0.03);
+            --shadow-card: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 6px -2px rgba(15, 23, 42, 0.02);
+            --shadow-float: 0 20px 35px -10px rgba(79, 70, 229, 0.15);
         }
 
+        /* 100% SCREEN AUTO-FIT VIEWPORT ARCHITECTURE */
         html, body {
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            height: 100vh !important;
+            height: 100dvh !important;
+            width: 100vw !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-body);
             color: var(--text-main);
-            overflow: hidden;
-            letter-spacing: -0.01em;
+            overflow: hidden !important;
+            letter-spacing: -0.015em;
         }
 
+        /* Modern Sleek Scrollbars */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.02); }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
+        /* Typography & Form Controls */
         .form-control, .form-select {
             border-radius: var(--radius-md);
-            border: 1px solid #e2e8f0;
-            padding: 0.55rem 0.85rem;
-            font-size: 0.88rem;
-            font-weight: 500;
+            border: 1.5px solid var(--card-border);
+            padding: 0.5rem 0.8rem;
+            font-size: 0.84rem;
+            font-weight: 600;
             color: var(--text-main);
             background-color: #ffffff;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .form-control:focus, .form-select:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+            box-shadow: 0 0 0 3.5px var(--primary-glow);
             outline: none;
+            background-color: #fff;
         }
 
         .btn {
             border-radius: var(--radius-md);
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0.01em;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
-        .btn:active { transform: scale(0.98); }
+        .btn:active { transform: scale(0.97); }
+
         .btn-primary {
-            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
             border: none;
-            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
+            box-shadow: 0 4px 14px var(--primary-glow);
+            color: #ffffff;
         }
         .btn-primary:hover {
-            background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%);
-            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+            background: linear-gradient(135deg, #4338ca 0%, #312e81 100%);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
             transform: translateY(-1px);
+            color: #ffffff;
         }
 
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: none;
+            box-shadow: 0 4px 14px var(--accent-emerald-glow);
+            color: #ffffff;
+        }
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+            transform: translateY(-1px);
+            color: #ffffff;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+            border: none;
+            box-shadow: 0 4px 14px var(--accent-rose-glow);
+            color: #ffffff;
+        }
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+            box-shadow: 0 6px 20px rgba(244, 63, 94, 0.4);
+            transform: translateY(-1px);
+            color: #ffffff;
+        }
+
+        /* LOGIN SCREEN DESIGN */
         #login-screen {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.12) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
-                        #0b0f19;
+            background: radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.22) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.18) 0%, transparent 40%),
+                        radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.1) 0%, transparent 50%),
+                        #050811;
             position: relative;
+            z-index: 10;
         }
         .login-card {
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             border-radius: var(--radius-xl);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
             width: 100%;
-            max-width: 430px;
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(20px);
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(25px);
         }
 
-        #main-app-container { height: 100vh; overflow: hidden; }
-        #main-app-container > .row { height: 100vh; }
+        /* MAIN APP SHELL */
+        #main-app-container {
+            height: 100vh !important;
+            height: 100dvh !important;
+            overflow: hidden !important;
+        }
+        #main-app-container > .row {
+            height: 100vh !important;
+            height: 100dvh !important;
+        }
+
+        /* EXECUTIVE SIDEBAR */
         .sidebar {
             height: 100vh !important;
-            background-color: var(--sidebar-bg);
+            height: 100dvh !important;
+            background: linear-gradient(180deg, #070a12 0%, #090e1a 100%);
             color: #94a3b8;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             overflow-y: auto;
-            z-index: 1000;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            border-right: 1px solid var(--sidebar-border);
+            box-shadow: 4px 0 30px rgba(0, 0, 0, 0.25);
+            padding: 1rem 0.85rem !important;
         }
         .sidebar .nav-link {
             color: #94a3b8;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             border-radius: var(--radius-md);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 600;
-            font-size: 0.84rem;
-            padding: 9px 13px;
+            font-size: 0.83rem;
+            padding: 8px 12px;
             display: flex;
             align-items: center;
             border: 1px solid transparent;
         }
-        .sidebar .nav-link i { font-size: 1.1rem; margin-right: 10px; }
+        .sidebar .nav-link i { font-size: 1.05rem; margin-right: 10px; }
         .sidebar .nav-link:hover {
             background-color: var(--sidebar-hover);
             color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.04);
-            transform: translateX(2px);
+            border-color: rgba(255, 255, 255, 0.06);
+            transform: translateX(3px);
         }
         .sidebar .nav-link.active {
             background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
             color: #ffffff;
             font-weight: 700;
-            box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.5);
-            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 20px -4px rgba(79, 70, 229, 0.55);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
+        /* MAIN CONTENT AREA - NO BODY OVERFLOW */
         .content-area {
-            height: 100vh;
-            overflow-y: auto;
+            height: 100vh !important;
+            height: 100dvh !important;
+            overflow: hidden !important;
             display: flex;
             flex-direction: column;
-            padding: 16px 24px !important;
+            padding: 14px 20px !important;
         }
 
+        /* CARD STYLES */
         .card-custom {
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--card-border);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-card);
             background-color: var(--card-bg);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .page-section { display: none; flex: 1; animation: modernFadeIn 0.2s ease; }
-        .page-section.active-page { display: flex; flex-direction: column; }
+        .page-section { display: none; flex: 1; min-height: 0; animation: modernFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .page-section.active-page { display: flex; flex-direction: column; height: 100%; min-height: 0; }
 
         @keyframes modernFadeIn {
-            from { opacity: 0; transform: translateY(6px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .category-badge {
-            display: inline-flex;
-            align-items: center;
-            margin: 2px;
-            padding: 5px 10px;
-            border-radius: var(--radius-sm);
-            font-size: 0.78rem;
-            font-weight: 600;
-        }
-
-        .pos-product-card {
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid #e2e8f0;
-            border-radius: var(--radius-md);
-            background: #ffffff;
-            overflow: hidden;
-            position: relative;
-        }
-        .pos-product-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 18px -4px rgba(0, 0, 0, 0.08);
-            border-color: #cbd5e1;
-        }
-        .pos-product-card:active { transform: scale(0.97); }
-
+        /* 500% MODERN DASHBOARD STAT CARDS */
         .dash-card-stat {
             border: none;
             border-radius: var(--radius-lg);
             color: #fff;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
             position: relative;
-            min-height: 120px;
+            min-height: 105px;
         }
-        .dash-card-stat:hover { transform: translateY(-4px); }
-        .bg-grad-sales { background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.3); }
-        .bg-grad-expense { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); box-shadow: 0 10px 25px -5px rgba(244, 63, 94, 0.3); }
-        .bg-grad-wastage { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.3); }
-        .bg-grad-orders { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.3); }
+        .dash-card-stat:hover {
+            transform: translateY(-3px);
+        }
+        .bg-grad-sales {
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.35);
+        }
+        .bg-grad-expense {
+            background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);
+            box-shadow: 0 10px 25px -5px rgba(244, 63, 94, 0.35);
+        }
+        .bg-grad-wastage {
+            background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+            box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.35);
+        }
+        .bg-grad-orders {
+            background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.35);
+        }
 
         .dash-icon-bg {
-            font-size: 3.5rem;
-            opacity: 0.16;
+            font-size: 3.8rem;
+            opacity: 0.18;
             position: absolute;
-            right: 15px;
-            bottom: 2px;
+            right: 12px;
+            bottom: -5px;
             pointer-events: none;
         }
 
@@ -236,13 +298,13 @@
             background: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 30px;
-            padding: 5px 14px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            padding: 4px 12px;
+            font-size: 0.78rem;
+            font-weight: 700;
             color: var(--secondary-dark);
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
             box-shadow: var(--shadow-subtle);
         }
 
@@ -260,70 +322,57 @@
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
 
-        .table { --bs-table-bg: transparent; font-size: 0.85rem; }
+        /* POS PRODUCT CARD */
+        .pos-product-card {
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1.5px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            background: #ffffff;
+            overflow: hidden;
+            position: relative;
+        }
+        .pos-product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
+        }
+        .pos-product-card:active { transform: scale(0.96); }
+
+        /* TABLES */
+        .table { --bs-table-bg: transparent; font-size: 0.83rem; }
         .table thead th {
-            font-size: 0.74rem;
+            font-size: 0.72rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            font-weight: 700;
+            font-weight: 800;
             color: #64748b;
             background-color: #f8fafc;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 10px 12px;
+            border-bottom: 1.5px solid #e2e8f0;
+            padding: 8px 10px;
         }
         .table tbody td {
-            padding: 10px 12px;
+            padding: 7px 10px;
             vertical-align: middle;
             border-bottom: 1px solid #f1f5f9;
             color: #1e293b;
         }
-        .table tbody tr:hover { background-color: rgba(241, 245, 249, 0.5); }
+        .table tbody tr:hover { background-color: rgba(241, 245, 249, 0.6); }
 
         .modal-content {
             border-radius: var(--radius-xl);
-            border: 1px solid rgba(255,255,255,0.7);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.8);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
         }
 
-        .nav-pills .nav-link, .nav-tabs .nav-link {
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            transition: all 0.2s ease;
-        }
-        .nav-pills .nav-link.active {
-            background-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-        }
-
-        #receipt-print-area, #zreport-print-area { display: none; }
-
-        #pdf-statement-wrapper {
-            background-color: #ffffff;
-            color: #000000;
-            padding: 25px;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        .pdf-header {
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        .pdf-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 11px;
-            margin-bottom: 15px;
-        }
-        .pdf-table th, .pdf-table td {
-            border: 1px solid #ddd;
-            padding: 6px 8px;
-        }
-        .pdf-table th {
-            background-color: #f2f2f2;
-            font-weight: bold;
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            margin: 2px;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 700;
         }
 
         .denom-row {
@@ -331,30 +380,27 @@
             align-items: center;
             justify-content: space-between;
             background: #ffffff;
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 8px;
             border: 1px solid #e2e8f0;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
-        .denom-badge { font-weight: 700; font-size: 0.78rem; min-width: 65px; }
-        .denom-input { width: 70px; text-align: center; font-weight: 700; padding: 2px 4px; height: 28px; }
-        .denom-total { font-size: 0.8rem; font-weight: 700; color: var(--secondary-dark); min-width: 80px; text-align: right; }
+        .denom-badge { font-weight: 800; font-size: 0.75rem; min-width: 65px; }
+        .denom-input { width: 65px; text-align: center; font-weight: 800; padding: 1px 3px; height: 26px; font-size: 0.8rem; }
+        .denom-total { font-size: 0.78rem; font-weight: 800; color: var(--secondary-dark); min-width: 75px; text-align: right; }
 
-        @media (max-width: 767.98px) {
-            html, body { height: auto; overflow: auto; }
-            #main-app-container, .content-area { height: auto; overflow: visible; }
-            .sidebar { height: auto !important; position: relative; }
-            .content-area { padding: 12px; }
-        }
-        
-        /* 80MM THERMAL MONOCHROME PRINT CSS */
+        #receipt-print-area, #zreport-print-area { display: none; }
+
+        /* ==========================================================================
+           ULTRA HIGH-DENSITY 80MM THERMAL MONOCHROME PRINT CSS (NO FAINT INK)
+           ========================================================================== */
         @media print {
             @page { size: 80mm auto; margin: 0mm !important; }
             *, *::before, *::after {
                 box-sizing: border-box !important;
                 color: #000000 !important;
-                -webkit-text-stroke: 0.35px #000000 !important;
-                text-shadow: none !important;
+                -webkit-text-stroke: 0.45px #000000 !important;
+                text-shadow: 0 0 0.3px #000000 !important;
                 filter: none !important;
             }
             html, body {
@@ -384,22 +430,22 @@
                 left: 0 !important;
                 width: 72mm !important;
                 margin: 0 auto !important;
-                padding: 3mm 4mm 4mm 4mm !important;
+                padding: 2mm 3mm 4mm 3mm !important;
                 font-family: 'Courier New', Courier, monospace, Arial !important;
-                font-size: 11.5px !important;
-                line-height: 1.3 !important;
-                font-weight: 800 !important;
+                font-size: 12px !important;
+                line-height: 1.25 !important;
+                font-weight: 900 !important;
                 color: #000000 !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
             }
             #receipt-print-area *, #zreport-print-area * {
                 color: #000000 !important;
-                font-weight: 800 !important;
+                font-weight: 900 !important;
                 border-color: #000000 !important;
             }
             .receipt-divider {
-                border-bottom: 1.5px dashed #000000 !important;
+                border-bottom: 2px dashed #000000 !important;
                 margin: 4px 0 !important;
                 width: 100% !important;
             }
@@ -410,20 +456,20 @@
 
 <datalist id="raw-materials-datalist"></datalist>
 
-<!-- Thermal Print Template for Receipts -->
+<!-- ULTRA HIGH-DENSITY THERMAL PRINT TEMPLATE: BILL RECEIPT -->
 <div id="receipt-print-area">
     <div style="text-align: center;">
-        <h3 style="margin: 0; font-size: 16px; font-weight: 900; letter-spacing: 0.5px;">HELLO BUBU</h3>
-        <p style="margin: 2px 0; font-size: 10px; font-weight: 700;">No.02, Rajakeeya Mawatha, Colombo</p>
-        <p style="margin: 2px 0; font-size: 10px; font-weight: 700;">Tel: 076-7112424</p>
+        <h3 style="margin: 0; font-size: 17px; font-weight: 900; letter-spacing: 0.5px;">HELLO BUBU</h3>
+        <p style="margin: 2px 0; font-size: 11px; font-weight: 900;">No.02, Rajakeeya Mawatha, Colombo</p>
+        <p style="margin: 2px 0; font-size: 11px; font-weight: 900;">Tel: 076-7112424</p>
         <div class="receipt-divider"></div>
-        <h4 style="margin: 2px 0; font-size: 13px; font-weight: 900; letter-spacing: 1px;">INVOICE</h4>
-        <div style="text-align: left; font-size: 10px; font-weight: 700; margin: 3px 0;" id="print-bill-details">Date: - <br>Bill No: -</div>
+        <h4 style="margin: 2px 0; font-size: 14px; font-weight: 900; letter-spacing: 1px;">INVOICE</h4>
+        <div style="text-align: left; font-size: 11px; font-weight: 900; margin: 3px 0;" id="print-bill-details">Date: - <br>Bill No: -</div>
         <div class="receipt-divider"></div>
     </div>
-    <table style="width: 100%; border-collapse: collapse; font-size: 10.5px; table-layout: fixed;">
+    <table style="width: 100%; border-collapse: collapse; font-size: 11px; table-layout: fixed;">
         <thead>
-            <tr style="border-bottom: 1.5px dashed #000;">
+            <tr style="border-bottom: 2px dashed #000;">
                 <th style="text-align: left; width: 44%; padding: 2px 0;">Item</th>
                 <th style="text-align: right; width: 22%; padding: 2px 0;">Price</th>
                 <th style="text-align: center; width: 12%; padding: 2px 0;">Qty</th>
@@ -434,44 +480,44 @@
     </table>
     <div style="margin-top: 3px;">
         <div class="receipt-divider"></div>
-        <div style="display: flex; justify-content: space-between; font-size: 10.5px;">
+        <div style="display: flex; justify-content: space-between; font-size: 11px;">
             <span>Subtotal:</span>
             <span id="print-subtotal">Rs. 0.00</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 10.5px;">
+        <div style="display: flex; justify-content: space-between; font-size: 11px;">
             <span>Discount:</span>
             <span id="print-discount">Rs. 0.00</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 13px; margin: 3px 0;">
+        <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 14px; margin: 3px 0;">
             <span>TOTAL:</span>
             <span id="print-total">Rs. 0.00</span>
         </div>
         <div class="receipt-divider"></div>
-        <div style="display: flex; justify-content: space-between; font-size: 10.5px;">
+        <div style="display: flex; justify-content: space-between; font-size: 11px;">
             <span>Paid (<span id="print-pay-method">Cash</span>):</span>
             <span id="print-paid">Rs. 0.00</span>
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 10.5px; font-weight: 800;">
+        <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 900;">
             <span>Balance:</span>
             <span id="print-balance">Rs. 0.00</span>
         </div>
         <div class="receipt-divider"></div>
     </div>
     <div style="text-align: center; margin-top: 6px;">
-        <p style="margin: 0; font-size: 10.5px; font-weight: 800;">Thank You! Come Again.</p>
-        <small style="font-size: 8px; font-weight: 700; display: block; margin-top: 2px;">Software by Systems.LK | 0760672029</small>
+        <p style="margin: 0; font-size: 11px; font-weight: 900;">Thank You! Come Again.</p>
+        <small style="font-size: 9px; font-weight: 900; display: block; margin-top: 2px;">Software by Systems.LK | 0760672029</small>
     </div>
 </div>
 
-<!-- Thermal Print Template for Z-Report -->
+<!-- ULTRA HIGH-DENSITY THERMAL PRINT TEMPLATE: Z-REPORT -->
 <div id="zreport-print-area">
     <div style="text-align: center;">
-        <h3 style="margin: 0; font-size: 15px; font-weight: 900;">HELLO BUBU</h3>
-        <h4 style="margin: 2px 0; font-size: 11px; font-weight: 900;">POS DAY END REPORT (Z-REPORT)</h4>
-        <p style="margin: 2px 0; font-size: 9px; font-weight: 700;" id="print-z-meta">Date: - | User: -</p>
+        <h3 style="margin: 0; font-size: 16px; font-weight: 900;">HELLO BUBU</h3>
+        <h4 style="margin: 2px 0; font-size: 12px; font-weight: 900;">POS DAY END REPORT (Z-REPORT)</h4>
+        <p style="margin: 2px 0; font-size: 10px; font-weight: 900;" id="print-z-meta">Date: - | User: -</p>
         <div class="receipt-divider"></div>
     </div>
-    <div style="font-size: 10px;">
+    <div style="font-size: 11px;">
         <div style="display: flex; justify-content: space-between; font-weight: 900;">
             <span>Opening Cash Float:</span>
             <strong id="print-z-float">Rs. 0.00</strong>
@@ -538,63 +584,63 @@
             <span id="print-z-variance-total">Rs. 0.00</span>
         </div>
         <div class="receipt-divider"></div>
-        <p style="margin: 2px 0; font-size: 9px;"><strong>Notes:</strong> <span id="print-z-notes">-</span></p>
+        <p style="margin: 2px 0; font-size: 10px;"><strong>Notes:</strong> <span id="print-z-notes">-</span></p>
     </div>
     <div style="text-align: center; margin-top: 15px;">
-        <p style="margin: 0; font-size: 9px;">................................</p>
-        <p style="margin: 0; font-size: 9px;">Cashier Signature</p>
-        <p style="margin: 6px 0 0 0; font-size: 8px;">Software by Systems.LK (0760672029)</p>
+        <p style="margin: 0; font-size: 10px;">................................</p>
+        <p style="margin: 0; font-size: 10px;">Cashier Signature</p>
+        <p style="margin: 6px 0 0 0; font-size: 9px; font-weight: 900;">Software by Systems.LK (0760672029)</p>
     </div>
 </div>
 
-<!-- LOGIN SCREEN -->
+<!-- 1. LOGIN SCREEN -->
 <div id="login-screen">
     <div class="card login-card p-4 p-md-5">
         <div class="text-center mb-4">
-            <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
-                <i class="bi bi-shop fs-2"></i>
+            <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm" style="width: 70px; height: 70px;">
+                <i class="bi bi-shop fs-1"></i>
             </div>
             <h3 class="fw-bold text-dark mb-1">Hello Bubu</h3>
-            <span class="text-muted small fw-medium">Restaurant Management System</span>
+            <span class="text-muted small fw-bold">Restaurant Management System v2.0</span>
         </div>
         <form id="login-form" onsubmit="handleLogin(event)">
             <div class="mb-3">
-                <label class="form-label text-dark small fw-semibold">Username or Email</label>
+                <label class="form-label text-dark small fw-bold">Username or Email</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-person"></i></span>
                     <input type="text" class="form-control border-start-0 ps-0" id="login-username" required placeholder="e.g. admin">
                 </div>
             </div>
             <div class="mb-4">
-                <label class="form-label text-dark small fw-semibold">Password</label>
+                <label class="form-label text-dark small fw-bold">Password</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
                     <input type="password" class="form-control border-start-0 ps-0" id="login-password" required placeholder="••••••••">
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100 py-2.5 fw-semibold shadow-sm" id="btn-login">
+            <button type="submit" class="btn btn-primary w-100 py-2.5 fw-bold shadow-sm" id="btn-login">
                 <span id="login-spinner" class="spinner-border spinner-border-sm d-none me-2" role="status"></span>
                 Sign In to RMS
             </button>
-            <div class="text-danger small text-center mt-3 d-none fw-medium" id="login-error-msg"></div>
+            <div class="text-danger small text-center mt-3 d-none fw-bold" id="login-error-msg"></div>
         </form>
 
         <div class="text-center mt-4 pt-3 border-top text-muted" style="font-size: 0.75rem;">
-            <p class="mb-0 fw-semibold text-dark">Hello Bubu RMS v1.5.0</p>
+            <p class="mb-0 fw-bold text-dark">Hello Bubu RMS • Luxury Edition</p>
             <small>© 2026 <strong>Systems.LK</strong>. All Rights Reserved.<br>Hotline: 0760672029</small>
         </div>
     </div>
 </div>
 
-<!-- MAIN SYSTEM CONTAINER -->
+<!-- 2. MAIN SYSTEM CONTAINER -->
 <div class="container-fluid no-print d-none" id="main-app-container">
     <div class="row g-0">
         <!-- Sidebar Navigation -->
-        <nav class="col-md-3 col-lg-2 d-md-block sidebar p-3">
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar">
             <div class="d-flex flex-column justify-content-between h-100">
                 <div>
                     <div class="text-center py-2 border-bottom border-secondary border-opacity-25 mb-3">
-                        <img src="logo.png" alt="Hello Bubu" class="img-fluid rounded-circle mb-1 shadow-sm" onerror="this.style.display='none'" style="max-height: 55px; width: auto; object-fit: cover; border: 2px solid rgba(255,255,255,0.15);">
+                        <img src="logo.png" alt="Hello Bubu" class="img-fluid rounded-circle mb-1 shadow-sm" onerror="this.style.display='none'" style="max-height: 52px; width: auto; object-fit: cover; border: 2px solid rgba(255,255,255,0.18);">
                         <h6 class="text-white mb-0 fw-bold" style="letter-spacing: 0.5px;">Hello Bubu</h6>
                         <span class="badge bg-primary bg-opacity-20 text-info border border-info border-opacity-25 mt-1 small py-0.5 px-2" id="user-role-badge" style="font-size: 0.72rem;">Role: -</span>
                     </div>
@@ -649,7 +695,7 @@
                 </div>
                 
                 <div class="pt-2 border-top border-secondary border-opacity-25 mt-auto mb-1">
-                    <button class="btn btn-outline-danger btn-sm w-100 mb-2 fw-semibold py-1.5 rounded-3" onclick="handleLogout()">
+                    <button class="btn btn-outline-danger btn-sm w-100 mb-2 fw-bold py-1.5 rounded-3" onclick="handleLogout()">
                         <i class="bi bi-box-arrow-right me-1"></i> Sign Out
                     </button>
                     <div class="text-center text-white-50" style="font-size: 0.68rem;">
@@ -663,25 +709,27 @@
         <!-- Main Content Area -->
         <main class="col-md-9 ms-sm-auto col-lg-10 content-area">
             <!-- Header Bar -->
-            <div class="d-flex justify-content-between flex-wrap align-items-center pb-2 mb-3 border-bottom flex-shrink-0">
+            <div class="d-flex justify-content-between flex-wrap align-items-center pb-2 mb-2 border-bottom flex-shrink-0">
                 <div>
-                    <h2 class="h4 fw-bold text-dark mb-0" id="page-title">Dashboard</h2>
+                    <h2 class="h5 fw-bold text-dark mb-0" id="page-title">Dashboard</h2>
                 </div>
-                <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+                <div class="d-flex align-items-center gap-2">
                     <div class="cashier-shift-pill" id="cashier-shift-header-pill">
                         <span class="pulse-dot bg-success"></span>
                         <span id="cashier-shift-header-text">Cashier Shift: Offline</span>
                     </div>
-                    <button class="btn btn-sm btn-outline-primary fw-semibold rounded-pill px-3 shadow-sm bg-white" onclick="openCashierShiftModal()">
+                    <button class="btn btn-sm btn-outline-primary fw-bold rounded-pill px-3 shadow-sm bg-white" onclick="openCashierShiftModal()">
                         <i class="bi bi-arrow-left-right me-1"></i> Cashier Shift
                     </button>
                     <span class="badge bg-dark px-3 py-1.5 fs-6 shadow-sm rounded-pill" id="current-date">Date</span>
                 </div>
             </div>
 
-            <!-- 1. DASHBOARD PAGE -->
+            <!-- =========================================================================
+                 1. DASHBOARD PAGE (500% ULTRA-MODERN LUXURY OVERHAUL)
+                 ========================================================================= -->
             <div id="page-dashboard" class="page-section active-page">
-                <div class="card card-custom bg-white p-3 mb-3 border-start border-4 border-primary">
+                <div class="card card-custom bg-white p-3 mb-2.5 border-start border-4 border-primary flex-shrink-0">
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                         <div>
                             <h5 class="fw-bold mb-1 text-dark" id="dash-welcome-text">Welcome back, Hello Bubu RMS 👋</h5>
@@ -698,24 +746,25 @@
                     </div>
                 </div>
 
-                <div class="card card-custom bg-white p-3 mb-3 border" id="dash-notification-card">
-                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                <div class="card card-custom bg-white p-2.5 mb-2.5 border flex-shrink-0" id="dash-notification-card">
+                    <div class="d-flex justify-content-between align-items-center border-bottom pb-1.5 mb-1.5">
                         <h6 class="fw-bold text-dark mb-0 small">
                             <i class="bi bi-bell-fill me-1 text-warning"></i> System Notifications & Live Alerts
                         </h6>
                         <span class="badge bg-secondary small" id="notif-count-badge">0 Alerts</span>
                     </div>
-                    <div id="dash-notification-list" class="d-flex flex-column gap-2" style="max-height: 150px; overflow-y: auto;">
-                        <small class="text-muted text-center py-2"><i class="bi bi-check-circle text-success me-1"></i> No critical alerts. All systems running smoothly.</small>
+                    <div id="dash-notification-list" class="d-flex flex-column gap-1.5" style="max-height: 95px; overflow-y: auto;">
+                        <small class="text-muted text-center py-1.5"><i class="bi bi-check-circle text-success me-1"></i> No critical alerts. All systems running smoothly.</small>
                     </div>
                 </div>
 
-                <div class="row g-3 mb-3 flex-shrink-0">
+                <!-- STAT CARDS -->
+                <div class="row g-2.5 mb-2.5 flex-shrink-0">
                     <div class="col-lg-3 col-md-6">
                         <div class="card dash-card-stat bg-grad-sales p-3">
                             <div class="d-flex flex-column justify-content-between h-100">
                                 <span class="text-white-50 text-uppercase fw-bold small">Today's Sales</span>
-                                <h3 class="fw-bold my-1" id="dash-today-sales">Rs. 0.00</h3>
+                                <h3 class="fw-bold my-1 text-white" id="dash-today-sales">Rs. 0.00</h3>
                                 <div class="d-flex align-items-center text-white-50 small">
                                     <i class="bi bi-graph-up-arrow me-1"></i> Live POS Revenue
                                 </div>
@@ -728,7 +777,7 @@
                         <div class="card dash-card-stat bg-grad-expense p-3">
                             <div class="d-flex flex-column justify-content-between h-100">
                                 <span class="text-white-50 text-uppercase fw-bold small">Today's Expenses</span>
-                                <h3 class="fw-bold my-1" id="dash-today-expenses">Rs. 0.00</h3>
+                                <h3 class="fw-bold my-1 text-white" id="dash-today-expenses">Rs. 0.00</h3>
                                 <div class="d-flex align-items-center text-white-50 small">
                                     <i class="bi bi-file-earmark-text me-1"></i> GRN & Vouchers
                                 </div>
@@ -754,7 +803,7 @@
                         <div class="card dash-card-stat bg-grad-orders p-3">
                             <div class="d-flex flex-column justify-content-between h-100">
                                 <span class="text-white-50 text-uppercase fw-bold small">Total Orders</span>
-                                <h3 class="fw-bold my-1" id="dash-today-orders">0</h3>
+                                <h3 class="fw-bold my-1 text-white" id="dash-today-orders">0</h3>
                                 <div class="d-flex align-items-center text-white-50 small">
                                     <i class="bi bi-cart-check me-1"></i> Processed Invoices
                                 </div>
@@ -764,9 +813,9 @@
                     </div>
                 </div>
 
-                <div class="row g-3 flex-grow-1">
-                    <div class="col-lg-8 col-md-12">
-                        <div class="card card-custom bg-white p-3 h-100">
+                <div class="row g-2.5 flex-grow-1" style="min-height: 0;">
+                    <div class="col-lg-8 col-md-12 d-flex flex-column h-100">
+                        <div class="card card-custom bg-white p-3 h-100 d-flex flex-column justify-content-between">
                             <h6 class="fw-bold text-dark mb-2"><i class="bi bi-pie-chart me-1 text-primary"></i> Today's Estimated Net Position</h6>
                             <div class="row g-3 align-items-center">
                                 <div class="col-md-6 border-end">
@@ -794,17 +843,17 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-4 col-md-12">
-                        <div class="card card-custom bg-white p-3 h-100">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="col-lg-4 col-md-12 d-flex flex-column h-100">
+                        <div class="card card-custom bg-white p-3 h-100 d-flex flex-column justify-content-between text-center">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
                                 <h6 class="fw-bold text-dark mb-0"><i class="bi bi-speedometer2 me-1 text-info"></i> System Latency</h6>
-                                <button class="btn btn-sm btn-outline-secondary p-1 border-0" onclick="checkSystemLatency()" title="Test Connection Speed">
+                                <button class="btn btn-sm btn-outline-secondary p-1 border-0" onclick="checkSystemLatency()" title="Test Speed">
                                     <i class="bi bi-arrow-clockwise"></i>
                                 </button>
                             </div>
-                            <div class="text-center py-2">
+                            <div class="py-1">
                                 <div class="p-2 bg-primary-subtle text-primary rounded-circle d-inline-block mb-1" id="latency-icon-box">
-                                    <i class="bi bi-wifi fs-3"></i>
+                                    <i class="bi bi-wifi fs-4"></i>
                                 </div>
                                 <h4 class="fw-bold mb-1 text-dark" id="dash-latency-val">-- ms</h4>
                                 <span class="badge bg-secondary px-3 py-1 fs-6 rounded-pill" id="dash-latency-status">Testing Link...</span>
@@ -814,12 +863,14 @@
                 </div>
             </div>
 
-            <!-- 2. BILLING (POS) PAGE -->
+            <!-- =========================================================================
+                 2. BILLING (POS) PAGE - SCREEN-FIT WITH LOCKED BOTTOM ACTIONS
+                 ========================================================================= -->
             <div id="page-billing" class="page-section">
-                <div class="d-flex justify-content-between align-items-center bg-white p-2.5 rounded-3 card-custom mb-3 border flex-shrink-0">
+                <div class="d-flex justify-content-between align-items-center bg-white p-2 rounded-3 card-custom mb-2 border flex-shrink-0">
                     <div>
                         <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-receipt me-1 text-primary"></i> POS Billing Counter</h6>
-                        <small class="text-muted" style="font-size: 0.76rem;">Take orders, calculate totals, record bank transfer refs, and print receipts</small>
+                        <small class="text-muted" style="font-size: 0.74rem;">Fast order taking, payment methods, hardware links & instant thermal receipt</small>
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <button class="btn btn-sm btn-outline-warning text-dark fw-bold rounded-pill px-3 shadow-sm bg-white" onclick="openMiddayCashModal()">
@@ -829,15 +880,15 @@
                     </div>
                 </div>
 
-                <div class="row g-3 flex-grow-1" style="min-height: 0;">
+                <div class="row g-2.5 flex-grow-1" style="min-height: 0;">
                     <!-- Products Column -->
-                    <div class="col-md-7 d-flex flex-column h-100">
-                        <div class="card card-custom bg-white p-3 h-100 d-flex flex-column">
+                    <div class="col-md-7 d-flex flex-column h-100" style="min-height: 0;">
+                        <div class="card card-custom bg-white p-2.5 h-100 d-flex flex-column" style="min-height: 0;">
                             <div class="row g-2 mb-2 flex-shrink-0">
                                 <div class="col-md-6">
                                     <div class="input-group input-group-sm">
                                         <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
-                                        <input type="text" class="form-control border-start-0 ps-0" id="pos-search" placeholder="Search product name..." oninput="displayPOSProducts()">
+                                        <input type="text" class="form-control border-start-0 ps-0" id="pos-search" placeholder="Search product..." oninput="displayPOSProducts()">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -846,64 +897,63 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row row-cols-2 row-cols-md-3 g-2 flex-grow-1" style="overflow-y: auto;" id="pos-products-grid"></div>
+                            <div class="row row-cols-2 row-cols-md-3 g-2 flex-grow-1" style="overflow-y: auto; align-content: flex-start;" id="pos-products-grid"></div>
                         </div>
                     </div>
 
-                    <!-- Cart Column -->
-                    <div class="col-md-5 d-flex flex-column h-100">
-                        <div class="card card-custom bg-white p-3 h-100 d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2 flex-wrap gap-2 flex-shrink-0">
+                    <!-- Cart Column - FIXED BOTTOM CALCULATION & PRINT BUTTON -->
+                    <div class="col-md-5 d-flex flex-column h-100" style="min-height: 0;">
+                        <div class="card card-custom bg-white p-2.5 h-100 d-flex flex-column" style="min-height: 0;">
+                            <div class="d-flex justify-content-between align-items-center border-bottom pb-1.5 mb-1.5 flex-shrink-0">
                                 <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-cart3 text-primary me-1"></i> Customer Cart</h6>
                                 <div class="d-flex gap-1">
-                                    <button class="btn btn-sm btn-outline-primary rounded-pill px-2 py-0.5" id="btn-connect-drawer" onclick="connectCashDrawer()" style="font-size: 0.74rem;">
+                                    <button class="btn btn-sm btn-outline-primary rounded-pill px-2 py-0.5" id="btn-connect-drawer" onclick="connectCashDrawer()" style="font-size: 0.72rem;">
                                         <i class="bi bi-safe me-1"></i> Drawer
                                     </button>
-                                    <button class="btn btn-sm btn-outline-dark rounded-pill px-2 py-0.5" id="btn-connect-display" onclick="connectCustomerDisplay()" style="font-size: 0.74rem;">
+                                    <button class="btn btn-sm btn-outline-dark rounded-pill px-2 py-0.5" id="btn-connect-display" onclick="connectCustomerDisplay()" style="font-size: 0.72rem;">
                                         <i class="bi bi-display me-1"></i> Display
                                     </button>
                                 </div>
                             </div>
                             
-                            <div class="flex-grow-1" style="overflow-y: auto; min-height: 120px;">
+                            <!-- Scrollable Cart Table -->
+                            <div class="flex-grow-1" style="overflow-y: auto; min-height: 80px;">
                                 <table class="table table-sm align-middle table-borderless mb-0">
                                     <thead class="sticky-top bg-white">
                                         <tr class="table-light text-muted small">
                                             <th>Item</th>
-                                            <th class="text-center" style="width: 75px;">Qty</th>
+                                            <th class="text-center" style="width: 70px;">Qty</th>
                                             <th class="text-end">Price</th>
-                                            <th class="text-center"></th>
+                                            <th class="text-center" style="width: 25px;"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="cart-table-body"></tbody>
                                 </table>
                             </div>
 
-                            <div class="border-top pt-2 bg-light p-2.5 rounded-3 mt-2 flex-shrink-0">
+                            <!-- Fixed View Checkout Summary Box -->
+                            <div class="border-top pt-2 bg-light p-2.5 rounded-3 mt-1.5 flex-shrink-0 shadow-sm">
                                 <div class="d-flex justify-content-between mb-1 small">
-                                    <span class="text-muted">Subtotal</span>
-                                    <span id="pos-subtotal" class="fw-semibold">Rs. 0.00</span>
+                                    <span class="text-muted fw-bold">Subtotal</span>
+                                    <span id="pos-subtotal" class="fw-bold text-dark">Rs. 0.00</span>
                                 </div>
-                                <div class="row mb-1 g-2">
+                                <div class="row mb-1 g-1.5">
                                     <div class="col-6">
-                                        <label class="small text-muted fw-medium" style="font-size: 0.72rem;">Discount Value</label>
-                                        <input type="number" class="form-control form-control-sm py-0.5" id="pos-discount" value="0" min="0" oninput="calculatePOSCart()">
+                                        <input type="number" class="form-control form-control-sm py-0.5" id="pos-discount" value="0" min="0" placeholder="Discount" oninput="calculatePOSCart()">
                                     </div>
                                     <div class="col-6">
-                                        <label class="small text-muted fw-medium" style="font-size: 0.72rem;">Discount Type</label>
                                         <select class="form-select form-select-sm py-0.5" id="pos-discount-type" onchange="calculatePOSCart()">
-                                            <option value="percentage">Percentage (%)</option>
+                                            <option value="percentage">Discount (%)</option>
                                             <option value="flat">Flat Cash (Rs.)</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-between mb-1 fw-bold fs-6">
+                                <div class="d-flex justify-content-between mb-1 fw-bold fs-6 border-top border-bottom py-1 my-1">
                                     <span>GRAND TOTAL</span>
                                     <span class="text-success" id="pos-total">Rs. 0.00</span>
                                 </div>
-                                <div class="row g-2 mb-1">
+                                <div class="row g-1.5 mb-1">
                                     <div class="col-6">
-                                        <label class="small text-muted fw-medium" style="font-size: 0.72rem;">Pay Method</label>
                                         <select class="form-select form-select-sm py-0.5" id="pos-pay-method" onchange="toggleCashInput()">
                                             <option value="Cash">Cash</option>
                                             <option value="Card">Card</option>
@@ -911,19 +961,17 @@
                                         </select>
                                     </div>
                                     <div class="col-6" id="cash-received-container">
-                                        <label class="small text-muted fw-medium" style="font-size: 0.72rem;">Cash Received (Rs.)</label>
-                                        <input type="number" class="form-control form-control-sm py-0.5" id="pos-cash-received" oninput="calculatePOSCart()">
+                                        <input type="number" class="form-control form-control-sm py-0.5" id="pos-cash-received" placeholder="Cash Paid (Rs.)" oninput="calculatePOSCart()">
                                     </div>
                                     <div class="col-12 d-none" id="online-ref-container">
-                                        <label class="small text-primary fw-bold" style="font-size: 0.72rem;"><i class="bi bi-hash me-1"></i> Bank / Online Transfer Reference No.</label>
-                                        <input type="text" class="form-control form-control-sm py-0.5 border-primary" id="pos-online-ref" placeholder="Enter Ref ID / Slip No." oninput="calculatePOSCart()">
+                                        <input type="text" class="form-control form-control-sm py-0.5 border-primary" id="pos-online-ref" placeholder="Bank / Online Ref ID" oninput="calculatePOSCart()">
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-between mb-2 fw-bold small" id="balance-due-container">
-                                    <span class="text-muted">Balance Return</span>
+                                <div class="d-flex justify-content-between mb-1.5 fw-bold small" id="balance-due-container">
+                                    <span class="text-muted">Balance Return:</span>
                                     <span class="text-danger" id="pos-balance">Rs. 0.00</span>
                                 </div>
-                                <button class="btn btn-success w-100 fw-bold shadow-sm rounded-3 py-2" id="btn-pos-checkout" onclick="checkoutAndPrintReceipt()">
+                                <button class="btn btn-success w-100 fw-bold shadow py-2" id="btn-pos-checkout" onclick="checkoutAndPrintReceipt()">
                                     <i class="bi bi-printer me-1"></i> Print & Checkout
                                 </button>
                             </div>
@@ -932,11 +980,13 @@
                 </div>
             </div>
 
-            <!-- 3. PRODUCTS MANAGEMENT PAGE -->
+            <!-- =========================================================================
+                 3. PRODUCTS MANAGEMENT PAGE
+                 ========================================================================= -->
             <div id="page-products" class="page-section">
-                <div class="row g-3 flex-grow-1" style="min-height: 0;">
+                <div class="row g-2.5 flex-grow-1" style="min-height: 0;">
                     <div class="col-lg-5 col-md-12 d-flex flex-column h-100" style="overflow-y: auto;">
-                        <div class="card card-custom bg-white p-3 mb-3">
+                        <div class="card card-custom bg-white p-3 mb-2.5">
                             <h6 class="mb-2 border-bottom pb-2 fw-bold text-dark" id="form-product-title"><i class="bi bi-plus-circle me-1 text-primary"></i> Add New Product</h6>
                             <form id="product-form" onsubmit="saveProduct(event)">
                                 <input type="hidden" id="product-id">
@@ -960,14 +1010,14 @@
                                 </div>
 
                                 <div class="mb-2">
-                                    <label class="form-label small fw-bold text-dark mb-0">Direct Unit Cost Price (Rs.) <small class="text-muted">(If no recipe ingredients)</small></label>
+                                    <label class="form-label small fw-bold text-dark mb-0">Direct Unit Cost Price (Rs.) <small class="text-muted">(If no recipe)</small></label>
                                     <input type="number" step="0.01" class="form-control form-control-sm" id="product-direct-cost" value="0.00" placeholder="0.00" oninput="updateRecipeCostSummaryUI()">
                                 </div>
 
                                 <div class="bg-light p-2 rounded-3 mb-2 border">
                                     <div class="d-flex justify-content-between align-items-center mb-1">
                                         <span class="fw-bold small text-secondary"><i class="bi bi-journals me-1"></i> Recipe Ingredients (Optional)</span>
-                                        <span class="badge bg-info text-dark" style="font-size: 0.65rem;">Auto-Calculate Cost</span>
+                                        <span class="badge bg-info text-dark" style="font-size: 0.65rem;">Auto-Costing</span>
                                     </div>
                                     
                                     <div class="row g-1 align-items-end mb-1">
@@ -986,7 +1036,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="table-responsive" style="max-height: 110px; overflow-y: auto;">
+                                    <div class="table-responsive" style="max-height: 100px; overflow-y: auto;">
                                         <table class="table table-sm align-middle mb-0 bg-white border rounded">
                                             <thead class="table-secondary small">
                                                 <tr>
@@ -1037,7 +1087,7 @@
                         <div class="card card-custom bg-white p-3 h-100 d-flex flex-column">
                             <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2 flex-shrink-0">
                                 <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-box-seam me-1 text-primary"></i> Product List & Live Costings</h6>
-                                <button class="btn btn-sm btn-primary fw-semibold rounded-pill px-3 py-1" id="btn-load-products" onclick="loadProductsClicked()">
+                                <button class="btn btn-sm btn-primary fw-bold rounded-pill px-3 py-1" id="btn-load-products" onclick="loadProductsClicked()">
                                     <i class="bi bi-arrow-clockwise me-1"></i> Load Products
                                 </button>
                             </div>
@@ -1077,7 +1127,9 @@
                 </div>
             </div>
 
-            <!-- 4. EXPENSES, GRN & PETTY CASH PAGE -->
+            <!-- =========================================================================
+                 4. EXPENSES, GRN & PETTY CASH PAGE
+                 ========================================================================= -->
             <div id="page-expenses" class="page-section">
                 <ul class="nav nav-pills mb-2 bg-white p-1.5 rounded-3 card-custom border flex-shrink-0" id="expenseSubTabs" role="tablist">
                     <li class="nav-item" role="presentation">
@@ -1094,9 +1146,9 @@
 
                 <div class="tab-content flex-grow-1 d-flex flex-column" id="expenseSubTabsContent" style="min-height: 0;">
                     <div class="tab-pane fade show active h-100" id="grn-subpanel" role="tabpanel">
-                        <div class="row g-3 h-100" style="min-height: 0;">
+                        <div class="row g-2.5 h-100" style="min-height: 0;">
                             <div class="col-lg-5 col-md-12 d-flex flex-column h-100" style="overflow-y: auto;">
-                                <div class="card card-custom bg-white p-3 mb-3">
+                                <div class="card card-custom bg-white p-3 mb-2.5">
                                     <h6 class="mb-2 border-bottom pb-2 text-danger fw-bold"><i class="bi bi-file-earmark-plus me-1"></i> Create Goods Received Note (GRN)</h6>
                                     <form id="grn-form" onsubmit="saveGrn(event)">
                                         <div class="row g-2 mb-2">
@@ -1148,7 +1200,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="table-responsive" style="max-height: 120px; overflow-y: auto;">
+                                            <div class="table-responsive" style="max-height: 110px; overflow-y: auto;">
                                                 <table class="table table-sm align-middle mb-0 bg-white border rounded">
                                                     <thead class="table-secondary small">
                                                         <tr>
@@ -1199,7 +1251,7 @@
                                 <div class="card card-custom bg-white p-3 h-100 d-flex flex-column">
                                     <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2 flex-shrink-0">
                                         <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-receipt me-1 text-danger"></i> GRN Notes History</h6>
-                                        <span class="badge bg-secondary" style="font-size: 0.68rem;">Live Query</span>
+                                        <span class="badge bg-secondary" style="font-size: 0.68rem;">Live Database</span>
                                     </div>
                                     
                                     <div class="row g-2 mb-2 align-items-end bg-light p-2 rounded-3 border flex-shrink-0">
@@ -1240,7 +1292,7 @@
                                     </div>
                                     <div id="expenses-load-placeholder" class="text-center py-5 text-muted flex-grow-1 d-flex flex-column align-items-center justify-content-center">
                                         <i class="bi bi-journal-text fs-1 d-block mb-2 text-secondary"></i>
-                                        Click "Filter Records" to fetch GRN notes history.
+                                        Click "Filter" to fetch GRN notes history.
                                     </div>
                                 </div>
                             </div>
@@ -1328,9 +1380,11 @@
                 </div>
             </div>
 
-            <!-- 5. WASTAGE PAGE -->
+            <!-- =========================================================================
+                 5. WASTAGE PAGE
+                 ========================================================================= -->
             <div id="page-wastage" class="page-section">
-                <div class="row g-3 flex-grow-1" style="min-height: 0;">
+                <div class="row g-2.5 flex-grow-1" style="min-height: 0;">
                     <div class="col-lg-4 col-md-12 d-flex flex-column h-100">
                         <div class="card card-custom bg-white p-3 h-100">
                             <h6 class="mb-2 border-bottom pb-2 fw-bold text-warning" id="form-wastage-title"><i class="bi bi-trash3 me-1"></i> Log Kitchen Wastage</h6>
@@ -1423,7 +1477,9 @@
                 </div>
             </div>
 
-            <!-- 6. REPORTS PAGE -->
+            <!-- =========================================================================
+                 6. REPORTS PAGE - 100% COMPREHENSIVE FINANCIAL STATEMENTS & PDFS
+                 ========================================================================= -->
             <div id="page-reports" class="page-section">
                 <ul class="nav nav-tabs mb-2 border-bottom flex-shrink-0" id="reportTabs" role="tablist">
                     <li class="nav-item" role="presentation">
@@ -1449,7 +1505,7 @@
                 </ul>
 
                 <div class="tab-content flex-grow-1 d-flex flex-column" id="reportTabsContent" style="min-height: 0; overflow-y: auto;">
-                    <!-- MASTER PDF PANEL -->
+                    <!-- 1. MASTER 100% COMPREHENSIVE PDF PANEL -->
                     <div class="tab-pane fade show active h-100" id="master-pdf-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-3 h-100 d-flex flex-column">
                             <div class="row g-2 align-items-end mb-2 bg-light p-2 rounded-3 border flex-shrink-0">
@@ -1477,12 +1533,12 @@
 
                             <div id="pdf-load-placeholder" class="text-center py-5 text-muted flex-grow-1 d-flex flex-column align-items-center justify-content-center">
                                 <i class="bi bi-file-pdf fs-1 d-block mb-2 text-secondary"></i>
-                                Select date range and click "Preview" to generate Master Statement.
+                                Select date range and click "Preview" to generate 100% Master Financial Statement.
                             </div>
                         </div>
                     </div>
 
-                    <!-- ITEM-WISE SALES PANEL -->
+                    <!-- 2. ITEM-WISE SALES PANEL -->
                     <div class="tab-pane fade h-100" id="sales-report-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-3 h-100 d-flex flex-column">
                             <div class="row g-2 align-items-end mb-2 bg-light p-2 rounded-3 border flex-shrink-0">
@@ -1546,7 +1602,7 @@
                         </div>
                     </div>
 
-                    <!-- INVOICE LOOKUP PANEL -->
+                    <!-- 3. INVOICE LOOKUP PANEL -->
                     <div class="tab-pane fade h-100" id="invoice-history-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-3 h-100 d-flex flex-column">
                             <div class="row g-2 mb-2 align-items-end bg-light p-2 rounded-3 border flex-shrink-0">
@@ -1594,7 +1650,7 @@
                         </div>
                     </div>
 
-                    <!-- EXPENSES REPORT PANEL -->
+                    <!-- 4. EXPENSES REPORT PANEL -->
                     <div class="tab-pane fade h-100" id="expenses-report-panel" role="tabpanel">
                         <div class="card card-custom bg-white p-3 h-100 d-flex flex-column">
                             <div class="row g-2 align-items-end mb-2 bg-light p-2 rounded-3 border flex-shrink-0">
@@ -1632,16 +1688,18 @@
                 </div>
             </div>
 
-            <!-- 7. SYSTEM UPDATES PAGE -->
+            <!-- =========================================================================
+                 7. SYSTEM UPDATES PAGE
+                 ========================================================================= -->
             <div id="page-updates" class="page-section">
-                <div class="row g-3 flex-grow-1" style="min-height: 0;">
+                <div class="row g-2.5 flex-grow-1" style="min-height: 0;">
                     <div class="col-md-4 d-flex flex-column h-100">
                         <div class="card card-custom bg-white p-3 h-100">
                             <h6 class="mb-2 fw-bold text-dark">Log System Update</h6>
                             <form id="update-form" onsubmit="saveUpdateLog(event)">
                                 <div class="mb-2">
                                     <label class="form-label small fw-bold mb-0">Version</label>
-                                    <input type="text" class="form-control form-control-sm" id="update-version" required placeholder="e.g. v1.5.0">
+                                    <input type="text" class="form-control form-control-sm" id="update-version" required placeholder="e.g. v2.0.0">
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label small fw-bold mb-0">Log Type</label>
@@ -1674,9 +1732,11 @@
                 </div>
             </div>
 
-            <!-- 8. USER MANAGEMENT & SHIFTS PAGE -->
+            <!-- =========================================================================
+                 8. USER MANAGEMENT & SHIFTS PAGE
+                 ========================================================================= -->
             <div id="page-users" class="page-section">
-                <div class="row g-3 flex-grow-1" style="min-height: 0;">
+                <div class="row g-2.5 flex-grow-1" style="min-height: 0;">
                     <div class="col-md-5 d-flex flex-column h-100" style="overflow-y: auto;">
                         <div class="card card-custom bg-white p-3">
                             <h6 class="mb-2 fw-bold text-dark" id="form-user-title">Create New User</h6>
@@ -1730,7 +1790,7 @@
                     </div>
 
                     <div class="col-md-7 d-flex flex-column h-100" style="overflow-y: auto;">
-                        <div class="card card-custom bg-white p-3 mb-3 flex-shrink-0">
+                        <div class="card card-custom bg-white p-3 mb-2.5 flex-shrink-0">
                             <h6 class="mb-2 fw-bold text-dark">Registered Users</h6>
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle table-sm">
@@ -1767,9 +1827,11 @@
                 </div>
             </div>
 
-            <!-- 9. DAY END PAGE -->
+            <!-- =========================================================================
+                 9. DAY END PAGE (Z-REPORT & RECONCILIATION)
+                 ========================================================================= -->
             <div id="page-dayend" class="page-section">
-                <div class="row g-3 flex-grow-1" style="min-height: 0;">
+                <div class="row g-2.5 flex-grow-1" style="min-height: 0;">
                     <div class="col-lg-5 col-md-12 d-flex flex-column h-100" style="overflow-y: auto;">
                         <div class="card card-custom bg-white p-3">
                             <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-2">
@@ -1785,12 +1847,12 @@
 
                                 <div class="mb-2">
                                     <label class="form-label text-dark small fw-bold mb-0">Opening Cash Float (Rs.)</label>
-                                    <input type="number" step="0.01" class="form-control form-control-sm bg-light" id="de-opening-float" value="0" oninput="calculateLiveDayEndReconciliation()" required readonly>
+                                    <input type="number" step="0.01" class="form-control form-control-sm bg-light fw-bold" id="de-opening-float" value="0" oninput="calculateLiveDayEndReconciliation()" required readonly>
                                 </div>
 
                                 <!-- CASH DENOMINATION CALCULATOR -->
-                                <div class="bg-light p-2.5 rounded-3 mb-2 border">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="bg-light p-2 rounded-3 mb-2 border">
+                                    <div class="d-flex justify-content-between align-items-center mb-1.5">
                                         <span class="fw-bold small text-dark"><i class="bi bi-cash-stack text-success me-1"></i> Cash Denomination Breakdown</span>
                                         <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.72rem;" onclick="resetDenominations()">Reset</button>
                                     </div>
@@ -1807,7 +1869,7 @@
                                     <div class="denom-row"><span class="badge bg-secondary denom-badge">Rs. 2</span><input type="number" min="0" class="form-control form-control-sm denom-input" id="denom-2" placeholder="0" oninput="calculateDenominationTotal()"><span class="denom-total" id="denom-val-2">Rs. 0.00</span></div>
                                     <div class="denom-row"><span class="badge bg-secondary denom-badge">Rs. 1</span><input type="number" min="0" class="form-control form-control-sm denom-input" id="denom-1" placeholder="0" oninput="calculateDenominationTotal()"><span class="denom-total" id="denom-val-1">Rs. 0.00</span></div>
 
-                                    <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top border-secondary border-opacity-25 small fw-bold">
+                                    <div class="d-flex justify-content-between align-items-center mt-2 pt-1.5 border-top border-secondary border-opacity-25 small fw-bold">
                                         <span>Total Counted Cash:</span>
                                         <span class="text-success fs-6" id="denom-grand-total">Rs. 0.00</span>
                                     </div>
@@ -1837,7 +1899,7 @@
 
                     <!-- Reconciliation Preview & History -->
                     <div class="col-lg-7 col-md-12 d-flex flex-column h-100" style="overflow-y: auto;">
-                        <div class="card card-custom bg-white p-3 mb-3 flex-shrink-0">
+                        <div class="card card-custom bg-white p-3 mb-2.5 flex-shrink-0">
                             <h6 class="mb-2 border-bottom pb-2 fw-bold text-dark">Shift Reconciliation Live Preview</h6>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-sm align-middle mb-0">
@@ -1908,8 +1970,10 @@
                 </div>
             </div>
 
-            <!-- MODALS -->
-            <!-- DAY START MODAL -->
+            <!-- =========================================================================
+                 MODALS: DAY START, CASHIER SHIFT, MID-DAY CASH, PETTY CASH & RAW MATERIALS
+                 ========================================================================= -->
+            <!-- 1. DAY START MODAL -->
             <div class="modal fade" id="dayStartModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content shadow-lg border-0 rounded-4">
@@ -1941,7 +2005,7 @@
                 </div>
             </div>
 
-            <!-- CASHIER SHIFT MODAL -->
+            <!-- 2. CASHIER SHIFT MODAL -->
             <div class="modal fade" id="cashierShiftModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -1983,7 +2047,7 @@
                 </div>
             </div>
 
-            <!-- MID-DAY CASH AUDIT MODAL -->
+            <!-- 3. MID-DAY CASH AUDIT MODAL -->
             <div class="modal fade" id="middayCashModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -2036,7 +2100,7 @@
                 </div>
             </div>
 
-            <!-- FLOAT TOP-UP MODAL -->
+            <!-- 4. FLOAT TOP-UP MODAL -->
             <div class="modal fade" id="addFloatModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -2068,7 +2132,7 @@
                 </div>
             </div>
 
-            <!-- VOUCHER MODAL -->
+            <!-- 5. VOUCHER MODAL -->
             <div class="modal fade" id="issueVoucherModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -2112,7 +2176,7 @@
                 </div>
             </div>
 
-            <!-- GRN DETAILS MODAL -->
+            <!-- 6. GRN DETAILS MODAL -->
             <div class="modal fade" id="grnDetailsModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -2130,7 +2194,7 @@
                 </div>
             </div>
 
-            <!-- ADD / EDIT RAW MATERIAL MODAL -->
+            <!-- 7. ADD / EDIT RAW MATERIAL MODAL -->
             <div class="modal fade" id="newRawMaterialModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -2173,7 +2237,7 @@
                 </div>
             </div>
 
-            <!-- MANAGE RAW MATERIALS MODAL -->
+            <!-- 8. MANAGE RAW MATERIALS MODAL -->
             <div class="modal fade" id="manageRawMaterialsModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content border-0 shadow-lg rounded-4">
@@ -2221,7 +2285,7 @@
     </div>
 </div>
 
-<!-- Bootstrap JS Bundle -->
+<!-- Bootstrap 5 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- Firebase SDK -->
@@ -2232,7 +2296,7 @@
 <script>
     /*
      * ============================================================================
-     * HELLO BUBU - RESTAURANT MANAGEMENT SYSTEM (RMS) v1.5.0
+     * HELLO BUBU - RESTAURANT MANAGEMENT SYSTEM (RMS) v2.0 Luxury Edition
      * Developed & Maintained by Systems.LK | Hotline: 0760672029
      * ============================================================================
      */
@@ -4196,6 +4260,12 @@
         }
     }
 
+    /* 100% COMPREHENSIVE PETTY CASH PDF */
+
+
+    /* =========================================================================
+       100% COMPREHENSIVE PETTY CASH PDF STATEMENT
+       ========================================================================= */
     async function generatePettyCashPDF() {
         const startDate = document.getElementById('pc-filter-start').value;
         const endDate = document.getElementById('pc-filter-end').value;
@@ -4222,49 +4292,136 @@
 
             periodLogs.sort((a,b) => (a.dateTime || a.date).localeCompare(b.dateTime || b.date));
 
+            let totalFloatIn = 0;
+            let totalVouchersOut = 0;
+            let categoryBreakdown = {};
+
             let tableRowsHtml = '';
-            periodLogs.forEach(log => {
+            periodLogs.forEach((log, index) => {
                 const isTopUp = log.type === 'FLOAT_IN';
                 const amt = parseFloat(log.amount || 0);
+
+                if (isTopUp) {
+                    totalFloatIn += amt;
+                } else {
+                    totalVouchersOut += amt;
+                    const cat = log.category || 'General';
+                    categoryBreakdown[cat] = (categoryBreakdown[cat] || 0) + amt;
+                }
                 
                 tableRowsHtml += `
-                    <tr>
-                        <td style="padding:5px; border:1px solid #ddd;">${log.dateTime || log.date}</td>
-                        <td style="padding:5px; border:1px solid #ddd;"><strong style="color:${isTopUp ? '#2e7d32' : '#c62828'}">${isTopUp ? 'Float Deposit' : 'Voucher'}</strong></td>
-                        <td style="padding:5px; border:1px solid #ddd;">${log.payee || log.issuedBy || 'N/A'}</td>
-                        <td style="padding:5px; border:1px solid #ddd;">${log.reason || '-'}</td>
-                        <td style="text-align:right; color: ${isTopUp ? '#2e7d32' : '#c62828'}; font-weight:bold; padding:5px; border:1px solid #ddd;">
+                    <tr style="page-break-inside: avoid;">
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:center;">${index + 1}</td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;"><small>${log.dateTime || log.date}</small></td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;">
+                            <strong style="color:${isTopUp ? '#059669' : '#e11d48'};">${isTopUp ? 'Float Deposit' : 'Voucher'}</strong>
+                        </td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;"><strong>${log.payee || log.issuedBy || 'N/A'}</strong></td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;">${log.reason || '-'}</td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;"><span style="background:#f1f5f9; padding:2px 5px; border-radius:4px; font-size:9px;">${log.category || 'Float'}</span></td>
+                        <td style="text-align:right; font-weight:bold; color:${isTopUp ? '#059669' : '#e11d48'}; padding:5px 6px; border:1px solid #cbd5e1;">
                             ${isTopUp ? '+' : '-'}Rs. ${amt.toFixed(2)}
                         </td>
-                        <td style="text-align:right; font-weight:bold; padding:5px; border:1px solid #ddd;">
+                        <td style="text-align:right; font-weight:bold; padding:5px 6px; border:1px solid #cbd5e1; background:#f8fafc;">
                             Rs. ${parseFloat(log.balanceAfter || 0).toFixed(2)}
                         </td>
                     </tr>
                 `;
             });
 
+            let catRowsHtml = '';
+            Object.keys(categoryBreakdown).forEach(cat => {
+                catRowsHtml += `
+                    <tr>
+                        <td style="padding:4px 8px; border:1px solid #e2e8f0;">${cat}</td>
+                        <td style="padding:4px 8px; border:1px solid #e2e8f0; text-align:right; font-weight:bold; color:#e11d48;">Rs. ${categoryBreakdown[cat].toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            const netPettyCashChange = totalFloatIn - totalVouchersOut;
+
             const printElement = document.createElement('div');
-            printElement.style.padding = '15px';
+            printElement.style.padding = '12px';
             printElement.style.fontFamily = 'Arial, sans-serif';
+            printElement.style.color = '#0f172a';
+
             printElement.innerHTML = `
-                <div style="text-align:center; border-bottom:2px solid #1a2a6c; padding-bottom:8px; margin-bottom:12px;">
-                    <h2 style="margin:0; color:#1a2a6c; font-size:18px;">HELLO BUBU RESTAURANT</h2>
-                    <h4 style="margin:4px 0 0 0; color:#b21f1f; font-size:13px;">PETTY CASH STATEMENT REPORT</h4>
-                    <p style="margin:2px 0; font-size:10px;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong></p>
+                <div style="text-align:center; border-bottom:2.5px solid #0f172a; padding-bottom:8px; margin-bottom:12px;">
+                    <h2 style="margin:0; font-size:18px; font-weight:900; color:#0f172a; letter-spacing:0.5px;">HELLO BUBU RESTAURANT</h2>
+                    <p style="margin:2px 0; font-size:10px; color:#475569;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                    <h4 style="margin:5px 0 0 0; font-size:13px; font-weight:900; color:#e11d48; text-transform:uppercase;">100% DETAILED PETTY CASH STATEMENT</h4>
+                    <small style="font-size:9.5px; color:#64748b;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong> | Generated on: ${formatDateTime(new Date())}</small>
                 </div>
-                <table style="width:100%; border-collapse:collapse; font-size:10px; border:1px solid #ccc;" cellpadding="5">
+
+                <!-- Summary Cards -->
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px; gap:8px;">
+                    <div style="flex:1; border:1px solid #10b981; background:#ecfdf5; padding:6px 10px; border-radius:6px;">
+                        <span style="font-size:9px; color:#047857; font-weight:bold; display:block; text-transform:uppercase;">Total Float Inflows</span>
+                        <strong style="font-size:13px; color:#047857;">Rs. ${totalFloatIn.toFixed(2)}</strong>
+                    </div>
+                    <div style="flex:1; border:1px solid #f43f5e; background:#fff1f2; padding:6px 10px; border-radius:6px;">
+                        <span style="font-size:9px; color:#be123c; font-weight:bold; display:block; text-transform:uppercase;">Total Voucher Outflows</span>
+                        <strong style="font-size:13px; color:#be123c;">Rs. ${totalVouchersOut.toFixed(2)}</strong>
+                    </div>
+                    <div style="flex:1; border:1px solid #4f46e5; background:#eef2ff; padding:6px 10px; border-radius:6px;">
+                        <span style="font-size:9px; color:#3730a3; font-weight:bold; display:block; text-transform:uppercase;">Net Float Movement</span>
+                        <strong style="font-size:13px; color:${netPettyCashChange >= 0 ? '#047857' : '#be123c'};">Rs. ${netPettyCashChange.toFixed(2)}</strong>
+                    </div>
+                    <div style="flex:1; border:1px solid #0f172a; background:#f8fafc; padding:6px 10px; border-radius:6px;">
+                        <span style="font-size:9px; color:#0f172a; font-weight:bold; display:block; text-transform:uppercase;">Current Float Balance</span>
+                        <strong style="font-size:13px; color:#0f172a;">Rs. ${currentPettyCashBalance.toFixed(2)}</strong>
+                    </div>
+                </div>
+
+                <table style="width:100%; border-collapse:collapse; font-size:9.5px; margin-bottom:12px;" cellpadding="4">
                     <thead>
-                        <tr style="background:#1a2a6c; color:#fff;">
-                            <th>Date</th><th>Type</th><th>Payee</th><th>Reason</th><th style="text-align:right;">Amount</th><th style="text-align:right;">Balance</th>
+                        <tr style="background:#0f172a; color:#ffffff;">
+                            <th style="border:1px solid #0f172a; width:4%; text-align:center;">#</th>
+                            <th style="border:1px solid #0f172a; width:16%; text-align:left;">Date & Time</th>
+                            <th style="border:1px solid #0f172a; width:11%; text-align:left;">Type</th>
+                            <th style="border:1px solid #0f172a; width:17%; text-align:left;">Payee / Issued By</th>
+                            <th style="border:1px solid #0f172a; width:20%; text-align:left;">Reason</th>
+                            <th style="border:1px solid #0f172a; width:12%; text-align:left;">Category</th>
+                            <th style="border:1px solid #0f172a; width:10%; text-align:right;">Amount</th>
+                            <th style="border:1px solid #0f172a; width:10%; text-align:right;">Balance</th>
                         </tr>
                     </thead>
                     <tbody>${tableRowsHtml}</tbody>
                 </table>
+
+                <!-- Category Breakdown Table -->
+                <div style="display:flex; justify-content:space-between; gap:20px; page-break-inside:avoid;">
+                    <div style="flex:1;">
+                        <h5 style="margin:0 0 5px 0; font-size:10.5px; font-weight:bold;">Expense Breakdown by Category:</h5>
+                        <table style="width:100%; border-collapse:collapse; font-size:9.5px;" cellpadding="4">
+                            <thead>
+                                <tr style="background:#f1f5f9; color:#0f172a;">
+                                    <th style="border:1px solid #cbd5e1; text-align:left;">Category</th>
+                                    <th style="border:1px solid #cbd5e1; text-align:right;">Total Spent</th>
+                                </tr>
+                            </thead>
+                            <tbody>${catRowsHtml || '<tr><td colspan="2" style="text-align:center;">No vouchers issued.</td></tr>'}</tbody>
+                        </table>
+                    </div>
+                    <div style="flex:1; border:1px dashed #94a3b8; padding:8px 12px; border-radius:6px;">
+                        <h5 style="margin:0 0 4px 0; font-size:10.5px; font-weight:bold;">Verification & Approvals</h5>
+                        <div style="display:flex; justify-content:space-between; margin-top:25px; font-size:9px;">
+                            <div style="text-align:center;"><p style="margin:0; border-top:1px solid #333; padding-top:2px;">Prepared By</p></div>
+                            <div style="text-align:center;"><p style="margin:0; border-top:1px solid #333; padding-top:2px;">Verified / Manager</p></div>
+                            <div style="text-align:center;"><p style="margin:0; border-top:1px solid #333; padding-top:2px;">Director / Admin</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align:center; font-size:8px; color:#64748b; margin-top:12px; border-top:1px solid #e2e8f0; padding-top:4px;">
+                    Hello Bubu Restaurant Management System • Developed by Systems.LK (0760672029)
+                </div>
             `;
 
             const opt = {
-                margin: 8,
-                filename: `Petty_Cash_Report_${startDate}_to_${endDate}.pdf`,
+                margin: 6,
+                filename: `Petty_Cash_Statement_${startDate}_to_${endDate}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -4273,9 +4430,13 @@
             html2pdf().set(opt).from(printElement).save();
         } catch (error) {
             console.error("Error generating Petty Cash PDF: ", error);
+            alert("Failed to generate Petty Cash PDF: " + error.message);
         }
     }
 
+    /* =========================================================================
+       WASTAGE TRACKER ENGINE
+       ========================================================================= */
     function calculateWastageTotal() {
         const qty = parseFloat(document.getElementById('wastage-qty').value) || 0;
         const unitCost = parseFloat(document.getElementById('wastage-unit-cost').value) || 0;
@@ -4418,6 +4579,9 @@
         document.getElementById('wastage-amount').value = '0.00';
     }
 
+    /* =========================================================================
+       SYSTEM UPDATES ENGINE
+       ========================================================================= */
     function displayUpdates() {
         const container = document.getElementById('updates-timeline-container');
         container.innerHTML = '';
@@ -4486,6 +4650,9 @@
         }
     }
 
+    /* =========================================================================
+       POS BILLING CORE ENGINE
+       ========================================================================= */
     function displayPOSCategories() {
         const filterSelect = document.getElementById('pos-category-filter');
         const selectedValue = filterSelect.value;
@@ -4520,13 +4687,13 @@
         filteredProducts.forEach(product => {
             gridHtml += `
                 <div class="col">
-                    <div class="card h-100 pos-product-card text-center p-2 bg-light" onclick="addToCart('${product.id}')">
+                    <div class="card h-100 pos-product-card text-center p-2 bg-light shadow-sm" onclick="addToCart('${product.id}')">
                         <div class="card-body p-1 d-flex flex-column justify-content-between">
                             <div>
                                 <span class="badge bg-secondary mb-1" style="font-size: 0.62rem;">${product.category}</span>
-                                <h6 class="card-title mb-1" style="font-size: 0.75rem; font-weight: 600; line-height: 1.2; word-break: break-word;">${product.name}</h6>
+                                <h6 class="card-title mb-1" style="font-size: 0.76rem; font-weight: 700; line-height: 1.2; word-break: break-word;">${product.name}</h6>
                             </div>
-                            <p class="card-text text-success mb-0" style="font-weight: 700; font-size: 0.82rem;">Rs.${parseFloat(product.price).toFixed(2)}</p>
+                            <p class="card-text text-success mb-0" style="font-weight: 800; font-size: 0.84rem;">Rs. ${parseFloat(product.price).toFixed(2)}</p>
                         </div>
                     </div>
                 </div>
@@ -4551,7 +4718,7 @@
         tbody.innerHTML = '';
 
         if (cart.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4 small">Cart is empty.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted py-4 small fw-bold">Cart is empty.</td></tr>`;
             calculatePOSCart();
             return;
         }
@@ -4568,7 +4735,7 @@
                     <td class="text-center">
                         <div class="input-group input-group-sm">
                             <button class="btn btn-outline-secondary px-1.5 py-0" onclick="changeCartQty('${item.product.id}', -1)">-</button>
-                            <span class="form-control text-center px-0.5 py-0" style="max-width: 30px; font-size:0.78rem;">${item.qty}</span>
+                            <span class="form-control text-center px-0.5 py-0 fw-bold" style="max-width: 28px; font-size:0.78rem;">${item.qty}</span>
                             <button class="btn btn-outline-secondary px-1.5 py-0" onclick="changeCartQty('${item.product.id}', 1)">+</button>
                         </div>
                     </td>
@@ -4734,11 +4901,11 @@
             const unitPrice = parseFloat(item.product.price || 0);
             const rowTotal = unitPrice * item.qty;
             printBodyHtml += `
-                <tr style="border-bottom: 1px dotted #ccc;">
-                    <td style="padding: 2px 0; text-align: left; word-break: break-word; font-weight: bold;">${item.product.name}</td>
-                    <td style="text-align: right; vertical-align: top; white-space: nowrap;">${unitPrice.toFixed(2)}</td>
-                    <td style="text-align: center; vertical-align: top; font-weight: bold;">${item.qty}</td>
-                    <td style="text-align: right; vertical-align: top; white-space: nowrap; font-weight: bold;">${rowTotal.toFixed(2)}</td>
+                <tr style="border-bottom: 1.5px dashed #000;">
+                    <td style="padding: 2px 0; text-align: left; word-break: break-word; font-weight: 900;">${item.product.name}</td>
+                    <td style="text-align: right; vertical-align: top; white-space: nowrap; font-weight: 900;">${unitPrice.toFixed(2)}</td>
+                    <td style="text-align: center; vertical-align: top; font-weight: 900;">${item.qty}</td>
+                    <td style="text-align: right; vertical-align: top; white-space: nowrap; font-weight: 900;">${rowTotal.toFixed(2)}</td>
                 </tr>
             `;
         });
@@ -4802,6 +4969,9 @@
         }
     }
 
+    /* =========================================================================
+       INVOICE LOOKUP & HISTORY
+       ========================================================================= */
     async function loadRecentSales() {
         const tbody = document.getElementById('pos-history-table-body');
         tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted"><span class="spinner-border spinner-border-sm me-2"></span> Fetching recent invoices...</td></tr>`;
@@ -4954,11 +5124,11 @@
                 const unitPrice = parseFloat(item.product ? item.product.price : (item.price || 0));
                 const rowTotal = unitPrice * item.qty;
                 printBodyHtml += `
-                    <tr style="border-bottom: 1px dotted #ccc;">
-                        <td style="padding: 2px 0; text-align: left; word-break: break-word; font-weight: bold;">${item.product ? item.product.name : item.name}</td>
-                        <td style="text-align: right; vertical-align: top; white-space: nowrap;">${unitPrice.toFixed(2)}</td>
-                        <td style="text-align: center; vertical-align: top; font-weight: bold;">${item.qty}</td>
-                        <td style="text-align: right; vertical-align: top; white-space: nowrap; font-weight: bold;">${rowTotal.toFixed(2)}</td>
+                    <tr style="border-bottom: 1.5px dashed #000;">
+                        <td style="padding: 2px 0; text-align: left; word-break: break-word; font-weight: 900;">${item.product ? item.product.name : item.name}</td>
+                        <td style="text-align: right; vertical-align: top; white-space: nowrap; font-weight: 900;">${unitPrice.toFixed(2)}</td>
+                        <td style="text-align: center; vertical-align: top; font-weight: 900;">${item.qty}</td>
+                        <td style="text-align: right; vertical-align: top; white-space: nowrap; font-weight: 900;">${rowTotal.toFixed(2)}</td>
                     </tr>
                 `;
             });
@@ -5010,6 +5180,9 @@
         }
     }
 
+    /* =========================================================================
+       100% COMPREHENSIVE ITEM-WISE SALES REPORTS & PDF
+       ========================================================================= */
     async function fetchFilteredItemWiseSalesData() {
         const startVal = document.getElementById('sales-start-date').value;
         const endVal = document.getElementById('sales-end-date').value;
@@ -5039,6 +5212,7 @@
             let ordersCount = 0;
             let itemWiseReport = {};
             let categoryWiseTotals = {};
+            let paymentBreakdown = { Cash: 0, Card: 0, "Online Transfer": 0 };
 
             Object.keys(salesData).forEach(billKey => {
                 const sale = salesData[billKey];
@@ -5051,6 +5225,12 @@
                     }
 
                     ordersCount++;
+                    const saleTotal = parseFloat(sale.total || 0);
+                    if (paymentBreakdown[sale.payMethod] !== undefined) {
+                        paymentBreakdown[sale.payMethod] += saleTotal;
+                    } else {
+                        paymentBreakdown.Cash += saleTotal;
+                    }
 
                     if (sale.items && Array.isArray(sale.items)) {
                         sale.items.forEach(item => {
@@ -5090,7 +5270,8 @@
                 overallTotalRevenue,
                 totalPortionsCount,
                 itemWiseReport,
-                categoryWiseTotals
+                categoryWiseTotals,
+                paymentBreakdown
             };
         } catch (error) {
             console.error("Error fetching sales data: ", error);
@@ -5159,50 +5340,114 @@
             itemsArray.forEach((item, index) => {
                 const sharePct = reportData.overallTotalRevenue > 0 ? ((item.revenue / reportData.overallTotalRevenue) * 100).toFixed(1) : '0.0';
                 tableRowsHtml += `
-                    <tr style="page-break-inside: avoid !important; break-inside: avoid !important;">
-                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:center;">${index + 1}</td>
-                        <td style="padding:5px 6px; border:1px solid #ddd;"><strong>${item.name}</strong></td>
-                        <td style="padding:5px 6px; border:1px solid #ddd;"><span style="background:#6c757d; color:#fff; padding:2px 6px; border-radius:4px; font-size:9px;">${item.category}</span></td>
-                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:right;">Rs. ${item.price.toFixed(2)}</td>
-                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:center; font-weight:bold;">${item.qtySold}</td>
-                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#11998e;">Rs. ${item.revenue.toFixed(2)}</td>
-                        <td style="padding:5px 6px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#1a2a6c;">${sharePct}%</td>
+                    <tr style="page-break-inside: avoid !important;">
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:center;">${index + 1}</td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;"><strong>${item.name}</strong></td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;"><span style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:9px;">${item.category}</span></td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:right;">Rs. ${item.price.toFixed(2)}</td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:center; font-weight:bold;">${item.qtySold}</td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#059669;">Rs. ${item.revenue.toFixed(2)}</td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#4f46e5;">${sharePct}%</td>
+                    </tr>
+                `;
+            });
+
+            let catRowsHtml = '';
+            Object.keys(reportData.categoryWiseTotals).forEach(cat => {
+                const rev = reportData.categoryWiseTotals[cat];
+                const pct = reportData.overallTotalRevenue > 0 ? ((rev / reportData.overallTotalRevenue) * 100).toFixed(1) : '0.0';
+                catRowsHtml += `
+                    <tr>
+                        <td style="padding:4px 6px; border:1px solid #e2e8f0;">${cat}</td>
+                        <td style="padding:4px 6px; border:1px solid #e2e8f0; text-align:right; font-weight:bold;">Rs. ${rev.toFixed(2)}</td>
+                        <td style="padding:4px 6px; border:1px solid #e2e8f0; text-align:right; font-weight:bold; color:#4f46e5;">${pct}%</td>
                     </tr>
                 `;
             });
 
             const printElement = document.createElement('div');
-            printElement.style.padding = '10px';
+            printElement.style.padding = '12px';
             printElement.style.fontFamily = 'Arial, sans-serif';
-            printElement.style.color = '#333';
+            printElement.style.color = '#0f172a';
             
             printElement.innerHTML = `
-                <div style="text-align:center; border-bottom:2px solid #1a2a6c; padding-bottom:8px; margin-bottom:12px;">
-                    <h2 style="margin:0; color:#1a2a6c; font-size:18px;">HELLO BUBU RESTAURANT</h2>
-                    <h4 style="margin:4px 0 0 0; color:#11998e; text-transform:uppercase; font-size:13px;">ITEM-WISE SALES REPORT</h4>
-                    <p style="margin:2px 0; font-size:9px;">Period: <strong>${reportData.startValFormatted}</strong> to <strong>${reportData.endValFormatted}</strong></p>
+                <div style="text-align:center; border-bottom:2.5px solid #0f172a; padding-bottom:8px; margin-bottom:12px;">
+                    <h2 style="margin:0; color:#0f172a; font-size:18px; font-weight:900;">HELLO BUBU RESTAURANT</h2>
+                    <p style="margin:2px 0; font-size:10px; color:#475569;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                    <h4 style="margin:4px 0 0 0; color:#059669; text-transform:uppercase; font-size:13px; font-weight:900;">100% ITEM-WISE SALES ANALYTICS REPORT</h4>
+                    <p style="margin:2px 0; font-size:9.5px; color:#64748b;">Period: <strong>${reportData.startValFormatted}</strong> to <strong>${reportData.endValFormatted}</strong></p>
                 </div>
-                <table style="width:100%; font-size:9.5px; border-collapse:collapse; border:1px solid #ccc; table-layout:fixed;" cellpadding="4">
+
+                <!-- KPI Metric Bar -->
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px; gap:8px;">
+                    <div style="flex:1; border:1px solid #10b981; background:#ecfdf5; padding:6px 10px; border-radius:6px;">
+                        <span style="font-size:9px; color:#047857; font-weight:bold; display:block; text-transform:uppercase;">Gross Sales Revenue</span>
+                        <strong style="font-size:14px; color:#047857;">Rs. ${reportData.overallTotalRevenue.toFixed(2)}</strong>
+                    </div>
+                    <div style="flex:1; border:1px solid #6366f1; background:#eef2ff; padding:6px 10px; border-radius:6px;">
+                        <span style="font-size:9px; color:#4338ca; font-weight:bold; display:block; text-transform:uppercase;">Total Orders Processed</span>
+                        <strong style="font-size:14px; color:#4338ca;">${reportData.ordersCount}</strong>
+                    </div>
+                    <div style="flex:1; border:1px solid #f59e0b; background:#fffbeb; padding:6px 10px; border-radius:6px;">
+                        <span style="font-size:9px; color:#b45309; font-weight:bold; display:block; text-transform:uppercase;">Total Portions / Qty Sold</span>
+                        <strong style="font-size:14px; color:#b45309;">${reportData.totalPortionsCount}</strong>
+                    </div>
+                </div>
+
+                <table style="width:100%; font-size:9.5px; border-collapse:collapse; margin-bottom:12px;" cellpadding="4">
                     <thead>
-                        <tr style="background:#1a2a6c; color:#ffffff;">
-                            <th style="border:1px solid #1a2a6c; text-align:center; width:6%;">#</th>
-                            <th style="border:1px solid #1a2a6c; text-align:left; width:34%;">Product Name</th>
-                            <th style="border:1px solid #1a2a6c; text-align:left; width:18%;">Category</th>
-                            <th style="border:1px solid #1a2a6c; text-align:right; width:14%;">Unit Price</th>
-                            <th style="border:1px solid #1a2a6c; text-align:center; width:10%;">Qty Sold</th>
-                            <th style="border:1px solid #1a2a6c; text-align:right; width:18%;">Total Revenue</th>
+                        <tr style="background:#0f172a; color:#ffffff;">
+                            <th style="border:1px solid #0f172a; text-align:center; width:5%;">#</th>
+                            <th style="border:1px solid #0f172a; text-align:left; width:34%;">Product Name</th>
+                            <th style="border:1px solid #0f172a; text-align:left; width:17%;">Category</th>
+                            <th style="border:1px solid #0f172a; text-align:right; width:13%;">Unit Price</th>
+                            <th style="border:1px solid #0f172a; text-align:center; width:10%;">Qty Sold</th>
+                            <th style="border:1px solid #0f172a; text-align:right; width:13%;">Revenue</th>
+                            <th style="border:1px solid #0f172a; text-align:right; width:8%;">Share %</th>
                         </tr>
                     </thead>
                     <tbody>${tableRowsHtml}</tbody>
                 </table>
+
+                <div style="display:flex; justify-content:space-between; gap:15px; page-break-inside:avoid;">
+                    <div style="flex:1;">
+                        <h5 style="margin:0 0 4px 0; font-size:10.5px; font-weight:bold;">Category Revenue Breakdown</h5>
+                        <table style="width:100%; border-collapse:collapse; font-size:9.5px;" cellpadding="4">
+                            <thead>
+                                <tr style="background:#f1f5f9;">
+                                    <th style="border:1px solid #cbd5e1; text-align:left;">Category</th>
+                                    <th style="border:1px solid #cbd5e1; text-align:right;">Revenue</th>
+                                    <th style="border:1px solid #cbd5e1; text-align:right;">Share %</th>
+                                </tr>
+                            </thead>
+                            <tbody>${catRowsHtml}</tbody>
+                        </table>
+                    </div>
+
+                    <div style="flex:1;">
+                        <h5 style="margin:0 0 4px 0; font-size:10.5px; font-weight:bold;">Payment Methods Breakdown</h5>
+                        <table style="width:100%; border-collapse:collapse; font-size:9.5px;" cellpadding="4">
+                            <tbody>
+                                <tr><td style="border:1px solid #cbd5e1; padding:4px 6px;">Cash Sales:</td><td style="border:1px solid #cbd5e1; text-align:right; font-weight:bold; padding:4px 6px;">Rs. ${reportData.paymentBreakdown.Cash.toFixed(2)}</td></tr>
+                                <tr><td style="border:1px solid #cbd5e1; padding:4px 6px;">Card POS Terminal:</td><td style="border:1px solid #cbd5e1; text-align:right; font-weight:bold; padding:4px 6px;">Rs. ${reportData.paymentBreakdown.Card.toFixed(2)}</td></tr>
+                                <tr><td style="border:1px solid #cbd5e1; padding:4px 6px;">Online / Bank Transfer:</td><td style="border:1px solid #cbd5e1; text-align:right; font-weight:bold; padding:4px 6px;">Rs. ${reportData.paymentBreakdown["Online Transfer"].toFixed(2)}</td></tr>
+                                <tr style="background:#f8fafc; font-weight:bold;"><td style="border:1px solid #cbd5e1; padding:4px 6px;">TOTAL COLLECTED:</td><td style="border:1px solid #cbd5e1; text-align:right; color:#059669; padding:4px 6px;">Rs. ${reportData.overallTotalRevenue.toFixed(2)}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="text-align:center; font-size:8px; color:#64748b; margin-top:12px; border-top:1px solid #e2e8f0; padding-top:4px;">
+                    Hello Bubu Restaurant Management System • Developed by Systems.LK (0760672029)
+                </div>
             `;
 
             const opt = {
-                margin:       [8, 8, 8, 8],
-                filename:     `Item_Wise_Sales_Report.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                margin: [6, 6, 6, 6],
+                filename: `Item_Wise_Sales_Report.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
             html2pdf().set(opt).from(printElement).save();
@@ -5211,6 +5456,9 @@
         }
     }
 
+    /* =========================================================================
+       100% COMPREHENSIVE GRN & EXPENSES REPORT & PDF
+       ========================================================================= */
     async function generateExpensesReport() {
         const startDate = document.getElementById('expenses-start-date').value;
         const endDate = document.getElementById('expenses-end-date').value;
@@ -5268,44 +5516,109 @@
             grnList.sort((a, b) => (a.dateTime || a.date).localeCompare(b.dateTime || b.date));
 
             let totalGRNAmount = 0;
+            let categoryWiseMap = {};
             let tableRowsHtml = '';
 
             grnList.forEach((grn, index) => {
                 const amt = parseFloat(grn.totalAmount || grn.amount || 0);
                 totalGRNAmount += amt;
+                const cat = grn.category || 'General';
+                categoryWiseMap[cat] = (categoryWiseMap[cat] || 0) + amt;
+
+                let itemsDesc = '';
+                if (grn.items && Array.isArray(grn.items)) {
+                    itemsDesc = grn.items.map(i => `${i.name} (${i.qty}${i.unit||''})`).join(', ');
+                }
 
                 tableRowsHtml += `
+                    <tr style="page-break-inside: avoid;">
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:center;">${index + 1}</td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;"><small>${grn.dateTime || grn.date}</small></td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;"><strong>#${grn.invoiceNo || 'N/A'}</strong> - ${grn.supplier || 'N/A'}</td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1;"><span style="background:#f1f5f9; padding:2px 5px; border-radius:4px; font-size:9px;">${cat}</span></td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1; font-size:9px; color:#475569;">${itemsDesc || grn.notes || '-'}</td>
+                        <td style="padding:5px 6px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#be123c;">Rs. ${amt.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            let catSummaryHtml = '';
+            Object.keys(categoryWiseMap).forEach(cat => {
+                catSummaryHtml += `
                     <tr>
-                        <td style="padding:5px; border:1px solid #ddd; text-align:center;">${index + 1}</td>
-                        <td style="padding:5px; border:1px solid #ddd;">${grn.dateTime || grn.date}</td>
-                        <td style="padding:5px; border:1px solid #ddd;">#${grn.invoiceNo || 'N/A'} - ${grn.supplier || 'N/A'}</td>
-                        <td style="padding:5px; border:1px solid #ddd;">${grn.category || 'General'}</td>
-                        <td style="padding:5px; border:1px solid #ddd; text-align:right; font-weight:bold; color:#c62828;">Rs. ${amt.toFixed(2)}</td>
+                        <td style="padding:4px 6px; border:1px solid #cbd5e1;">${cat}</td>
+                        <td style="padding:4px 6px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#be123c;">Rs. ${categoryWiseMap[cat].toFixed(2)}</td>
                     </tr>
                 `;
             });
 
             const printElement = document.createElement('div');
-            printElement.style.padding = '15px';
+            printElement.style.padding = '12px';
             printElement.style.fontFamily = 'Arial, sans-serif';
+            printElement.style.color = '#0f172a';
+
             printElement.innerHTML = `
-                <div style="text-align:center; border-bottom:2px solid #1a2a6c; padding-bottom:8px; margin-bottom:12px;">
-                    <h2 style="margin:0; color:#1a2a6c; font-size:18px;">HELLO BUBU RESTAURANT</h2>
-                    <h4 style="margin:4px 0 0 0; color:#c62828; font-size:13px;">GRN & EXPENSES SUMMARY REPORT</h4>
-                    <p style="margin:2px 0; font-size:10px;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong></p>
+                <div style="text-align:center; border-bottom:2.5px solid #0f172a; padding-bottom:8px; margin-bottom:12px;">
+                    <h2 style="margin:0; font-size:18px; font-weight:900; color:#0f172a;">HELLO BUBU RESTAURANT</h2>
+                    <p style="margin:2px 0; font-size:10px; color:#475569;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                    <h4 style="margin:4px 0 0 0; color:#be123c; font-size:13px; font-weight:900; text-transform:uppercase;">100% GOODS RECEIVED NOTE (GRN) & EXPENSES REPORT</h4>
+                    <p style="margin:2px 0; font-size:9.5px; color:#64748b;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong> | Total GRN Invoices: <strong>${grnList.length}</strong></p>
                 </div>
-                <table style="width:100%; border-collapse:collapse; font-size:10px; border:1px solid #ccc;" cellpadding="5">
+
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px; gap:10px;">
+                    <div style="flex:1; border:1px solid #f43f5e; background:#fff1f2; padding:6px 12px; border-radius:6px;">
+                        <span style="font-size:9px; color:#be123c; font-weight:bold; display:block; text-transform:uppercase;">Total GRN Expenditure</span>
+                        <strong style="font-size:15px; color:#be123c;">Rs. ${totalGRNAmount.toFixed(2)}</strong>
+                    </div>
+                    <div style="flex:1; border:1px solid #0f172a; background:#f8fafc; padding:6px 12px; border-radius:6px;">
+                        <span style="font-size:9px; color:#0f172a; font-weight:bold; display:block; text-transform:uppercase;">Total GRNs Processed</span>
+                        <strong style="font-size:15px; color:#0f172a;">${grnList.length} Notes</strong>
+                    </div>
+                </div>
+
+                <table style="width:100%; border-collapse:collapse; font-size:9.5px; margin-bottom:12px;" cellpadding="4">
                     <thead>
-                        <tr style="background:#1a2a6c; color:#fff;">
-                            <th>#</th><th>Date</th><th>Inv / Supplier</th><th>Category</th><th style="text-align:right;">Amount</th>
+                        <tr style="background:#0f172a; color:#ffffff;">
+                            <th style="border:1px solid #0f172a; width:4%; text-align:center;">#</th>
+                            <th style="border:1px solid #0f172a; width:15%; text-align:left;">Date & Time</th>
+                            <th style="border:1px solid #0f172a; width:22%; text-align:left;">Inv / Supplier</th>
+                            <th style="border:1px solid #0f172a; width:14%; text-align:left;">Category</th>
+                            <th style="border:1px solid #0f172a; width:33%; text-align:left;">Items Included</th>
+                            <th style="border:1px solid #0f172a; width:12%; text-align:right;">Amount</th>
                         </tr>
                     </thead>
                     <tbody>${tableRowsHtml}</tbody>
                 </table>
+
+                <div style="display:flex; justify-content:space-between; gap:20px; page-break-inside:avoid;">
+                    <div style="flex:1;">
+                        <h5 style="margin:0 0 4px 0; font-size:10.5px; font-weight:bold;">Expense Category Breakdown:</h5>
+                        <table style="width:100%; border-collapse:collapse; font-size:9.5px;" cellpadding="4">
+                            <thead>
+                                <tr style="background:#f1f5f9;">
+                                    <th style="border:1px solid #cbd5e1; text-align:left;">Category</th>
+                                    <th style="border:1px solid #cbd5e1; text-align:right;">Total Spent</th>
+                                </tr>
+                            </thead>
+                            <tbody>${catSummaryHtml}</tbody>
+                        </table>
+                    </div>
+                    <div style="flex:1; border:1px dashed #94a3b8; padding:8px 12px; border-radius:6px;">
+                        <h5 style="margin:0 0 4px 0; font-size:10.5px; font-weight:bold;">Approvals & Verification</h5>
+                        <div style="display:flex; justify-content:space-between; margin-top:25px; font-size:9px;">
+                            <div style="text-align:center;"><p style="margin:0; border-top:1px solid #333; padding-top:2px;">Store Keeper</p></div>
+                            <div style="text-align:center;"><p style="margin:0; border-top:1px solid #333; padding-top:2px;">Accountant / Manager</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align:center; font-size:8px; color:#64748b; margin-top:12px; border-top:1px solid #e2e8f0; padding-top:4px;">
+                    Hello Bubu Restaurant Management System • Developed by Systems.LK (0760672029)
+                </div>
             `;
 
             const opt = {
-                margin: 8,
+                margin: 6,
                 filename: `GRN_Summary_Report_${startDate}_to_${endDate}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
@@ -5318,7 +5631,9 @@
         }
     }
 
-    /* MASTER FINANCIAL STATEMENT CALCULATOR */
+    /* =========================================================================
+       100% COMPREHENSIVE MASTER FINANCIAL P&L STATEMENT
+       ========================================================================= */
     async function generateMasterFinancialSummary() {
         const startDate = document.getElementById('pdf-start-date').value;
         const endDate = document.getElementById('pdf-end-date').value;
@@ -5342,51 +5657,126 @@
             ]);
 
             const activeSales = Object.values(salesSnap.val() || {}).filter(s => s.status !== 'Reversed');
-            let totalSalesGross = 0, salesCash = 0, salesCard = 0, salesOnline = 0;
+            let totalSalesGross = 0, totalSalesDiscounts = 0, totalSalesNet = 0;
+            let salesCash = 0, salesCard = 0, salesOnline = 0;
             
             activeSales.forEach(s => {
-                const amt = parseFloat(s.total || 0);
-                totalSalesGross += amt;
-                if (s.payMethod === 'Cash') salesCash += amt;
-                else if (s.payMethod === 'Card') salesCard += amt;
-                else if (s.payMethod === 'Online Transfer') salesOnline += amt;
+                const gross = parseFloat(s.subtotal || s.total || 0);
+                const disc = parseFloat(s.discount || 0);
+                const net = parseFloat(s.total || 0);
+                
+                totalSalesGross += gross;
+                totalSalesDiscounts += disc;
+                totalSalesNet += net;
+
+                if (s.payMethod === 'Cash') salesCash += net;
+                else if (s.payMethod === 'Card') salesCard += net;
+                else if (s.payMethod === 'Online Transfer') salesOnline += net;
             });
 
             const grnList = Object.values(grnSnap.val() || {});
             let totalGrnOutflow = 0;
-            grnList.forEach(g => { totalGrnOutflow += parseFloat(g.totalAmount || g.amount || 0); });
+            let grnCategorySummary = {};
+            grnList.forEach(g => {
+                const amt = parseFloat(g.totalAmount || g.amount || 0);
+                totalGrnOutflow += amt;
+                const cat = g.category || 'General';
+                grnCategorySummary[cat] = (grnCategorySummary[cat] || 0) + amt;
+            });
 
             const pcList = Object.values(pcSnap.val() || {});
             let totalPcVoucherOut = 0;
-            pcList.forEach(p => { if (p.type === 'EXPENSE_OUT') totalPcVoucherOut += parseFloat(p.amount || 0); });
+            let totalPcFloatIn = 0;
+            pcList.forEach(p => {
+                if (p.type === 'EXPENSE_OUT') totalPcVoucherOut += parseFloat(p.amount || 0);
+                if (p.type === 'FLOAT_IN') totalPcFloatIn += parseFloat(p.amount || 0);
+            });
 
             const wastageList = Object.values(wastageSnap.val() || {});
             let totalWastageLoss = 0;
             wastageList.forEach(w => { totalWastageLoss += parseFloat(w.amount || 0); });
 
             const totalOperatingExpenses = totalGrnOutflow + totalPcVoucherOut;
-            const operatingProfit = totalSalesGross - totalOperatingExpenses;
-            const netEstimatedIncome = operatingProfit - totalWastageLoss;
+            const grossOperatingProfit = totalSalesNet - totalOperatingExpenses;
+            const netOperatingIncome = grossOperatingProfit - totalWastageLoss;
+            const profitMarginPct = totalSalesNet > 0 ? ((netOperatingIncome / totalSalesNet) * 100).toFixed(2) : "0.00";
+
+            let grnCatRows = '';
+            Object.keys(grnCategorySummary).forEach(cat => {
+                grnCatRows += `<tr><td style="padding-left:20px;">• ${cat}</td><td class="text-end text-danger">Rs. ${grnCategorySummary[cat].toFixed(2)}</td></tr>`;
+            });
 
             wrapper.innerHTML = `
-                <div class="pdf-header text-center">
-                    <h3 style="margin:0; font-weight:bold; color:#1a2a6c;">HELLO BUBU RESTAURANT</h3>
-                    <p style="margin:2px 0; font-size:11px;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
-                    <h5 style="margin:6px 0 0 0; font-weight:bold; text-transform:uppercase; color:#d9534f;">FINANCIAL SUMMARY STATEMENT</h5>
-                    <small style="color:#555;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong></small>
+                <div class="pdf-header text-center" style="border-bottom:2.5px solid #0f172a; padding-bottom:8px; margin-bottom:15px;">
+                    <h2 style="margin:0; font-weight:900; color:#0f172a; font-size:18px;">HELLO BUBU RESTAURANT</h2>
+                    <p style="margin:2px 0; font-size:10.5px; color:#475569;">No.02, Rajakeeya Mawatha, Colombo | Tel: 076-7112424</p>
+                    <h4 style="margin:5px 0 0 0; font-weight:900; text-transform:uppercase; color:#4f46e5; font-size:13px;">100% MASTER FINANCIAL P&L STATEMENT</h4>
+                    <small style="color:#64748b; font-size:9.5px;">Period: <strong>${startDate}</strong> to <strong>${endDate}</strong> | Report Generated: ${formatDateTime(new Date())}</small>
                 </div>
 
-                <h6 style="font-weight:bold; color:#1a2a6c; margin-top:15px;">1. OPERATING PROFIT & LOSS</h6>
+                <!-- KPI Metric Bar -->
+                <div style="display:flex; justify-content:space-between; margin-bottom:14px; gap:8px;">
+                    <div style="flex:1; border:1px solid #10b981; background:#ecfdf5; padding:6px 8px; border-radius:6px; text-align:center;">
+                        <span style="font-size:8.5px; color:#047857; font-weight:bold; display:block; text-transform:uppercase;">Net Sales Revenue</span>
+                        <strong style="font-size:13px; color:#047857;">Rs. ${totalSalesNet.toFixed(2)}</strong>
+                    </div>
+                    <div style="flex:1; border:1px solid #f43f5e; background:#fff1f2; padding:6px 8px; border-radius:6px; text-align:center;">
+                        <span style="font-size:8.5px; color:#be123c; font-weight:bold; display:block; text-transform:uppercase;">Total Operating Outflows</span>
+                        <strong style="font-size:13px; color:#be123c;">Rs. ${totalOperatingExpenses.toFixed(2)}</strong>
+                    </div>
+                    <div style="flex:1; border:1px solid #4f46e5; background:#eef2ff; padding:6px 8px; border-radius:6px; text-align:center;">
+                        <span style="font-size:8.5px; color:#3730a3; font-weight:bold; display:block; text-transform:uppercase;">Net Operating Income</span>
+                        <strong style="font-size:13px; color:${netOperatingIncome >= 0 ? '#047857' : '#be123c'};">Rs. ${netOperatingIncome.toFixed(2)}</strong>
+                    </div>
+                    <div style="flex:1; border:1px solid #0f172a; background:#f8fafc; padding:6px 8px; border-radius:6px; text-align:center;">
+                        <span style="font-size:8.5px; color:#0f172a; font-weight:bold; display:block; text-transform:uppercase;">Estimated Net Margin</span>
+                        <strong style="font-size:13px; color:${netOperatingIncome >= 0 ? '#047857' : '#be123c'};">${profitMarginPct}%</strong>
+                    </div>
+                </div>
+
+                <h6 style="font-weight:bold; color:#0f172a; margin-top:10px; font-size:11.5px;">1. REVENUE BREAKDOWN</h6>
                 <table class="pdf-table">
                     <tbody>
-                        <tr><td><strong>Total Gross Sales Revenue</strong></td><td class="text-end text-success fw-bold">Rs. ${totalSalesGross.toFixed(2)}</td></tr>
-                        <tr><td>(-) Cost of Goods Received (GRN)</td><td class="text-end text-danger">Rs. ${totalGrnOutflow.toFixed(2)}</td></tr>
-                        <tr><td>(-) Petty Cash Vouchers</td><td class="text-end text-danger">Rs. ${totalPcVoucherOut.toFixed(2)}</td></tr>
-                        <tr style="background:#fff3cd; font-weight:bold;"><td>(=) GROSS OPERATING PROFIT</td><td class="text-end">Rs. ${operatingProfit.toFixed(2)}</td></tr>
-                        <tr><td>(-) Kitchen Wastage Loss</td><td class="text-end text-warning">Rs. ${totalWastageLoss.toFixed(2)}</td></tr>
-                        <tr style="background:#e8f5e9; font-size:12px; font-weight:bold;"><td>(=) NET ESTIMATED OPERATING INCOME</td><td class="text-end text-success">Rs. ${netEstimatedIncome.toFixed(2)}</td></tr>
+                        <tr><td>Gross Menu Sales</td><td class="text-end fw-bold">Rs. ${totalSalesGross.toFixed(2)}</td></tr>
+                        <tr><td>(-) Total Customer Discounts Granted</td><td class="text-end text-danger">Rs. ${totalSalesDiscounts.toFixed(2)}</td></tr>
+                        <tr style="background:#f8fafc; font-weight:bold;"><td>(=) TOTAL NET REVENUE</td><td class="text-end text-success">Rs. ${totalSalesNet.toFixed(2)}</td></tr>
+                        <tr><td style="padding-left:20px;">• Cash In-Drawer Collections</td><td class="text-end">Rs. ${salesCash.toFixed(2)}</td></tr>
+                        <tr><td style="padding-left:20px;">• Card POS Terminal Collections</td><td class="text-end">Rs. ${salesCard.toFixed(2)}</td></tr>
+                        <tr><td style="padding-left:20px;">• Online / Bank Transfers</td><td class="text-end">Rs. ${salesOnline.toFixed(2)}</td></tr>
                     </tbody>
                 </table>
+
+                <h6 style="font-weight:bold; color:#0f172a; margin-top:10px; font-size:11.5px;">2. OPERATING EXPENSES & OUTFLOWS (COGS & VOUCHERS)</h6>
+                <table class="pdf-table">
+                    <tbody>
+                        <tr><td><strong>Goods Received Notes (GRN Purchases)</strong></td><td class="text-end text-danger fw-bold">Rs. ${totalGrnOutflow.toFixed(2)}</td></tr>
+                        ${grnCatRows}
+                        <tr><td><strong>Petty Cash Out-of-Pocket Vouchers</strong></td><td class="text-end text-danger fw-bold">Rs. ${totalPcVoucherOut.toFixed(2)}</td></tr>
+                        <tr style="background:#fff1f2; font-weight:bold;"><td>(=) TOTAL OPERATING EXPENDITURES</td><td class="text-end text-danger">Rs. ${totalOperatingExpenses.toFixed(2)}</td></tr>
+                    </tbody>
+                </table>
+
+                <h6 style="font-weight:bold; color:#0f172a; margin-top:10px; font-size:11.5px;">3. PROFITABILITY & LOSS ADJUSTMENTS</h6>
+                <table class="pdf-table">
+                    <tbody>
+                        <tr style="background:#fffbeb; font-weight:bold;"><td>GROSS OPERATING PROFIT (Net Revenue - Operating Expenses)</td><td class="text-end text-dark">Rs. ${grossOperatingProfit.toFixed(2)}</td></tr>
+                        <tr><td>(-) Kitchen Wastage Loss Valuation</td><td class="text-end text-warning fw-bold">Rs. ${totalWastageLoss.toFixed(2)}</td></tr>
+                        <tr style="background:#ecfdf5; font-size:12px; font-weight:900;">
+                            <td>(=) NET ESTIMATED OPERATING INCOME (P&L RESULT)</td>
+                            <td class="text-end" style="color:${netOperatingIncome >= 0 ? '#047857' : '#be123c'};">Rs. ${netOperatingIncome.toFixed(2)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="display:flex; justify-content:space-between; margin-top:30px; font-size:9.5px; page-break-inside:avoid;">
+                    <div style="text-align:center; width:28%;"><p style="margin:0; border-top:1px solid #333; padding-top:4px;">Prepared By (Cashier/Accountant)</p></div>
+                    <div style="text-align:center; width:28%;"><p style="margin:0; border-top:1px solid #333; padding-top:4px;">Verified By (General Manager)</p></div>
+                    <div style="text-align:center; width:28%;"><p style="margin:0; border-top:1px solid #333; padding-top:4px;">Approved By (Director)</p></div>
+                </div>
+
+                <div style="text-align:center; font-size:8px; color:#64748b; margin-top:15px; border-top:1px solid #e2e8f0; padding-top:4px;">
+                    Hello Bubu Restaurant Management System • Developed by Systems.LK (Hotline: 0760672029)
+                </div>
             `;
 
             container.classList.remove('d-none');
@@ -5394,6 +5784,7 @@
             btnDownload.classList.remove('d-none');
         } catch (error) {
             console.error("Error generating master summary: ", error);
+            alert("Error generating financial summary: " + error.message);
         } finally {
             btnPreview.disabled = false;
             btnPreview.innerHTML = `<i class="bi bi-eye me-1"></i> Preview`;
@@ -5406,8 +5797,8 @@
         const endDate = document.getElementById('pdf-end-date').value;
 
         const opt = {
-            margin:       10,
-            filename:     `Financial_Statement_${startDate}_to_${endDate}.pdf`,
+            margin:       8,
+            filename:     `Master_Financial_Statement_${startDate}_to_${endDate}.pdf`,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 2, useCORS: true },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -5416,6 +5807,9 @@
         html2pdf().set(opt).from(element).save();
     }
 
+    /* =========================================================================
+       DAY END RECONCILIATION (Z-REPORT ENGINE)
+       ========================================================================= */
     async function fetchTodaySalesForDayEnd() {
         const selectedDate = (document.getElementById('de-shift-date') && document.getElementById('de-shift-date').value) ? document.getElementById('de-shift-date').value : todayStr;
         try {
@@ -5679,10 +6073,13 @@
 
             window.print();
         } catch (e) {
-            console.error(e);
+            console.error("Z-Report reprint error:", e);
         }
     }
 
+    /* =========================================================================
+       USER MANAGEMENT & PERMISSIONS ENGINE
+       ========================================================================= */
     async function loadAllUsers() {
         const tbody = document.getElementById('users-table-body');
         if (!tbody) return;
@@ -5889,6 +6286,9 @@
         applyDefaultRoleTemplate();
     }
 
+    /* =========================================================================
+       HARDWARE INTEGRATION: WEB SERIAL API (LED8N CUSTOMER DISPLAY)
+       ========================================================================= */
     async function connectCustomerDisplay() {
         if ('serial' in navigator) {
             try {
@@ -5945,3 +6345,4 @@
 </script>
 </body>
 </html>
+
