@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -563,7 +562,7 @@
                         </li>
                         <li class="nav-item" id="nav-btn-users">
                             <a class="nav-link" onclick="switchPage('users', 'User Management')">
-                                <i class="bi bi-people me-2"></i> Users
+                                <i class="bi bi-people me-2"></i> Users & Shifts
                             </a>
                         </li>
                     </ul>
@@ -1987,7 +1986,7 @@
                 </div>
             </div>
 
-            <!-- 8. USER MANAGEMENT PAGE -->
+            <!-- 8. USER MANAGEMENT & CASHIER SHIFTS PAGE -->
             <div id="page-users" class="page-section">
                 <div class="row">
                     <div class="col-md-5 mb-4">
@@ -2084,7 +2083,7 @@
                     </div>
 
                     <div class="col-md-7">
-                        <div class="card card-custom bg-white p-4">
+                        <div class="card card-custom bg-white p-4 mb-4">
                             <h5 class="mb-3 fw-bold text-dark">Registered Users</h5>
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle">
@@ -2099,6 +2098,39 @@
                                     <tbody id="users-table-body">
                                         <tr>
                                             <td colspan="4" class="text-center text-muted">Loading users list...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- LIVE CASHIER SHIFTS & ATTENDANCE LOG TABLE -->
+                        <div class="card card-custom bg-white p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                                <h5 class="mb-0 fw-bold text-dark">
+                                    <i class="bi bi-clock-history me-2 text-primary"></i> Cashier Shift Attendance Logs
+                                </h5>
+                                <div class="d-flex gap-2">
+                                    <input type="date" class="form-control form-control-sm" id="shift-log-date" onchange="loadCashierShiftLogs()">
+                                    <button class="btn btn-sm btn-outline-primary fw-bold" onclick="loadCashierShiftLogs()">
+                                        <i class="bi bi-arrow-clockwise"></i> Refresh
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive" style="max-height: 280px; overflow-y: auto;">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light sticky-top">
+                                        <tr>
+                                            <th>Cashier</th>
+                                            <th>Date</th>
+                                            <th>Signed In</th>
+                                            <th>Signed Out</th>
+                                            <th class="text-center">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cashier-shift-logs-body">
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted py-3">Select date to load shift logs.</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -2439,6 +2471,10 @@
         document.getElementById('pc-voucher-date').value = todayStr;
     }
 
+    if (document.getElementById('shift-log-date')) {
+        document.getElementById('shift-log-date').value = todayStr;
+    }
+
     function formatDateTime(dateObj) {
         const yyyy = dateObj.getFullYear();
         const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -2646,6 +2682,7 @@
             if (modal) modal.hide();
 
             checkCashierShiftSession();
+            loadCashierShiftLogs();
         } catch (e) {
             console.error("Error signing in Cashier: ", e);
             alert("Failed to sign in Cashier shift.");
@@ -2670,9 +2707,56 @@
             if (modal) modal.hide();
 
             checkCashierShiftSession();
+            loadCashierShiftLogs();
         } catch (e) {
             console.error("Error signing out Cashier: ", e);
             alert("Failed to sign out Cashier shift.");
+        }
+    }
+
+    /* LOAD CASHIER SHIFT ATTENDANCE LOGS (UI) */
+    async function loadCashierShiftLogs() {
+        const dateInput = document.getElementById('shift-log-date');
+        const selectedDate = (dateInput && dateInput.value) ? dateInput.value : todayStr;
+        if (dateInput) dateInput.value = selectedDate;
+
+        const tbody = document.getElementById('cashier-shift-logs-body');
+        if (!tbody) return;
+
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted"><span class="spinner-border spinner-border-sm me-2"></span>Loading logs...</td></tr>`;
+
+        try {
+            const snapshot = await rtdb.ref(`cashier_sessions/${selectedDate}`).once('value');
+            const data = snapshot.val();
+            tbody.innerHTML = '';
+
+            if (!data) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">No cashier shifts recorded for ${selectedDate}.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            Object.values(data).forEach(session => {
+                const isOnline = session.status === 'Signed_In';
+                const statusBadge = isOnline 
+                    ? `<span class="badge bg-success">Active (Working)</span>` 
+                    : `<span class="badge bg-secondary">Shift Completed</span>`;
+
+                html += `
+                    <tr>
+                        <td><strong>${session.cashierName}</strong></td>
+                        <td>${session.date}</td>
+                        <td class="text-success fw-bold">${session.signedInAt || '--:--'}</td>
+                        <td class="text-danger fw-bold">${session.signedOutAt || '<span class="badge bg-warning text-dark">Currently Working</span>'}</td>
+                        <td class="text-center">${statusBadge}</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        } catch (e) {
+            console.error("Error loading shift logs:", e);
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Failed to load shift records.</td></tr>`;
         }
     }
 
@@ -2847,7 +2931,10 @@
             checkSystemLatency();
             loadPettyCashBalance();
 
-            if (currentUserPermissions && currentUserPermissions.users === true) loadAllUsers();
+            if (currentUserPermissions && currentUserPermissions.users === true) {
+                loadAllUsers();
+                loadCashierShiftLogs();
+            }
 
         } catch (error) {
             console.error("Firebase data load error: ", error);
@@ -2942,6 +3029,7 @@
             displayPOSCategories();
             displayPOSProducts();
             checkDayStartStatus(true);
+            checkCashierShiftSession();
         } else if (pageId === 'products') {
             populateRawMaterialsDropdown();
             if (isProductsLoaded) displayProducts();
@@ -2955,6 +3043,7 @@
             generateExpensesReport();
         } else if (pageId === 'users') {
             loadAllUsers();
+            loadCashierShiftLogs();
         } else if (pageId === 'dayend') {
             fetchTodaySalesForDayEnd();
         }
@@ -3676,10 +3765,7 @@
         const qty = parseFloat(qtyInput.value) || 0;
         const price = parseFloat(priceInput.value) || 0;
 
-        if (!mat || qty <= 0 || price <= 0
-
-
-        ) {
+        if (!mat || qty <= 0 || price <= 0) {
             alert("Please search/select a valid Raw Material and enter valid Qty & Unit Price!");
             return;
         }
@@ -4768,11 +4854,18 @@
         }
     }
 
-    /* UPDATED CHECKOUT FUNCTION WITH ONLINE REF RECORDING */
+    /* POS CHECKOUT WITH CASHIER SHIFT ENFORCEMENT & REFERENCE TRACKING */
     async function checkoutAndPrintReceipt() {
         if (!isDayStarted) {
             alert("⚠️ SECURITY BLOCK: POS Shift is NOT started! Please enter Opening Cash Float.");
             checkDayStartStatus(true);
+            return;
+        }
+
+        // ENFORCE CASHIER SHIFT SIGN-IN BEFORE INVOICING
+        if (!currentCashierSession || currentCashierSession.status !== 'Signed_In') {
+            alert("⚠️ SECURITY BLOCK: ඔබගේ Cashier Shift එක Sign In කර නොමැත! කරුණාකර පළමුව Shift එකට Sign In වන්න.");
+            openCashierShiftModal();
             return;
         }
 
