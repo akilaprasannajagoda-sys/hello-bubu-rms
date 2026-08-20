@@ -400,6 +400,9 @@
        /* ==========================================================================
            ULTRA HIGH-DENSITY SOLID JET BLACK THERMAL PRINT FIX
            ========================================================================== */
+    /* ==========================================================================
+           ULTRA CRISP 80MM THERMAL RECEIPT (SOLID BLACK FONT FIX)
+           ========================================================================== */
         @media print {
             @page { 
                 size: 80mm auto; 
@@ -411,7 +414,7 @@
                 color: #000000 !important;
                 background-color: transparent !important;
                 text-shadow: 0 0 0.5px #000000 !important;
-                -webkit-text-stroke: 0.4px #000000 !important; /* තිත් නැති කර අකුරු තද කළු කරයි */
+                -webkit-text-stroke: 0.5px #000000 !important;
             }
 
             html, body {
@@ -439,16 +442,16 @@
                 position: relative !important;
                 width: 72mm !important;
                 margin: 0 auto !important;
-                padding: 2mm 1mm 8mm 1mm !important;
-                font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
-                font-size: 13px !important;
+                padding: 2mm 1mm 10mm 1mm !important;
+                font-family: "Arial Black", Gadget, sans-serif !important;
+                font-size: 11.5px !important;
                 line-height: 1.25 !important;
                 font-weight: 900 !important;
                 color: #000000 !important;
             }
 
             #receipt-print-area h3, #zreport-print-area h3 {
-                font-size: 19px !important;
+                font-size: 17px !important;
                 font-weight: 900 !important;
                 letter-spacing: 0.5px !important;
             }
@@ -456,7 +459,7 @@
             #receipt-print-area table, #zreport-print-area table {
                 width: 100% !important;
                 border-collapse: collapse !important;
-                font-size: 12.5px !important;
+                font-size: 11px !important;
                 font-weight: 900 !important;
             }
 
@@ -468,7 +471,7 @@
             }
 
             .receipt-divider {
-                border-bottom: 2px solid #000000 !important;
+                border-bottom: 2.5px solid #000000 !important;
                 margin: 4px 0 !important;
                 width: 100% !important;
             }
