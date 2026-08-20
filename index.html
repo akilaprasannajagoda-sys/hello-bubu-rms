@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,40 +11,78 @@
     <meta name="copyright" content="Copyright © 2026 Systems.LK. All Rights Reserved.">
     <meta name="description" content="Hello Bubu Restaurant Management System developed by Systems.LK (Tel: 0760672029)">
 
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     
     <!-- html2pdf CDN for Fast Client-Side PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #0f172a;
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --accent-green: #059669;
+            --accent-red: #e11d48;
+            --accent-orange: #d97706;
+            --sidebar-width: 260px;
         }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
         /* Login Screen Styles */
         #login-screen {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #343a40;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            position: relative;
         }
         .login-card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
         }
-        
+
         /* Sidebar Styles */
         .sidebar {
             height: 100vh;
-            background-color: #343a40;
-            color: white;
+            background-color: var(--secondary-color);
+            color: #94a3b8;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -51,94 +90,120 @@
             top: 0;
             overflow-y: auto;
             z-index: 1000;
+            border-right: 1px solid #1e293b;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.05);
         }
         .sidebar .nav-link {
-            color: #c2c7d0;
-            margin-bottom: 5px;
-            border-radius: 8px;
+            color: #94a3b8;
+            margin-bottom: 4px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
+            font-weight: 500;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
         }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            background-color: #495057;
-            color: white;
+        .sidebar .nav-link i {
+            font-size: 1.15rem;
+            margin-right: 12px;
+            transition: transform 0.2s ease;
         }
+        .sidebar .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #f8fafc;
+        }
+        .sidebar .nav-link:hover i {
+            transform: translateX(3px);
+        }
+        .sidebar .nav-link.active {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+        }
+
         .content-area {
-            padding: 25px;
+            padding: 28px;
+            min-height: 100vh;
         }
+
         .card-custom {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
+            background-color: #ffffff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+
         .page-section {
             display: none;
+            animation: fadeIn 0.3s ease-in-out;
         }
         .page-section.active-page {
             display: block;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .category-badge {
             display: inline-flex;
             align-items: center;
-            margin: 2px;
+            margin: 3px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
         }
         .category-badge .btn-close {
             font-size: 0.65em;
-            margin-left: 5px;
+            margin-left: 8px;
         }
-        .timeline-item {
-            border-left: 3px solid #6c757d;
-            padding-left: 20px;
-            position: relative;
-        }
-        .timeline-item::before {
-            content: '';
-            width: 12px;
-            height: 12px;
-            background-color: #6c757d;
-            border-radius: 50%;
-            position: absolute;
-            left: -8px;
-            top: 5px;
-        }
+
         /* POS Product Cards */
         .pos-product-card {
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            background: #ffffff;
+            overflow: hidden;
         }
         .pos-product-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
         }
 
         /* Dashboard Styles */
         .dash-card-stat {
             border: none;
-            border-radius: 16px;
+            border-radius: 18px;
             color: #fff;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
             overflow: hidden;
             position: relative;
-            min-height: 125px;
+            min-height: 130px;
         }
         .dash-card-stat:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
         }
-        .bg-grad-sales { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-        .bg-grad-expense { background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%); }
-        .bg-grad-wastage { background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%); color: #212529 !important; }
-        .bg-grad-orders { background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%); }
+        .bg-grad-sales { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .bg-grad-expense { background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%); }
+        .bg-grad-wastage { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); color: #ffffff !important; }
+        .bg-grad-orders { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); }
 
         .dash-icon-bg {
-            font-size: 3.5rem;
-            opacity: 0.2;
+            font-size: 3.8rem;
+            opacity: 0.18;
             position: absolute;
             right: 15px;
-            bottom: 5px;
+            bottom: 2px;
         }
         
         #receipt-print-area, #zreport-print-area {
@@ -170,6 +235,20 @@
         .pdf-table th {
             background-color: #f2f2f2;
             font-weight: bold;
+        }
+
+        /* Cashier Shift Status Pill Header */
+        .cashier-shift-pill {
+            background: rgba(37, 99, 235, 0.08);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 30px;
+            padding: 6px 16px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #1e40af;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         @media (max-width: 767.98px) {
@@ -391,35 +470,38 @@
 
 <!-- LOGIN SCREEN -->
 <div id="login-screen">
-    <div class="card login-card p-4">
+    <div class="card login-card p-4 p-md-5">
         <div class="text-center mb-4">
-            <h4 class="fw-bold text-dark">Hello Bubu</h4>
-            <span class="text-muted small">Restaurant Management System</span>
+            <div class="p-3 bg-primary bg-opacity-10 rounded-circle d-inline-block mb-3">
+                <i class="bi bi-shop text-primary display-6"></i>
+            </div>
+            <h3 class="fw-bold text-dark mb-1">Hello Bubu</h3>
+            <span class="text-muted small fw-medium">Restaurant Management System</span>
         </div>
         <form id="login-form" onsubmit="handleLogin(event)">
             <div class="mb-3">
-                <label class="form-label text-dark small">Username or Email</label>
+                <label class="form-label text-dark small fw-semibold">Username or Email</label>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-person"></i></span>
-                    <input type="text" class="form-control" id="login-username" required placeholder="e.g. admin">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0" id="login-username" required placeholder="e.g. admin">
                 </div>
             </div>
             <div class="mb-4">
-                <label class="form-label text-dark small">Password</label>
+                <label class="form-label text-dark small fw-semibold">Password</label>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                    <input type="password" class="form-control" id="login-password" required placeholder="••••••••">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-muted"></i></span>
+                    <input type="password" class="form-control border-start-0 ps-0" id="login-password" required placeholder="••••••••">
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" id="btn-login">
+            <button type="submit" class="btn btn-primary w-100 py-2.5 fw-semibold shadow-sm" id="btn-login">
                 <span id="login-spinner" class="spinner-border spinner-border-sm d-none me-2" role="status"></span>
-                Sign In
+                Sign In to RMS
             </button>
-            <div class="text-danger small text-center mt-3 d-none" id="login-error-msg"></div>
+            <div class="text-danger small text-center mt-3 d-none fw-medium" id="login-error-msg"></div>
         </form>
 
         <div class="text-center mt-4 pt-3 border-top text-muted" style="font-size: 0.75rem;">
-            <p class="mb-0 fw-semibold">Hello Bubu RMS v1.4.0</p>
+            <p class="mb-0 fw-semibold">Hello Bubu RMS v1.5.0</p>
             <small>© 2026 <strong>Systems.LK</strong>. All Rights Reserved.<br>Hotline: 0760672029</small>
         </div>
     </div>
@@ -432,16 +514,16 @@
         <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse p-3">
             <div class="d-flex flex-column justify-content-between h-100">
                 <div>
-                    <div class="text-center py-3 border-bottom border-secondary mb-4">
-                        <img src="logo.png" alt="Hello Bubu" class="img-fluid rounded-circle mb-2" onerror="this.style.display='none'" style="max-height: 80px; width: auto; object-fit: cover; border: 2px solid #fff;">
-                        <h5 class="text-white mb-0" style="font-weight: bold; letter-spacing: 1px;">Hello Bubu</h5>
-                        <span class="badge bg-light text-dark mt-2 small" id="user-role-badge">Role: -</span>
+                    <div class="text-center py-3 border-bottom border-secondary border-opacity-25 mb-4">
+                        <img src="logo.png" alt="Hello Bubu" class="img-fluid rounded-circle mb-2" onerror="this.style.display='none'" style="max-height: 80px; width: auto; object-fit: cover; border: 2px solid rgba(255,255,255,0.2);">
+                        <h5 class="text-white mb-0 fw-bold" style="letter-spacing: 0.5px;">Hello Bubu</h5>
+                        <span class="badge bg-primary bg-opacity-20 text-info border border-info border-opacity-25 mt-2 small" id="user-role-badge">Role: -</span>
                     </div>
                     
                     <ul class="nav flex-column">
                         <li class="nav-item" id="nav-btn-dashboard">
                             <a class="nav-link active" onclick="switchPage('dashboard', 'Dashboard')">
-                                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                                <i class="bi bi-grid-1x2 me-2"></i> Dashboard
                             </a>
                         </li>
                         <li class="nav-item" id="nav-btn-billing">
@@ -461,12 +543,12 @@
                         </li>
                         <li class="nav-item" id="nav-btn-wastage">
                             <a class="nav-link" onclick="switchPage('wastage', 'Wastage Tracker')">
-                                <i class="bi bi-trash me-2"></i> Wastage
+                                <i class="bi bi-trash3 me-2"></i> Wastage
                             </a>
                         </li>
                         <li class="nav-item" id="nav-btn-reports">
                             <a class="nav-link" onclick="switchPage('reports', 'Reports')">
-                                <i class="bi bi-graph-up me-2"></i> Reports & PDF
+                                <i class="bi bi-graph-up-arrow me-2"></i> Reports & PDF
                             </a>
                         </li>
                         <li class="nav-item" id="nav-btn-dayend">
@@ -487,8 +569,8 @@
                     </ul>
                 </div>
                 
-                <div class="pt-3 border-top border-secondary mt-auto mb-2">
-                    <button class="btn btn-outline-danger w-100 mb-3" onclick="handleLogout()">
+                <div class="pt-3 border-top border-secondary border-opacity-25 mt-auto mb-2">
+                    <button class="btn btn-outline-danger w-100 mb-3 fw-semibold py-2" onclick="handleLogout()">
                         <i class="bi bi-box-arrow-right me-2"></i> Sign Out
                     </button>
                     <div class="text-center text-white-50" style="font-size: 0.72rem;">
@@ -502,9 +584,22 @@
 
         <!-- Main Content Area -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content-area">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2" id="page-title">Dashboard</h1>
-                <span class="badge bg-primary p-2 fs-6 shadow-sm" id="current-date">Date</span>
+            <!-- Header Bar -->
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-4 border-bottom">
+                <div>
+                    <h1 class="h2 fw-bold text-dark mb-0" id="page-title">Dashboard</h1>
+                </div>
+                <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+                    <!-- Cashier Shift Pill Status -->
+                    <div class="cashier-shift-pill" id="cashier-shift-header-pill">
+                        <i class="bi bi-person-badge text-primary"></i>
+                        <span id="cashier-shift-header-text">Cashier Shift: Offline</span>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary fw-semibold rounded-pill px-3" onclick="openCashierShiftModal()">
+                        <i class="bi bi-arrow-left-right me-1"></i> Cashier Shift
+                    </button>
+                    <span class="badge bg-primary px-3 py-2 fs-6 shadow-sm rounded-pill" id="current-date">Date</span>
+                </div>
             </div>
 
             <!-- 1. DASHBOARD PAGE -->
@@ -516,10 +611,10 @@
                             <p class="text-muted mb-0 small">Here's a live overview of your restaurant's business performance today.</p>
                         </div>
                         <div class="mt-2 mt-md-0">
-                            <button class="btn btn-primary fw-bold me-2 shadow-sm" onclick="switchPage('billing', 'Billing (POS)')">
+                            <button class="btn btn-primary fw-bold me-2 shadow-sm rounded-3" onclick="switchPage('billing', 'Billing (POS)')">
                                 <i class="bi bi-cart-plus me-1"></i> Open POS
                             </button>
-                            <button class="btn btn-outline-danger fw-bold shadow-sm" onclick="switchPage('expenses', 'Expenses & GRN')">
+                            <button class="btn btn-outline-danger fw-bold shadow-sm rounded-3" onclick="switchPage('expenses', 'Expenses & GRN')">
                                 <i class="bi bi-file-earmark-plus me-1"></i> Create GRN
                             </button>
                         </div>
@@ -568,13 +663,13 @@
                     <div class="col-lg-3 col-md-6">
                         <div class="card dash-card-stat bg-grad-wastage p-3">
                             <div class="d-flex flex-column justify-content-between h-100">
-                                <span class="text-dark-50 text-uppercase fw-bold small">Today's Wastage</span>
-                                <h3 class="fw-bold my-2 text-dark" id="dash-today-wastage">Rs. 0.00</h3>
-                                <div class="d-flex align-items-center text-dark-50 small">
+                                <span class="text-white-50 text-uppercase fw-bold small">Today's Wastage</span>
+                                <h3 class="fw-bold my-2 text-white" id="dash-today-wastage">Rs. 0.00</h3>
+                                <div class="d-flex align-items-center text-white-50 small">
                                     <i class="bi bi-trash3 me-1"></i> Kitchen Loss Value
                                 </div>
                             </div>
-                            <i class="bi bi-trash3 dash-icon-bg text-dark"></i>
+                            <i class="bi bi-trash3 dash-icon-bg text-white"></i>
                         </div>
                     </div>
 
@@ -598,7 +693,7 @@
                             <h5 class="fw-bold text-dark mb-3"><i class="bi bi-pie-chart me-2 text-primary"></i> Today's Estimated Net Position</h5>
                             <div class="row g-3 align-items-center">
                                 <div class="col-md-6 border-end">
-                                    <div class="p-3 bg-light rounded">
+                                    <div class="p-3 bg-light rounded-3">
                                         <small class="text-muted fw-bold d-block mb-1">Estimated Net Cash Flow (Sales - Expenses)</small>
                                         <h2 class="fw-bold mb-0 text-success" id="dash-net-position-val">Rs. 0.00</h2>
                                         <small class="text-secondary" style="font-size: 0.8rem;">Calculated dynamically from today's active transactions.</small>
@@ -635,7 +730,7 @@
                                     <i class="bi bi-wifi fs-2"></i>
                                 </div>
                                 <h3 class="fw-bold mb-1 text-dark" id="dash-latency-val">-- ms</h3>
-                                <span class="badge bg-secondary px-3 py-2 fs-6" id="dash-latency-status">Testing Link...</span>
+                                <span class="badge bg-secondary px-3 py-2 fs-6 rounded-pill" id="dash-latency-status">Testing Link...</span>
                             </div>
                         </div>
                     </div>
@@ -644,12 +739,16 @@
 
             <!-- 2. BILLING (POS) PAGE -->
             <div id="page-billing" class="page-section">
-                <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded card-custom mb-3 border">
+                <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded-3 card-custom mb-3 border">
                     <div>
-                        <h6 class="mb-0 fw-bold"><i class="bi bi-receipt me-1 text-primary"></i> POS Billing Counter</h6>
-                        <small class="text-muted">Take orders, calculate totals and print receipts</small>
+                        <h6 class="mb-0 fw-bold text-dark"><i class="bi bi-receipt me-1 text-primary"></i> POS Billing Counter</h6>
+                        <small class="text-muted">Take orders, calculate totals, record bank transfer refs, and print receipts</small>
                     </div>
-                    <div>
+                    <div class="d-flex align-items-center gap-2">
+                        <!-- Mid-day Cash Balance Button -->
+                        <button class="btn btn-sm btn-outline-warning text-dark fw-bold rounded-pill" onclick="openMiddayCashModal()">
+                            <i class="bi bi-cash-coin me-1"></i> Mid-Day Cash Check
+                        </button>
                         <span id="pos-shift-status-badge" class="badge bg-secondary p-2">Checking Shift Status...</span>
                     </div>
                 </div>
@@ -660,8 +759,8 @@
                             <div class="row g-2 mb-3">
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                                        <input type="text" class="form-control border-start-0" id="pos-search" placeholder="Search product name..." oninput="displayPOSProducts()">
+                                        <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                                        <input type="text" class="form-control border-start-0 ps-0" id="pos-search" placeholder="Search product name..." oninput="displayPOSProducts()">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -670,28 +769,28 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="row row-cols-2 row-cols-md-3 g-3" style="max-height: 500px; overflow-y: auto;" id="pos-products-grid"></div>
+                            <div class="row row-cols-2 row-cols-md-3 g-3" style="max-height: 520px; overflow-y: auto;" id="pos-products-grid"></div>
                         </div>
                     </div>
 
                     <div class="col-md-5">
-                        <div class="card card-custom bg-white p-4 d-flex flex-column" style="min-height: 580px;">
+                        <div class="card card-custom bg-white p-4 d-flex flex-column" style="min-height: 600px;">
                             <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                                <h5 class="mb-0"><i class="bi bi-cart3"></i> Customer Cart</h5>
+                                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-cart3 text-primary me-1"></i> Customer Cart</h5>
                                 <div>
-                                    <button class="btn btn-sm btn-outline-primary me-1" id="btn-connect-drawer" onclick="connectCashDrawer()">
+                                    <button class="btn btn-sm btn-outline-primary me-1 rounded-pill" id="btn-connect-drawer" onclick="connectCashDrawer()">
                                         <i class="bi bi-safe me-1"></i> Connect Drawer
                                     </button>
-                                    <button class="btn btn-sm btn-outline-dark" id="btn-connect-display" onclick="connectCustomerDisplay()">
+                                    <button class="btn btn-sm btn-outline-dark rounded-pill" id="btn-connect-display" onclick="connectCustomerDisplay()">
                                         <i class="bi bi-display me-1"></i> Connect Display
                                     </button>
                                 </div>
                             </div>
                             
                             <div class="flex-grow-1" style="max-height: 250px; overflow-y: auto;">
-                                <table class="table table-sm align-middle table-borderless">
+                                <table class="table table-sm align-middle table-borderless mb-0">
                                     <thead>
-                                        <tr class="table-light">
+                                        <tr class="table-light text-muted small">
                                             <th>Item</th>
                                             <th class="text-center" style="width: 80px;">Qty</th>
                                             <th class="text-end">Price</th>
@@ -702,18 +801,18 @@
                                 </table>
                             </div>
 
-                            <div class="border-top pt-3 bg-light p-3 rounded mt-3">
+                            <div class="border-top pt-3 bg-light p-3 rounded-3 mt-3">
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted">Subtotal</span>
-                                    <span id="pos-subtotal">Rs. 0.00</span>
+                                    <span id="pos-subtotal" class="fw-semibold">Rs. 0.00</span>
                                 </div>
                                 <div class="row mb-2 g-2">
                                     <div class="col-md-6">
-                                        <label class="small text-muted">Discount Value</label>
+                                        <label class="small text-muted fw-medium">Discount Value</label>
                                         <input type="number" class="form-control form-control-sm" id="pos-discount" value="0" min="0" oninput="calculatePOSCart()">
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="small text-muted">Discount Type</label>
+                                        <label class="small text-muted fw-medium">Discount Type</label>
                                         <select class="form-select form-select-sm" id="pos-discount-type" onchange="calculatePOSCart()">
                                             <option value="percentage">Percentage (%)</option>
                                             <option value="flat">Flat Cash (Rs.)</option>
@@ -724,9 +823,9 @@
                                     <span>GRAND TOTAL</span>
                                     <span class="text-success" id="pos-total">Rs. 0.00</span>
                                 </div>
-                                <div class="row g-2 mb-3">
+                                <div class="row g-2 mb-2">
                                     <div class="col-md-6">
-                                        <label class="small text-muted">Pay Method</label>
+                                        <label class="small text-muted fw-medium">Pay Method</label>
                                         <select class="form-select form-select-sm" id="pos-pay-method" onchange="toggleCashInput()">
                                             <option value="Cash">Cash</option>
                                             <option value="Card">Card</option>
@@ -734,15 +833,20 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6" id="cash-received-container">
-                                        <label class="small text-muted">Cash Received (Rs.)</label>
+                                        <label class="small text-muted fw-medium">Cash Received (Rs.)</label>
                                         <input type="number" class="form-control form-control-sm" id="pos-cash-received" oninput="calculatePOSCart()">
+                                    </div>
+                                    <!-- Dynamic Online Reference Field -->
+                                    <div class="col-12 d-none" id="online-ref-container">
+                                        <label class="small text-primary fw-bold"><i class="bi bi-hash me-1"></i> Bank / Online Transfer Reference No.</label>
+                                        <input type="text" class="form-control form-control-sm border-primary" id="pos-online-ref" placeholder="Enter Ref ID / Slip No. (e.g. TRX-98231)" oninput="calculatePOSCart()">
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between mb-3 fw-bold" id="balance-due-container">
                                     <span class="text-muted">Balance Return</span>
                                     <span class="text-danger" id="pos-balance">Rs. 0.00</span>
                                 </div>
-                                <button class="btn btn-success btn-lg w-100" onclick="checkoutAndPrintReceipt()">
+                                <button class="btn btn-success btn-lg w-100 fw-bold shadow-sm rounded-3" onclick="checkoutAndPrintReceipt()">
                                     <i class="bi bi-printer me-2"></i> Print & Checkout
                                 </button>
                             </div>
@@ -756,7 +860,7 @@
                 <div class="row">
                     <div class="col-lg-5 col-md-12 mb-4">
                         <div class="card card-custom bg-white p-4 mb-4">
-                            <h5 class="mb-3 border-bottom pb-2 fw-bold" id="form-product-title"><i class="bi bi-plus-circle me-1"></i> Add New Product</h5>
+                            <h5 class="mb-3 border-bottom pb-2 fw-bold text-dark" id="form-product-title"><i class="bi bi-plus-circle me-1 text-primary"></i> Add New Product</h5>
                             <form id="product-form" onsubmit="saveProduct(event)">
                                 <input type="hidden" id="product-id">
                                 
@@ -778,7 +882,7 @@
                                     </div>
                                 </div>
 
-                                <div class="bg-light p-3 rounded mb-3 border">
+                                <div class="bg-light p-3 rounded-3 mb-3 border">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <h6 class="fw-bold mb-0 small text-secondary"><i class="bi bi-journals me-1"></i> Recipe / Portion Ingredients</h6>
                                         <span class="badge bg-info text-dark small">Searchable Material</span>
@@ -801,7 +905,7 @@
                                     </div>
 
                                     <div class="table-responsive mt-2" style="max-height: 150px; overflow-y: auto;">
-                                        <table class="table table-sm align-middle mb-0 bg-white border">
+                                        <table class="table table-sm align-middle mb-0 bg-white border rounded">
                                             <thead class="table-secondary small">
                                                 <tr>
                                                     <th>Ingredient</th>
@@ -819,7 +923,7 @@
                                     </div>
                                 </div>
 
-                                <div class="p-2 bg-dark text-white rounded mb-3">
+                                <div class="p-3 bg-dark text-white rounded-3 mb-3">
                                     <div class="d-flex justify-content-between small">
                                         <span>Calculated Cost Price:</span>
                                         <strong id="recipe-total-cost-display">Rs. 0.00</strong>
@@ -830,20 +934,20 @@
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary w-100 fw-bold py-2" id="btn-product-submit">Save Product & Recipe</button>
+                                <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm" id="btn-product-submit">Save Product & Recipe</button>
                                 <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btn-product-cancel" onclick="clearProductForm()">Cancel Edit</button>
                             </form>
                         </div>
 
                         <div class="card card-custom bg-white p-4">
-                            <h5 class="mb-3">Manage Categories</h5>
+                            <h5 class="mb-3 fw-bold text-dark">Manage Categories</h5>
                             <form id="category-form" onsubmit="saveCategory(event)">
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" id="new-category-name" placeholder="Category Name" required>
-                                    <button class="btn btn-outline-success" type="submit">Add</button>
+                                    <button class="btn btn-outline-success fw-bold" type="submit">Add</button>
                                 </div>
                             </form>
-                            <h6>Existing Categories:</h6>
+                            <h6 class="fw-semibold small text-muted">Existing Categories:</h6>
                             <div id="category-badges-container" class="mt-2"></div>
                         </div>
                     </div>
@@ -851,15 +955,15 @@
                     <div class="col-lg-7 col-md-12">
                         <div class="card card-custom bg-white p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                                <h5 class="mb-0 fw-bold"><i class="bi bi-box-seam me-1"></i> Product List & Live Costings</h5>
-                                <button class="btn btn-sm btn-primary" id="btn-load-products" onclick="loadProductsClicked()">
+                                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-box-seam me-1 text-primary"></i> Product List & Live Costings</h5>
+                                <button class="btn btn-sm btn-primary fw-semibold rounded-pill" id="btn-load-products" onclick="loadProductsClicked()">
                                     <i class="bi bi-arrow-clockwise me-1"></i> Load Products
                                 </button>
                             </div>
 
                             <div class="mb-3" id="product-search-wrapper">
                                 <div class="input-group input-group-sm">
-                                    <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                                    <span class="input-group-text bg-light"><i class="bi bi-search text-muted"></i></span>
                                     <input type="text" class="form-control" id="product-list-search-input" placeholder="Search product by name or category..." oninput="displayProducts()">
                                 </div>
                             </div>
@@ -884,7 +988,7 @@
                                 </nav>
                             </div>
                             <div id="products-load-placeholder" class="text-center py-5 text-muted">
-                                <i class="bi bi-box-seam fs-1 d-block mb-2"></i>
+                                <i class="bi bi-box-seam fs-1 d-block mb-2 text-secondary"></i>
                                 Click "Load Products" to display products, live cost prices, and profit margins.
                             </div>
                         </div>
@@ -894,7 +998,7 @@
 
             <!-- 4. EXPENSES, GRN & PETTY CASH PAGE -->
             <div id="page-expenses" class="page-section">
-                <ul class="nav nav-pills mb-3 bg-white p-2 rounded card-custom" id="expenseSubTabs" role="tablist">
+                <ul class="nav nav-pills mb-3 bg-white p-2 rounded-3 card-custom border" id="expenseSubTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active fw-bold" id="grn-subtab" data-bs-toggle="pill" data-bs-target="#grn-subpanel" type="button" role="tab">
                             <i class="bi bi-box-seam me-1"></i> Goods Received Note (GRN)
@@ -938,14 +1042,14 @@
                                             </div>
                                         </div>
 
-                                        <div class="bg-light p-3 rounded mb-3 border">
+                                        <div class="bg-light p-3 rounded-3 mb-3 border">
                                             <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-1">
                                                 <h6 class="fw-bold mb-0 small text-secondary"><i class="bi bi-cart-plus me-1"></i> Add Raw Material Items</h6>
                                                 <div>
-                                                    <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 small me-1" onclick="openNewRawMaterialModal()">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary py-0 px-2 small me-1 rounded-pill" onclick="openNewRawMaterialModal()">
                                                         <i class="bi bi-plus-circle-fill me-1"></i> New
                                                     </button>
-                                                    <button type="button" class="btn btn-sm btn-outline-dark py-0 px-2 small" onclick="openManageRawMaterialsModal()">
+                                                    <button type="button" class="btn btn-sm btn-outline-dark py-0 px-2 small rounded-pill" onclick="openManageRawMaterialsModal()">
                                                         <i class="bi bi-gear-fill me-1"></i> Manage Raw Materials
                                                     </button>
                                                 </div>
@@ -969,7 +1073,7 @@
                                             </div>
 
                                             <div class="table-responsive mt-2" style="max-height: 160px; overflow-y: auto;">
-                                                <table class="table table-sm align-middle mb-0 bg-white border">
+                                                <table class="table table-sm align-middle mb-0 bg-white border rounded">
                                                     <thead class="table-secondary small">
                                                         <tr>
                                                             <th>Item</th>
@@ -988,7 +1092,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="d-flex justify-content-between align-items-center mb-3 p-2 bg-danger-subtle text-danger rounded fw-bold">
+                                        <div class="d-flex justify-content-between align-items-center mb-3 p-2.5 bg-danger-subtle text-danger rounded-3 fw-bold">
                                             <span>GRN NET TOTAL:</span>
                                             <span class="fs-5" id="grn-net-total-display">Rs. 0.00</span>
                                         </div>
@@ -998,21 +1102,21 @@
                                             <input type="text" class="form-control form-control-sm" id="grn-notes" placeholder="Optional notes (e.g. Cash paid from drawer)">
                                         </div>
 
-                                        <button type="submit" class="btn btn-danger btn-lg w-100 fw-bold fs-6" id="btn-expense-submit">
+                                        <button type="submit" class="btn btn-danger btn-lg w-100 fw-bold fs-6 shadow-sm rounded-3" id="btn-expense-submit">
                                             <i class="bi bi-save me-1"></i> Submit & Save GRN Note
                                         </button>
                                     </form>
                                 </div>
 
                                 <div class="card card-custom bg-white p-4">
-                                    <h6 class="mb-3 fw-bold">Manage Expense Categories</h6>
+                                    <h6 class="mb-3 fw-bold text-dark">Manage Expense Categories</h6>
                                     <form id="expense-category-form" onsubmit="saveExpenseCategory(event)">
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control form-control-sm" id="new-expense-category-name" placeholder="New Category Name" required>
-                                            <button class="btn btn-sm btn-outline-danger" type="submit">Add</button>
+                                            <button class="btn btn-sm btn-outline-danger fw-bold" type="submit">Add</button>
                                         </div>
                                     </form>
-                                    <small class="fw-bold d-block mb-1">Existing Categories:</small>
+                                    <small class="fw-bold d-block mb-1 text-muted">Existing Categories:</small>
                                     <div id="expense-category-badges-container"></div>
                                 </div>
                             </div>
@@ -1020,11 +1124,11 @@
                             <div class="col-lg-7 col-md-12">
                                 <div class="card card-custom bg-white p-4">
                                     <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                                        <h5 class="mb-0 fw-bold"><i class="bi bi-receipt me-1"></i> GRN Notes History</h5>
+                                        <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-receipt me-1 text-danger"></i> GRN Notes History</h5>
                                         <span class="badge bg-secondary">On-Demand Fetching</span>
                                     </div>
                                     
-                                    <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded border">
+                                    <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded-3 border">
                                         <div class="col-md-3 col-6">
                                             <label class="small text-muted fw-bold">From Date</label>
                                             <input type="date" class="form-control form-control-sm" id="expense-filter-start">
@@ -1034,12 +1138,12 @@
                                             <input type="date" class="form-control form-control-sm" id="expense-filter-end">
                                         </div>
                                         <div class="col-md-3 col-6">
-                                            <button class="btn btn-sm btn-danger w-100 fw-bold" onclick="loadExpensesClicked(true)">
+                                            <button class="btn btn-sm btn-danger w-100 fw-bold rounded-2" onclick="loadExpensesClicked(true)">
                                                 <i class="bi bi-funnel"></i> Filter Records
                                             </button>
                                         </div>
                                         <div class="col-md-3 col-6">
-                                            <button class="btn btn-sm btn-outline-danger w-100 fw-bold" onclick="downloadGRNSummaryPDF()">
+                                            <button class="btn btn-sm btn-outline-danger w-100 fw-bold rounded-2" onclick="downloadGRNSummaryPDF()">
                                                 <i class="bi bi-file-earmark-pdf"></i> GRN PDF
                                             </button>
                                         </div>
@@ -1065,7 +1169,7 @@
                                         </nav>
                                     </div>
                                     <div id="expenses-load-placeholder" class="text-center py-5 text-muted">
-                                        <i class="bi bi-journal-text fs-1 d-block mb-2"></i>
+                                        <i class="bi bi-journal-text fs-1 d-block mb-2 text-secondary"></i>
                                         Select date period and click "Filter Records" to fetch GRN notes or "GRN PDF" to export PDF summary.
                                     </div>
                                 </div>
@@ -1082,7 +1186,7 @@
                                             <h6 class="text-muted mb-1 small fw-bold">Current Petty Cash Balance (Float)</h6>
                                             <h3 class="mb-0 text-success fw-bold" id="pc-current-balance-display">Rs. 0.00</h3>
                                         </div>
-                                        <button class="btn btn-success fw-bold" onclick="openAddFloatModal()">
+                                        <button class="btn btn-success fw-bold rounded-pill px-3" onclick="openAddFloatModal()">
                                             <i class="bi bi-plus-circle me-1"></i> Add Float (Top-Up)
                                         </button>
                                     </div>
@@ -1096,7 +1200,7 @@
                                             <h6 class="text-muted mb-1 small fw-bold">Issue Out-of-Pocket Expense</h6>
                                             <span class="small text-secondary">Pay small bills / vouchers from float</span>
                                         </div>
-                                        <button class="btn btn-danger fw-bold" onclick="openIssueVoucherModal()">
+                                        <button class="btn btn-danger fw-bold rounded-pill px-3" onclick="openIssueVoucherModal()">
                                             <i class="bi bi-dash-circle me-1"></i> Issue Voucher
                                         </button>
                                     </div>
@@ -1106,11 +1210,11 @@
 
                         <div class="card card-custom bg-white p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                                <h5 class="mb-0 fw-bold"><i class="bi bi-journals me-1"></i> Petty Cash Voucher & Allocation Logs</h5>
+                                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-journals me-1 text-primary"></i> Petty Cash Voucher & Allocation Logs</h5>
                                 <span class="badge bg-secondary">On-Demand Querying</span>
                             </div>
 
-                            <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded border">
+                            <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded-3 border">
                                 <div class="col-md-3 col-6">
                                     <label class="small text-muted fw-bold">From Date</label>
                                     <input type="date" class="form-control form-control-sm" id="pc-filter-start">
@@ -1120,12 +1224,12 @@
                                     <input type="date" class="form-control form-control-sm" id="pc-filter-end">
                                 </div>
                                 <div class="col-md-3 col-6">
-                                    <button class="btn btn-sm btn-primary w-100 fw-bold" onclick="loadPettyCashLogsClicked(true)">
+                                    <button class="btn btn-sm btn-primary w-100 fw-bold rounded-2" onclick="loadPettyCashLogsClicked(true)">
                                         <i class="bi bi-funnel me-1"></i> Filter Logs
                                     </button>
                                 </div>
                                 <div class="col-md-3 col-6">
-                                    <button class="btn btn-sm btn-danger w-100 fw-bold" onclick="generatePettyCashPDF()">
+                                    <button class="btn btn-sm btn-danger w-100 fw-bold rounded-2" onclick="generatePettyCashPDF()">
                                         <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF Summary
                                     </button>
                                 </div>
@@ -1154,7 +1258,7 @@
                             </div>
 
                             <div id="pc-load-placeholder" class="text-center py-5 text-muted">
-                                <i class="bi bi-cash-stack fs-1 d-block mb-2"></i>
+                                <i class="bi bi-cash-stack fs-1 d-block mb-2 text-secondary"></i>
                                 Select date period and click "Filter Logs" or "Download PDF Summary" to inspect voucher outflows and float top-ups.
                             </div>
                         </div>
@@ -1166,7 +1270,7 @@
             <!-- DAY START MODAL -->
             <div class="modal fade" id="dayStartModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content shadow-lg border-0">
+                    <div class="modal-content shadow-lg border-0 rounded-4">
                         <div class="modal-header bg-primary text-white">
                             <h5 class="modal-title fw-bold"><i class="bi bi-play-circle me-2"></i> POS Day Start / Open Shift</h5>
                         </div>
@@ -1186,8 +1290,103 @@
                             </div>
                             <div class="modal-footer bg-light justify-content-between">
                                 <button type="button" class="btn btn-outline-secondary" onclick="switchPage('dashboard', 'Dashboard')" data-bs-dismiss="modal">Go to Dashboard</button>
-                                <button type="submit" class="btn btn-primary fw-bold px-4" id="btn-submit-daystart">
+                                <button type="submit" class="btn btn-primary fw-bold px-4 rounded-3" id="btn-submit-daystart">
                                     <i class="bi bi-check-circle me-1"></i> Start POS Shift
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CASHIER SHIFT SIGN-IN / SIGN-OUT MODAL -->
+            <div class="modal fade" id="cashierShiftModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg rounded-4">
+                        <div class="modal-header bg-dark text-white">
+                            <h5 class="modal-title fw-bold"><i class="bi bi-person-badge me-2"></i> Cashier Shift Attendance & Sign In/Out</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <div class="text-center mb-3 p-3 bg-light rounded-3 border">
+                                <span class="badge bg-primary px-3 py-2 fs-6 mb-2 rounded-pill" id="modal-cashier-role">Cashier</span>
+                                <h4 class="fw-bold text-dark mb-1" id="modal-cashier-name">Cashier Name</h4>
+                                <p class="text-muted small mb-0" id="modal-cashier-email">email@hellobubu.com</p>
+                            </div>
+
+                            <div class="p-3 bg-primary-subtle text-primary border border-primary border-opacity-25 rounded-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold small">Current Shift Status:</span>
+                                    <span class="badge bg-success" id="modal-shift-status-badge">Active Signed In</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-2 small">
+                                    <span>Signed In At:</span>
+                                    <strong id="modal-signed-in-time">--:--</strong>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-success fw-bold py-2" id="btn-cashier-sign-in" onclick="recordCashierSignIn()">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i> Sign In Cashier Shift
+                                </button>
+                                <button type="button" class="btn btn-outline-danger fw-bold py-2" id="btn-cashier-sign-out" onclick="recordCashierSignOut()">
+                                    <i class="bi bi-box-arrow-left me-1"></i> Sign Out Shift
+                                </button>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MID-DAY CASH BALANCE / AUDIT MODAL -->
+            <div class="modal fade" id="middayCashModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-0 shadow-lg rounded-4">
+                        <div class="modal-header bg-warning text-dark">
+                            <h5 class="modal-title fw-bold"><i class="bi bi-cash-coin me-2"></i> Mid-Day Cash Drawer Audit & Check</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form id="midday-cash-form" onsubmit="saveMiddayCashCheck(event)">
+                            <div class="modal-body p-4">
+                                <p class="text-muted small mb-3">Conduct a physical cash drawer count at mid-day without closing the shift.</p>
+                                
+                                <div class="p-3 bg-light rounded-3 mb-3 border">
+                                    <div class="d-flex justify-content-between mb-1 small text-muted">
+                                        <span>Opening Cash Float:</span>
+                                        <strong id="midday-exp-float">Rs. 0.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-1 small text-muted">
+                                        <span>POS Cash Sales So Far:</span>
+                                        <strong id="midday-exp-sales">Rs. 0.00</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between fw-bold text-dark border-top pt-2">
+                                        <span>SYSTEM EXPECTED DRAWER CASH:</span>
+                                        <strong id="midday-exp-total" class="text-primary">Rs. 0.00</strong>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold text-dark">Actual Physical Cash Counted (Rs.)</label>
+                                    <input type="number" step="0.01" class="form-control form-control-lg fw-bold text-success" id="midday-actual-cash" placeholder="Enter cash count" required oninput="calculateMiddayCashAudit()">
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center p-2.5 rounded-3 mb-3 fw-bold bg-secondary-subtle" id="midday-variance-box">
+                                    <span>Mid-Day Cash Variance:</span>
+                                    <span id="midday-variance-val">Rs. 0.00</span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold text-dark">Audit Remarks / Explanation</label>
+                                    <input type="text" class="form-control" id="midday-notes" placeholder="Optional remarks for safe drops or cash checks">
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-light">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-warning fw-bold text-dark">
+                                    <i class="bi bi-check2-circle me-1"></i> Record Mid-Day Audit
                                 </button>
                             </div>
                         </form>
@@ -1197,7 +1396,7 @@
 
             <div class="modal fade" id="addFloatModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content border-0 shadow-lg rounded-4">
                         <div class="modal-header bg-success text-white">
                             <h5 class="modal-title fw-bold"><i class="bi bi-plus-circle me-1"></i> Add Petty Cash Float (Top-Up)</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1228,7 +1427,7 @@
 
             <div class="modal fade" id="issueVoucherModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content border-0 shadow-lg rounded-4">
                         <div class="modal-header bg-danger text-white">
                             <h5 class="modal-title fw-bold"><i class="bi bi-dash-circle me-1"></i> Issue Petty Cash Voucher</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1271,7 +1470,7 @@
 
             <div class="modal fade" id="grnDetailsModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content border-0 shadow-lg rounded-4">
                         <div class="modal-header bg-danger text-white">
                             <h5 class="modal-title fw-bold" id="grnModalTitle">GRN Details</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1289,7 +1488,7 @@
             <!-- ADD / EDIT RAW MATERIAL MODAL -->
             <div class="modal fade" id="newRawMaterialModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
+                    <div class="modal-content border-0 shadow-lg rounded-4">
                         <div class="modal-header bg-primary text-white">
                             <h5 class="modal-title fw-bold" id="raw-material-modal-title"><i class="bi bi-box-seam me-1"></i> Add New Raw Material / Ingredient</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1332,7 +1531,7 @@
             <!-- MANAGE RAW MATERIALS MODAL -->
             <div class="modal fade" id="manageRawMaterialsModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content">
+                    <div class="modal-content border-0 shadow-lg rounded-4">
                         <div class="modal-header bg-dark text-white">
                             <h5 class="modal-title fw-bold"><i class="bi bi-box-seam me-2"></i> Manage Raw Materials List</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -1343,7 +1542,7 @@
                                     <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
                                     <input type="text" class="form-control" id="manage-mat-search-input" placeholder="Search raw material..." oninput="displayManageRawMaterialsTable()">
                                 </div>
-                                <button class="btn btn-sm btn-primary fw-bold" onclick="openNewRawMaterialModal()">
+                                <button class="btn btn-sm btn-primary fw-bold rounded-pill px-3" onclick="openNewRawMaterialModal()">
                                     <i class="bi bi-plus-lg me-1"></i> Add New Material
                                 </button>
                             </div>
@@ -1412,7 +1611,7 @@
                                     <input type="date" class="form-control form-control-sm" id="wastage-date" required>
                                 </div>
 
-                                <button type="submit" class="btn btn-warning w-100 fw-bold py-2" id="btn-wastage-submit">Save Wastage Record</button>
+                                <button type="submit" class="btn btn-warning w-100 fw-bold py-2 shadow-sm rounded-3" id="btn-wastage-submit">Save Wastage Record</button>
                                 <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btn-wastage-cancel" onclick="clearWastageForm()">Cancel Edit</button>
                             </form>
                         </div>
@@ -1421,11 +1620,11 @@
                     <div class="col-lg-8 col-md-12">
                         <div class="card card-custom bg-white p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                                <h5 class="mb-0 fw-bold"><i class="bi bi-journal-text me-1"></i> Kitchen Wastage History</h5>
+                                <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-journal-text me-1 text-warning"></i> Kitchen Wastage History</h5>
                                 <span class="badge bg-secondary">GRN Unit Cost Linked</span>
                             </div>
 
-                            <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded border">
+                            <div class="row g-2 mb-3 align-items-end bg-light p-3 rounded-3 border">
                                 <div class="col-md-4 col-6">
                                     <label class="small text-muted fw-bold">From Date</label>
                                     <input type="date" class="form-control form-control-sm" id="wastage-filter-start">
@@ -1435,7 +1634,7 @@
                                     <input type="date" class="form-control form-control-sm" id="wastage-filter-end">
                                 </div>
                                 <div class="col-md-4 col-12">
-                                    <button class="btn btn-sm btn-warning w-100 fw-bold" onclick="loadWastageClicked(true)">
+                                    <button class="btn btn-sm btn-warning w-100 fw-bold rounded-2" onclick="loadWastageClicked(true)">
                                         <i class="bi bi-funnel"></i> Filter & Load Records
                                     </button>
                                 </div>
@@ -1462,7 +1661,7 @@
                                 </nav>
                             </div>
                             <div id="wastage-load-placeholder" class="text-center py-5 text-muted">
-                                <i class="bi bi-trash fs-1 d-block mb-2"></i>
+                                <i class="bi bi-trash fs-1 d-block mb-2 text-secondary"></i>
                                 Select date range and click "Filter & Load Records" to safely fetch wastage records.
                             </div>
                         </div>
@@ -1472,7 +1671,7 @@
 
             <!-- 6. REPORTS PAGE -->
             <div id="page-reports" class="page-section">
-                <ul class="nav nav-tabs mb-4" id="reportTabs" role="tablist">
+                <ul class="nav nav-tabs mb-4 border-bottom" id="reportTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active fw-bold" id="master-pdf-tab" data-bs-toggle="tab" data-bs-target="#master-pdf-panel" type="button" role="tab">
                             <i class="bi bi-file-earmark-pdf me-1 text-danger"></i> Master PDF Statement & Cash Book
@@ -1503,7 +1702,7 @@
                                 <span class="badge bg-success p-2"><i class="bi bi-lightning-charge me-1"></i> Non-Blocking Asynchronous Processing</span>
                             </div>
 
-                            <div class="row g-3 align-items-end mb-4 bg-light p-3 rounded border">
+                            <div class="row g-3 align-items-end mb-4 bg-light p-3 rounded-3 border">
                                 <div class="col-md-4">
                                     <label class="form-label small fw-bold text-dark">From Date</label>
                                     <input type="date" class="form-control" id="pdf-start-date">
@@ -1513,16 +1712,16 @@
                                     <input type="date" class="form-control" id="pdf-end-date">
                                 </div>
                                 <div class="col-md-4 d-flex gap-2">
-                                    <button class="btn btn-primary fw-bold w-100 py-2" id="btn-generate-pdf-preview" onclick="generateMasterFinancialSummary()">
+                                    <button class="btn btn-primary fw-bold w-100 py-2 rounded-2" id="btn-generate-pdf-preview" onclick="generateMasterFinancialSummary()">
                                         <i class="bi bi-eye me-1"></i> Preview Report
                                     </button>
-                                    <button class="btn btn-danger fw-bold w-100 py-2 d-none" id="btn-download-pdf-file" onclick="downloadMasterStatementPDF()">
+                                    <button class="btn btn-danger fw-bold w-100 py-2 d-none rounded-2" id="btn-download-pdf-file" onclick="downloadMasterStatementPDF()">
                                         <i class="bi bi-download me-1"></i> Download PDF
                                     </button>
                                 </div>
                             </div>
 
-                            <div id="pdf-preview-container" class="border rounded p-3 bg-white d-none">
+                            <div id="pdf-preview-container" class="border rounded-3 p-3 bg-white d-none">
                                 <div id="pdf-statement-wrapper"></div>
                             </div>
 
@@ -1541,7 +1740,7 @@
                                 <span class="badge bg-success">Time-Precision Filtering</span>
                             </div>
 
-                            <div class="row g-3 align-items-end mb-4 bg-light p-3 rounded border">
+                            <div class="row g-3 align-items-end mb-4 bg-light p-3 rounded-3 border">
                                 <div class="col-md-4">
                                     <label class="form-label small fw-bold text-dark">Start Date & Time (සම්භාරී ආරම්භක වේලාව)</label>
                                     <input type="datetime-local" class="form-control" id="sales-start-date">
@@ -1551,10 +1750,10 @@
                                     <input type="datetime-local" class="form-control" id="sales-end-date">
                                 </div>
                                 <div class="col-md-4 d-flex gap-2">
-                                    <button class="btn btn-success fw-bold w-100 py-2" onclick="generateSalesReport()">
+                                    <button class="btn btn-success fw-bold w-100 py-2 rounded-2" onclick="generateSalesReport()">
                                         <i class="bi bi-funnel-fill me-1"></i> View Report
                                     </button>
-                                    <button class="btn btn-danger fw-bold w-100 py-2" onclick="downloadItemWiseSalesPDF()">
+                                    <button class="btn btn-danger fw-bold w-100 py-2 rounded-2" onclick="downloadItemWiseSalesPDF()">
                                         <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download PDF Report
                                     </button>
                                 </div>
@@ -1562,26 +1761,26 @@
 
                             <div class="row mb-4">
                                 <div class="col-md-4 mb-2">
-                                    <div class="p-3 bg-success-subtle text-success rounded border border-success">
+                                    <div class="p-3 bg-success-subtle text-success rounded-3 border border-success">
                                         <h6 class="mb-1 fw-bold small text-uppercase">Total Period Sales (මුළු ආදායම)</h6>
                                         <h3 class="mb-0 fw-bold" id="report-sales-total">Rs. 0.00</h3>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-2">
-                                    <div class="p-3 bg-info-subtle text-info-emphasis rounded border border-info">
+                                    <div class="p-3 bg-info-subtle text-info-emphasis rounded-3 border border-info">
                                         <h6 class="mb-1 fw-bold small text-uppercase">Total Orders Count (බිල්පත් ගණන)</h6>
                                         <h3 class="mb-0 fw-bold" id="report-sales-count">0</h3>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-2">
-                                    <div class="p-3 bg-warning-subtle text-warning-emphasis rounded border border-warning">
+                                    <div class="p-3 bg-warning-subtle text-warning-emphasis rounded-3 border border-warning">
                                         <h6 class="mb-1 fw-bold small text-uppercase">Total Portions Sold (විකිණුනු මුළු ප්‍රමාණය)</h6>
                                         <h3 class="mb-0 fw-bold" id="report-sales-items-count">0</h3>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="table-responsive border rounded">
+                            <div class="table-responsive border rounded-3">
                                 <table class="table table-hover align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
@@ -1595,7 +1794,7 @@
                                     <tbody id="sales-report-table-body">
                                         <tr>
                                             <td colspan="5" class="text-center text-muted py-4">
-                                                <i class="bi bi-calendar-range fs-2 d-block mb-2"></i>
+                                                <i class="bi bi-calendar-range fs-2 d-block mb-2 text-secondary"></i>
                                                 Select Start/End Date Time range and click "View Report".
                                             </td>
                                         </tr>
@@ -1613,7 +1812,7 @@
                                 <span class="badge bg-secondary">Indexed Fast Search</span>
                             </div>
 
-                            <div class="row g-2 mb-4 align-items-end bg-light p-3 rounded border">
+                            <div class="row g-2 mb-4 align-items-end bg-light p-3 rounded-3 border">
                                 <div class="col-md-4">
                                     <label class="small text-muted fw-bold">Search strictly by Invoice ID / Bill No</label>
                                     <div class="input-group input-group-sm">
@@ -1646,7 +1845,7 @@
                                         <tr>
                                             <th>Invoice No</th>
                                             <th>Date & Time</th>
-                                            <th>Payment Method</th>
+                                            <th>Payment Method & Ref</th>
                                             <th class="text-end">Grand Total</th>
                                             <th class="text-center">Status</th>
                                             <th class="text-center">Actions</th>
@@ -1655,7 +1854,7 @@
                                     <tbody id="pos-history-table-body">
                                         <tr>
                                             <td colspan="6" class="text-center text-muted py-4">
-                                                <i class="bi bi-clock-history fs-2 d-block mb-2"></i>
+                                                <i class="bi bi-clock-history fs-2 d-block mb-2 text-secondary"></i>
                                                 Click Refresh or Filter to load sales invoice transactions.
                                             </td>
                                         </tr>
@@ -1676,7 +1875,7 @@
                                 <span class="badge bg-danger">Fast PDF Export</span>
                             </div>
 
-                            <div class="row g-3 align-items-end mb-4 bg-light p-3 rounded border">
+                            <div class="row g-3 align-items-end mb-4 bg-light p-3 rounded-3 border">
                                 <div class="col-md-3">
                                     <label class="form-label small fw-bold text-dark">Start Date</label>
                                     <input type="date" class="form-control" id="expenses-start-date">
@@ -1686,12 +1885,12 @@
                                     <input type="date" class="form-control" id="expenses-end-date">
                                 </div>
                                 <div class="col-md-3">
-                                    <button class="btn btn-danger w-100 fw-bold py-2" onclick="generateExpensesReport()">
+                                    <button class="btn btn-danger w-100 fw-bold py-2 rounded-2" onclick="generateExpensesReport()">
                                         <i class="bi bi-funnel-fill me-1"></i> View Expenses Report
                                     </button>
                                 </div>
                                 <div class="col-md-3">
-                                    <button class="btn btn-outline-danger w-100 fw-bold py-2" onclick="downloadGRNSummaryPDF()">
+                                    <button class="btn btn-outline-danger w-100 fw-bold py-2 rounded-2" onclick="downloadGRNSummaryPDF()">
                                         <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download GRN PDF
                                     </button>
                                 </div>
@@ -1699,7 +1898,7 @@
 
                             <div class="row mb-4">
                                 <div class="col-12">
-                                    <div class="p-3 bg-danger-subtle text-danger rounded border border-danger">
+                                    <div class="p-3 bg-danger-subtle text-danger rounded-3 border border-danger">
                                         <h6 class="mb-1 fw-bold text-uppercase small">Total Period Expenses / GRN (මුළු කාලසීමාවේ GRN වියදම)</h6>
                                         <h3 class="mb-0 fw-bold" id="report-expenses-total">Rs. 0.00</h3>
                                     </div>
@@ -1707,7 +1906,7 @@
                             </div>
 
                             <h6 class="fw-bold mt-2 mb-3 text-dark">Category-Wise Expense Breakdown</h6>
-                            <div class="table-responsive mb-4 border rounded">
+                            <div class="table-responsive mb-4 border rounded-3">
                                 <table class="table table-hover align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
@@ -1724,7 +1923,7 @@
                             </div>
 
                             <h6 class="fw-bold mb-3 text-dark">Itemized GRN Transactions History</h6>
-                            <div class="table-responsive border rounded">
+                            <div class="table-responsive border rounded-3">
                                 <table class="table table-hover align-middle mb-0">
                                     <thead class="table-light">
                                         <tr>
@@ -1751,14 +1950,14 @@
                 <div class="row">
                     <div class="col-md-4 mb-4">
                         <div class="card card-custom bg-white p-4">
-                            <h5 class="mb-3">Log System Update / Roadmap</h5>
+                            <h5 class="mb-3 fw-bold text-dark">Log System Update / Roadmap</h5>
                             <form id="update-form" onsubmit="saveUpdateLog(event)">
                                 <div class="mb-3">
-                                    <label class="form-label">Version / Feature Name</label>
-                                    <input type="text" class="form-control" id="update-version" required placeholder="e.g. v1.4.0 or Billing Module">
+                                    <label class="form-label small fw-bold">Version / Feature Name</label>
+                                    <input type="text" class="form-control" id="update-version" required placeholder="e.g. v1.5.0 or Shift Control">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Log Type</label>
+                                    <label class="form-label small fw-bold">Log Type</label>
                                     <select class="form-select" id="update-type" required>
                                         <option value="New Feature">New Feature</option>
                                         <option value="Bug Fix">Bug Fix</option>
@@ -1767,21 +1966,21 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Description</label>
+                                    <label class="form-label small fw-bold">Description</label>
                                     <textarea class="form-control" id="update-desc" rows="4" required placeholder="Describe what's new or planned..."></textarea>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Date</label>
+                                    <label class="form-label small fw-bold">Date</label>
                                     <input type="date" class="form-control" id="update-date" required>
                                 </div>
-                                <button type="submit" class="btn btn-dark w-100">Add Log</button>
+                                <button type="submit" class="btn btn-dark w-100 fw-bold py-2 shadow-sm rounded-3">Add Log</button>
                             </form>
                         </div>
                     </div>
 
                     <div class="col-md-8">
                         <div class="card card-custom bg-white p-4">
-                            <h5 class="mb-3">Update History & System Roadmap</h5>
+                            <h5 class="mb-3 fw-bold text-dark">Update History & System Roadmap</h5>
                             <div id="updates-timeline-container"></div>
                         </div>
                     </div>
@@ -1793,24 +1992,24 @@
                 <div class="row">
                     <div class="col-md-5 mb-4">
                         <div class="card card-custom bg-white p-4">
-                            <h5 class="mb-3" id="form-user-title">Create New User</h5>
+                            <h5 class="mb-3 fw-bold text-dark" id="form-user-title">Create New User</h5>
                             <form id="user-creation-form" onsubmit="saveUserAccount(event)">
                                 <input type="hidden" id="manage-uid">
                                 <div class="mb-3">
-                                    <label class="form-label">Username</label>
+                                    <label class="form-label small fw-bold">Username</label>
                                     <input type="text" class="form-control" id="manage-username" required placeholder="e.g. sunil">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Email Address</label>
+                                    <label class="form-label small fw-bold">Email Address</label>
                                     <input type="email" class="form-control" id="manage-email" required placeholder="e.g. sunil@hellobubu.com">
                                 </div>
                                 <div class="mb-3" id="password-field-container">
-                                    <label class="form-label" id="password-field-label">Password</label>
+                                    <label class="form-label small fw-bold" id="password-field-label">Password</label>
                                     <input type="password" class="form-control" id="manage-password" required placeholder="Min 6 characters">
                                     <small class="text-muted d-none" id="password-edit-help">Leave blank to keep existing password, or enter new password to reset.</small>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Default Template Role</label>
+                                    <label class="form-label small fw-bold">Default Template Role</label>
                                     <select class="form-select" id="manage-role" onchange="applyDefaultRoleTemplate()">
                                         <option value="Admin">Admin (All Access)</option>
                                         <option value="Manager">Manager (Operational Access)</option>
@@ -1820,65 +2019,65 @@
                                 </div>
                                 
                                 <div class="mb-4">
-                                    <label class="form-label d-block fw-bold border-bottom pb-2">Custom Page Permissions (Tick to Allow)</label>
+                                    <label class="form-label d-block fw-bold border-bottom pb-2 small">Custom Page Permissions (Tick to Allow)</label>
                                     <div class="row g-2">
                                         <div class="col-6">
                                             <div class="form-check">
                                                 <input class="form-check-input perm-check" type="checkbox" value="dashboard" id="perm-dashboard" checked>
-                                                <label class="form-check-label" for="perm-dashboard">Dashboard</label>
+                                                <label class="form-check-label small" for="perm-dashboard">Dashboard</label>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-check">
                                                 <input class="form-check-input perm-check" type="checkbox" value="billing" id="perm-billing" checked>
-                                                <label class="form-check-label" for="perm-billing">Billing (POS)</label>
+                                                <label class="form-check-label small" for="perm-billing">Billing (POS)</label>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-check">
                                                 <input class="form-check-input perm-check" type="checkbox" value="products" id="perm-products" checked>
-                                                <label class="form-check-label" for="perm-products">Products</label>
+                                                <label class="form-check-label small" for="perm-products">Products</label>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-check">
                                                 <input class="form-check-input perm-check" type="checkbox" value="expenses" id="perm-expenses" checked>
-                                                <label class="form-check-label" for="perm-expenses">Expenses (GRN)</label>
+                                                <label class="form-check-label small" for="perm-expenses">Expenses (GRN)</label>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-check">
                                                 <input class="form-check-input perm-check" type="checkbox" value="wastage" id="perm-wastage" checked>
-                                                <label class="form-check-label" for="perm-wastage">Wastage</label>
+                                                <label class="form-check-label small" for="perm-wastage">Wastage</label>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-check">
                                                 <input class="form-check-input perm-check" type="checkbox" value="reports" id="perm-reports" checked>
-                                                <label class="form-check-label" for="perm-reports">Reports</label>
+                                                <label class="form-check-label small" for="perm-reports">Reports</label>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-check">
                                                 <input class="form-check-input perm-check" type="checkbox" value="dayend" id="perm-dayend" checked>
-                                                <label class="form-check-label" for="perm-dayend">Day End</label>
+                                                <label class="form-check-label small" for="perm-dayend">Day End</label>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-check">
                                                 <input class="form-check-input perm-check" type="checkbox" value="updates" id="perm-updates" checked>
-                                                <label class="form-check-label" for="perm-updates">Updates</label>
+                                                <label class="form-check-label small" for="perm-updates">Updates</label>
                                             </div>
                                         </div>
                                         <div class="col-6 flex-grow-1">
                                             <div class="form-check">
                                                 <input class="form-check-input perm-check" type="checkbox" value="users" id="perm-users" checked>
-                                                <label class="form-check-label" for="perm-users">Users (Admin)</label>
+                                                <label class="form-check-label small" for="perm-users">Users (Admin)</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary w-100" id="btn-user-submit">Create User</button>
+                                <button type="submit" class="btn btn-primary w-100 fw-bold py-2 shadow-sm rounded-3" id="btn-user-submit">Create User</button>
                                 <button type="button" class="btn btn-secondary w-100 mt-2 d-none" id="btn-user-cancel" onclick="clearUserForm()">Cancel Edit</button>
                             </form>
                         </div>
@@ -1886,7 +2085,7 @@
 
                     <div class="col-md-7">
                         <div class="card card-custom bg-white p-4">
-                            <h5 class="mb-3">Registered Users</h5>
+                            <h5 class="mb-3 fw-bold text-dark">Registered Users</h5>
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle">
                                     <thead class="table-light">
@@ -1915,15 +2114,15 @@
                     <div class="col-md-5 mb-4">
                         <div class="card card-custom bg-white p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="mb-0">Submit Shift Closure (Z-Report)</h5>
+                                <h5 class="mb-0 fw-bold text-dark">Submit Shift Closure (Z-Report)</h5>
                                 <span class="badge bg-secondary">Multi-Date Closure</span>
                             </div>
                             
                             <form id="dayend-form" onsubmit="submitDayEnd(event)">
-                                <div class="mb-3 bg-light p-3 rounded border">
+                                <div class="mb-3 bg-light p-3 rounded-3 border">
                                     <label class="form-label text-dark small fw-bold"><i class="bi bi-calendar-event me-1 text-primary"></i> Select Reconciliation Date</label>
                                     <input type="date" class="form-control" id="de-shift-date" onchange="fetchTodaySalesForDayEnd()" required>
-                                    <small class="text-muted style-08">Select previous date if reconciling an unclosed shift retroactively.</small>
+                                    <small class="text-muted" style="font-size: 0.75rem;">Select previous date if reconciling an unclosed shift retroactively.</small>
                                 </div>
 
                                 <div class="mb-3">
@@ -1948,7 +2147,7 @@
                                     <label class="form-label text-dark small fw-bold">Shift Notes / Explanations</label>
                                     <textarea class="form-control" id="de-notes" rows="3" placeholder="Explain any shortages, cash issues or manual float overrides here..."></textarea>
                                 </div>
-                                <button type="submit" class="btn btn-success btn-lg w-100 fw-bold">
+                                <button type="submit" class="btn btn-success btn-lg w-100 fw-bold shadow-sm rounded-3">
                                     <i class="bi bi-shield-check me-2"></i> Submit & Print Day End (Z-Report)
                                 </button>
                             </form>
@@ -1957,7 +2156,7 @@
 
                     <div class="col-md-7">
                         <div class="card card-custom bg-white p-4 mb-4">
-                            <h5 class="mb-3 border-bottom pb-2">Shift Reconciliation Preview</h5>
+                            <h5 class="mb-3 border-bottom pb-2 fw-bold text-dark">Shift Reconciliation Preview</h5>
                             <div class="table-responsive">
                                 <table class="table table-bordered align-middle">
                                     <thead class="table-light">
@@ -2011,7 +2210,7 @@
                         </div>
 
                         <div class="card card-custom bg-white p-4">
-                            <h5 class="mb-3">Recent Shift Closures (Last 10 Days)</h5>
+                            <h5 class="mb-3 fw-bold text-dark">Recent Shift Closures (Last 10 Days)</h5>
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle table-sm" style="font-size: 0.9rem;">
                                     <thead class="table-light">
@@ -2051,7 +2250,7 @@
 <script>
     /*
      * ============================================================================
-     * HELLO BUBU - RESTAURANT MANAGEMENT SYSTEM (RMS)
+     * HELLO BUBU - RESTAURANT MANAGEMENT SYSTEM (RMS) v1.5.0
      * Copyright (c) 2026 Systems.LK. All Rights Reserved.
      * Technical Support / License Inquiries: 0760672029
      * ============================================================================
@@ -2165,6 +2364,9 @@
     let currentHistoryPage = 1;
     const historyPerPage = 10;
     let grnItemsList = [];
+
+    // Cashier Session State Variables
+    let currentCashierSession = null;
 
     function getLocalDateString(d = new Date()) {
         const year = d.getFullYear();
@@ -2295,6 +2497,7 @@
                 mainApp.classList.remove('d-none');
                 
                 loadDataFromFirebase();
+                checkCashierShiftSession();
 
                 const firstAllowedTab = Object.keys(userData.permissions).find(key => userData.permissions[key] === true);
                 if (firstAllowedTab) {
@@ -2358,10 +2561,195 @@
                 expenses = []; wastage = []; updates = []; cart = []; userAccountsList = [];
                 currentUserPermissions = null; todayExpectedSales = { cash: 0, card: 0, online: 0 };
                 currentPettyCashBalance = 0; pettyCashLogsList = []; recipeBuilderList = [];
-                isDayStarted = false; todayOpeningFloat = 0;
+                isDayStarted = false; todayOpeningFloat = 0; currentCashierSession = null;
             } catch (error) {
                 console.error("Logout failed: ", error);
             }
+        }
+    }
+
+    /* CASHIER SHIFT ATTENDANCE TRACKER */
+    async function checkCashierShiftSession() {
+        if (!auth.currentUser) return;
+        const uid = auth.currentUser.uid;
+        
+        try {
+            const snapshot = await rtdb.ref(`cashier_sessions/${todayStr}/${uid}`).once('value');
+            const data = snapshot.val();
+            
+            const pillText = document.getElementById('cashier-shift-header-text');
+            const userStr = auth.currentUser.email.split('@')[0];
+
+            if (data && data.status === 'Signed_In') {
+                currentCashierSession = data;
+                if (pillText) pillText.innerHTML = `Cashier: <strong>${userStr}</strong> (Active Shift)`;
+            } else {
+                currentCashierSession = null;
+                if (pillText) pillText.innerHTML = `Cashier: <strong>${userStr}</strong> (Shift Offline)`;
+            }
+        } catch (e) {
+            console.error("Error checking Cashier shift: ", e);
+        }
+    }
+
+    function openCashierShiftModal() {
+        if (!auth.currentUser) return;
+        const userStr = auth.currentUser.email.split('@')[0];
+        
+        document.getElementById('modal-cashier-name').innerText = userStr;
+        document.getElementById('modal-cashier-email').innerText = auth.currentUser.email;
+
+        const btnSignIn = document.getElementById('btn-cashier-sign-in');
+        const btnSignOut = document.getElementById('btn-cashier-sign-out');
+        const statusBadge = document.getElementById('modal-shift-status-badge');
+        const signedInTimeEl = document.getElementById('modal-signed-in-time');
+
+        if (currentCashierSession && currentCashierSession.status === 'Signed_In') {
+            statusBadge.className = "badge bg-success";
+            statusBadge.innerText = "Shift Active (Signed In)";
+            signedInTimeEl.innerText = currentCashierSession.signedInAt || "--:--";
+            btnSignIn.disabled = true;
+            btnSignOut.disabled = false;
+        } else {
+            statusBadge.className = "badge bg-secondary";
+            statusBadge.innerText = "Shift Offline (Signed Out)";
+            signedInTimeEl.innerText = "Not Signed In";
+            btnSignIn.disabled = false;
+            btnSignOut.disabled = true;
+        }
+
+        new bootstrap.Modal(document.getElementById('cashierShiftModal')).show();
+    }
+
+    async function recordCashierSignIn() {
+        if (!auth.currentUser) return;
+        const uid = auth.currentUser.uid;
+        const userStr = auth.currentUser.email.split('@')[0];
+        const formattedTime = formatDateTime(new Date());
+
+        const sessionData = {
+            cashierName: userStr,
+            cashierUid: uid,
+            signedInAt: formattedTime,
+            status: "Signed_In",
+            date: todayStr,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        try {
+            await rtdb.ref(`cashier_sessions/${todayStr}/${uid}`).set(sessionData);
+            currentCashierSession = sessionData;
+            alert(`Cashier Shift Signed In successfully for ${userStr}!`);
+            
+            const modalEl = document.getElementById('cashierShiftModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+
+            checkCashierShiftSession();
+        } catch (e) {
+            console.error("Error signing in Cashier: ", e);
+            alert("Failed to sign in Cashier shift.");
+        }
+    }
+
+    async function recordCashierSignOut() {
+        if (!auth.currentUser || !currentCashierSession) return;
+        const uid = auth.currentUser.uid;
+        const formattedTime = formatDateTime(new Date());
+
+        try {
+            await rtdb.ref(`cashier_sessions/${todayStr}/${uid}`).update({
+                signedOutAt: formattedTime,
+                status: "Signed_Out"
+            });
+            currentCashierSession = null;
+            alert("Cashier Shift Signed Out successfully!");
+
+            const modalEl = document.getElementById('cashierShiftModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+
+            checkCashierShiftSession();
+        } catch (e) {
+            console.error("Error signing out Cashier: ", e);
+            alert("Failed to sign out Cashier shift.");
+        }
+    }
+
+    /* MID-DAY CASH BALANCE & AUDIT FUNCTIONALITY */
+    async function openMiddayCashModal() {
+        try {
+            const snapshot = await rtdb.ref(`daily_summaries/${todayStr}`).once('value');
+            const data = snapshot.val() || { cash_sales: 0, openingFloat: 0 };
+            
+            const openingFloat = parseFloat(data.openingFloat || 0);
+            const cashSalesSoFar = parseFloat(data.cash_sales || 0);
+            const totalExpectedDrawerCash = openingFloat + cashSalesSoFar;
+
+            document.getElementById('midday-exp-float').innerText = `Rs. ${openingFloat.toFixed(2)}`;
+            document.getElementById('midday-exp-sales').innerText = `Rs. ${cashSalesSoFar.toFixed(2)}`;
+            document.getElementById('midday-exp-total').innerText = `Rs. ${totalExpectedDrawerCash.toFixed(2)}`;
+            
+            document.getElementById('midday-actual-cash').value = '';
+            document.getElementById('midday-notes').value = '';
+            document.getElementById('midday-variance-val').innerText = 'Rs. 0.00';
+
+            new bootstrap.Modal(document.getElementById('middayCashModal')).show();
+        } catch (e) {
+            console.error("Error opening Mid-Day Cash Check: ", e);
+        }
+    }
+
+    function calculateMiddayCashAudit() {
+        const expTotalText = document.getElementById('midday-exp-total').innerText.replace('Rs. ', '');
+        const expectedTotal = parseFloat(expTotalText) || 0;
+        const actualCash = parseFloat(document.getElementById('midday-actual-cash').value) || 0;
+
+        const variance = actualCash - expectedTotal;
+        const varEl = document.getElementById('midday-variance-val');
+        const boxEl = document.getElementById('midday-variance-box');
+
+        varEl.innerText = `Rs. ${variance.toFixed(2)}`;
+
+        if (variance < 0) {
+            boxEl.className = "d-flex justify-content-between align-items-center p-2.5 rounded-3 mb-3 fw-bold bg-danger-subtle text-danger";
+        } else if (variance > 0) {
+            boxEl.className = "d-flex justify-content-between align-items-center p-2.5 rounded-3 mb-3 fw-bold bg-success-subtle text-success";
+        } else {
+            boxEl.className = "d-flex justify-content-between align-items-center p-2.5 rounded-3 mb-3 fw-bold bg-secondary-subtle text-dark";
+        }
+    }
+
+    async function saveMiddayCashCheck(event) {
+        event.preventDefault();
+        const expTotalText = document.getElementById('midday-exp-total').innerText.replace('Rs. ', '');
+        const expectedTotal = parseFloat(expTotalText) || 0;
+        const actualCash = parseFloat(document.getElementById('midday-actual-cash').value) || 0;
+        const notes = document.getElementById('midday-notes').value.trim();
+        const variance = actualCash - expectedTotal;
+        const cashierUser = auth.currentUser ? (auth.currentUser.email.split('@')[0]) : 'system';
+
+        const auditRecord = {
+            date: todayStr,
+            dateTime: formatDateTime(new Date()),
+            auditedBy: cashierUser,
+            expectedCash: expectedTotal,
+            actualCash: actualCash,
+            variance: variance,
+            notes: notes || "N/A",
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
+
+        try {
+            await rtdb.ref('midday_cash_checks').push().set(auditRecord);
+            alert(`Mid-Day Cash Audit saved successfully! Variance: Rs. ${variance.toFixed(2)}`);
+
+            const modalEl = document.getElementById('middayCashModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+        } catch (e) {
+            console.error("Error saving Mid-Day Cash Check: ", e);
+            alert("Failed to save Mid-Day Cash audit.");
         }
     }
 
@@ -2382,21 +2770,21 @@
             latencyText.innerText = `${latency} ms`;
 
             if (latency < 150) {
-                statusBadge.className = "badge bg-success text-white px-3 py-2 fs-6";
+                statusBadge.className = "badge bg-success text-white px-3 py-2 fs-6 rounded-pill";
                 statusBadge.innerText = "Excellent (Ultra Fast)";
                 if (iconBox) iconBox.className = "p-3 bg-success-subtle text-success rounded-circle d-inline-block mb-2";
             } else if (latency < 350) {
-                statusBadge.className = "badge bg-warning text-dark px-3 py-2 fs-6";
+                statusBadge.className = "badge bg-warning text-dark px-3 py-2 fs-6 rounded-pill";
                 statusBadge.innerText = "Good Link";
                 if (iconBox) iconBox.className = "p-3 bg-warning-subtle text-warning rounded-circle d-inline-block mb-2";
             } else {
-                statusBadge.className = "badge bg-danger text-white px-3 py-2 fs-6";
+                statusBadge.className = "badge bg-danger text-white px-3 py-2 fs-6 rounded-pill";
                 statusBadge.innerText = "Slow Link";
                 if (iconBox) iconBox.className = "p-3 bg-danger-subtle text-danger rounded-circle d-inline-block mb-2";
             }
         } catch (error) {
             console.error("Latency check aborted: ", error);
-            statusBadge.className = "badge bg-dark text-white px-3 py-2 fs-6";
+            statusBadge.className = "badge bg-dark text-white px-3 py-2 fs-6 rounded-pill";
             statusBadge.innerText = "Offline/Error";
             latencyText.innerText = "-- ms";
         }
@@ -3288,7 +3676,10 @@
         const qty = parseFloat(qtyInput.value) || 0;
         const price = parseFloat(priceInput.value) || 0;
 
-        if (!mat || qty <= 0 || price <= 0) {
+        if (!mat || qty <= 0 || price <= 0
+
+
+        ) {
             alert("Please search/select a valid Raw Material and enter valid Qty & Unit Price!");
             return;
         }
@@ -4290,22 +4681,30 @@
         displayCart();
     }
 
+    /* UPDATED POS PAYMENT METHOD TOGGLE WITH ONLINE REF INPUT */
     function toggleCashInput() {
         const payMethod = document.getElementById('pos-pay-method').value;
         const cashReceivedContainer = document.getElementById('cash-received-container');
         const balanceContainer = document.getElementById('balance-due-container');
+        const onlineRefContainer = document.getElementById('online-ref-container');
 
         if (payMethod === 'Cash') {
             cashReceivedContainer.classList.remove('d-none');
             balanceContainer.classList.remove('d-none');
+            if (onlineRefContainer) onlineRefContainer.classList.add('d-none');
+        } else if (payMethod === 'Online Transfer') {
+            cashReceivedContainer.classList.add('d-none');
+            balanceContainer.classList.add('d-none');
+            if (onlineRefContainer) onlineRefContainer.classList.remove('d-none');
         } else {
             cashReceivedContainer.classList.add('d-none');
             balanceContainer.classList.add('d-none');
+            if (onlineRefContainer) onlineRefContainer.classList.add('d-none');
         }
         calculatePOSCart();
     }
 
-    let checkoutTotals = { subtotal: 0, discount: 0, total: 0, balance: 0, cashReceived: 0 };
+    let checkoutTotals = { subtotal: 0, discount: 0, total: 0, balance: 0, cashReceived: 0, onlineRef: '' };
 
     function calculatePOSCart() {
         let subtotal = 0;
@@ -4323,8 +4722,10 @@
         let balance = payMethod === 'Cash' ? (cashReceived - grandTotal) : 0;
         if (payMethod !== 'Cash') cashReceived = grandTotal;
 
+        const onlineRefVal = (payMethod === 'Online Transfer') ? (document.getElementById('pos-online-ref').value.trim()) : '';
+
         checkoutTotals = {
-            subtotal, discount: discountAmount, total: grandTotal, balance: balance >= 0 ? balance : 0, cashReceived
+            subtotal, discount: discountAmount, total: grandTotal, balance: balance >= 0 ? balance : 0, cashReceived, onlineRef: onlineRefVal
         };
 
         document.getElementById('pos-subtotal').innerText = `Rs. ${subtotal.toFixed(2)}`;
@@ -4343,7 +4744,7 @@
                 
                 const btn = document.getElementById('btn-connect-drawer');
                 if (btn) {
-                    btn.className = "btn btn-sm btn-success me-1";
+                    btn.className = "btn btn-sm btn-success me-1 rounded-pill";
                     btn.innerHTML = `<i class="bi bi-safe-fill me-1"></i> Drawer Connected`;
                 }
                 alert("Cash Drawer / Printer port successfully connected!");
@@ -4367,6 +4768,7 @@
         }
     }
 
+    /* UPDATED CHECKOUT FUNCTION WITH ONLINE REF RECORDING */
     async function checkoutAndPrintReceipt() {
         if (!isDayStarted) {
             alert("⚠️ SECURITY BLOCK: POS Shift is NOT started! Please enter Opening Cash Float.");
@@ -4385,14 +4787,26 @@
             return;
         }
 
+        if (payMethod === 'Online Transfer' && !checkoutTotals.onlineRef) {
+            if (!confirm("Bank Reference Number is empty. Continue checkout anyway?")) {
+                document.getElementById('pos-online-ref').focus();
+                return;
+            }
+        }
+
         const billNo = Date.now().toString().slice(-6);
         const formattedDateString = formatDateTime(new Date());
+
+        let payMethodLabel = payMethod;
+        if (payMethod === 'Online Transfer' && checkoutTotals.onlineRef) {
+            payMethodLabel += ` (Ref: ${checkoutTotals.onlineRef})`;
+        }
 
         document.getElementById('print-bill-details').innerText = `Date: ${formattedDateString}\nBill No: #${billNo}`;
         document.getElementById('print-subtotal').innerText = `Rs. ${checkoutTotals.subtotal.toFixed(2)}`;
         document.getElementById('print-discount').innerText = `Rs. ${checkoutTotals.discount.toFixed(2)}`;
         document.getElementById('print-total').innerText = `Rs. ${checkoutTotals.total.toFixed(2)}`;
-        document.getElementById('print-pay-method').innerText = payMethod;
+        document.getElementById('print-pay-method').innerText = payMethodLabel;
         document.getElementById('print-paid').innerText = `Rs. ${checkoutTotals.cashReceived.toFixed(2)}`;
         document.getElementById('print-balance').innerText = `Rs. ${checkoutTotals.balance.toFixed(2)}`;
 
@@ -4416,10 +4830,12 @@
         await triggerCashDrawerPulse();
         window.print();
 
+        const cashierName = auth.currentUser ? (auth.currentUser.email.split('@')[0]) : 'system';
+
         const saleRecord = {
             billNo, date: todayStr, items: JSON.parse(JSON.stringify(cart)),
             subtotal: checkoutTotals.subtotal, discount: checkoutTotals.discount, total: checkoutTotals.total,
-            payMethod, cashReceived: checkoutTotals.cashReceived, timestamp: firebase.database.ServerValue.TIMESTAMP, status: "Active"
+            payMethod, onlineRef: checkoutTotals.onlineRef || '', cashierName, cashReceived: checkoutTotals.cashReceived, timestamp: firebase.database.ServerValue.TIMESTAMP, status: "Active"
         };
 
         let methodKey = 'cash_sales';
@@ -4448,6 +4864,7 @@
             displayCart();
             document.getElementById('pos-discount').value = 0;
             document.getElementById('pos-cash-received').value = '';
+            document.getElementById('pos-online-ref').value = '';
 
             updateDashboardData();
 
@@ -4505,11 +4922,16 @@
                 ? `<button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="reverseInvoice('${invoice.id}')"><i class="bi bi-arrow-counterclockwise"></i> Reverse</button>`
                 : `<button class="btn btn-sm btn-outline-secondary py-0 px-2" disabled>Reversed</button>`;
 
+            let methodLabel = invoice.payMethod;
+            if (invoice.payMethod === 'Online Transfer' && invoice.onlineRef) {
+                methodLabel += `<br><small class="text-primary fw-bold">Ref: ${invoice.onlineRef}</small>`;
+            }
+
             tableHtml += `
                 <tr>
                     <td><strong>#${invoice.id}</strong></td>
                     <td>${invoiceDate}</td>
-                    <td><span class="badge bg-light text-dark border">${invoice.payMethod}</span></td>
+                    <td><span class="badge bg-light text-dark border">${methodLabel}</span></td>
                     <td class="text-end fw-bold">Rs. ${parseFloat(invoice.total || 0).toFixed(2)}</td>
                     <td class="text-center">${statusBadge}</td>
                     <td class="text-center">
@@ -4589,11 +5011,16 @@
             const invoiceTime = sale.timestamp ? formatDateTime(new Date(sale.timestamp)) : sale.date;
             const titleModifier = sale.status === 'Reversed' ? '\n(VOID / REVERSED)' : '';
 
+            let payLabel = sale.payMethod;
+            if (sale.payMethod === 'Online Transfer' && sale.onlineRef) {
+                payLabel += ` (Ref: ${sale.onlineRef})`;
+            }
+
             document.getElementById('print-bill-details').innerText = `Date: ${invoiceTime}\nBill No: #${billNo}${titleModifier}`;
             document.getElementById('print-subtotal').innerText = `Rs. ${parseFloat(sale.subtotal || 0).toFixed(2)}`;
             document.getElementById('print-discount').innerText = `Rs. ${parseFloat(sale.discount || 0).toFixed(2)}`;
             document.getElementById('print-total').innerText = `Rs. ${parseFloat(sale.total || 0).toFixed(2)}`;
-            document.getElementById('print-pay-method').innerText = sale.payMethod;
+            document.getElementById('print-pay-method').innerText = payLabel;
             document.getElementById('print-paid').innerText = `Rs. ${parseFloat(sale.cashReceived || sale.total || 0).toFixed(2)}`;
 
             const balanceVal = (sale.cashReceived || sale.total || 0) - (sale.total || 0);
@@ -5807,7 +6234,7 @@
                 
                 const btn = document.getElementById('btn-connect-display');
                 if (btn) {
-                    btn.className = "btn btn-sm btn-success";
+                    btn.className = "btn btn-sm btn-success rounded-pill";
                     btn.innerHTML = `<i class="bi bi-display-fill me-1"></i> Display Connected`;
                 }
                 
