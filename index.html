@@ -394,14 +394,19 @@
         /* ==========================================================================
            ULTRA HIGH-DENSITY 80MM THERMAL MONOCHROME PRINT CSS (NO FAINT INK)
            ========================================================================== */
+      /* ==========================================================================
+           ULTRA CRISP HIGH-CONTRAST THERMAL RECEIPT PRINT (DARK & SOLID)
+           ========================================================================== */
         @media print {
-            @page { size: 80mm auto; margin: 0mm !important; }
+            @page { 
+                size: 80mm auto; 
+                margin: 0mm !important; 
+            }
             *, *::before, *::after {
                 box-sizing: border-box !important;
                 color: #000000 !important;
-                -webkit-text-stroke: 0.45px #000000 !important;
-                text-shadow: 0 0 0.3px #000000 !important;
-                filter: none !important;
+                text-shadow: none !important;
+                -webkit-text-stroke: 0 !important;
             }
             html, body {
                 width: 80mm !important;
@@ -411,17 +416,13 @@
                 color: #000000 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
-                overflow: hidden !important;
             }
             #main-app-container, #login-screen, .no-print,
             body:not(.print-receipt) #receipt-print-area,
             body:not(.print-zreport) #zreport-print-area {
                 display: none !important;
+                visibility: hidden !important;
                 height: 0 !important;
-                max-height: 0 !important;
-                overflow: hidden !important;
-                position: absolute !important;
-                left: -9999px !important;
             }
             body.print-receipt #receipt-print-area,
             body.print-zreport #zreport-print-area {
@@ -430,23 +431,32 @@
                 left: 0 !important;
                 width: 72mm !important;
                 margin: 0 auto !important;
-                padding: 2mm 3mm 4mm 3mm !important;
-                font-family: 'Courier New', Courier, monospace, Arial !important;
-                font-size: 12px !important;
-                line-height: 1.25 !important;
-                font-weight: 900 !important;
+                padding: 2mm 2mm 6mm 2mm !important;
+                font-family: Arial, Helvetica, sans-serif !important;
+                font-size: 13px !important;
+                line-height: 1.3 !important;
+                font-weight: 800 !important;
                 color: #000000 !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
             }
-            #receipt-print-area *, #zreport-print-area * {
-                color: #000000 !important;
+            #receipt-print-area h3, #zreport-print-area h3 {
+                font-size: 18px !important;
                 font-weight: 900 !important;
-                border-color: #000000 !important;
+            }
+            #receipt-print-area table, #zreport-print-area table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                font-size: 12px !important;
+                font-weight: 800 !important;
+            }
+            #receipt-print-area th, #receipt-print-area td,
+            #zreport-print-area th, #zreport-print-area td {
+                color: #000000 !important;
+                font-weight: 800 !important;
+                padding: 3px 0 !important;
             }
             .receipt-divider {
-                border-bottom: 2px dashed #000000 !important;
-                margin: 4px 0 !important;
+                border-bottom: 2px solid #000000 !important;
+                margin: 5px 0 !important;
                 width: 100% !important;
             }
         }
