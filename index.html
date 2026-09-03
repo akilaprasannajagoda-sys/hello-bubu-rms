@@ -472,6 +472,60 @@
                 width: 100% !important;
             }
         }
+        /* =========================================================
+           7-DAY CUSTOMER TRAFFIC HEATMAP MATRIX STYLES (ZERO-LAG)
+           ========================================================= */
+        .heatmap-matrix-card {
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-card);
+            padding: 8px 12px;
+        }
+        .traffic-matrix-wrapper {
+            display: grid;
+            grid-template-columns: 38px repeat(12, 1fr);
+            gap: 2.5px;
+            align-items: center;
+        }
+        .matrix-header-cell {
+            font-size: 0.62rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 1px 0;
+        }
+        .matrix-day-label {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-align: left;
+            padding-right: 2px;
+        }
+        .matrix-heat-cell {
+            height: 16px;
+            border-radius: 3.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.60rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        .matrix-heat-cell:hover {
+            transform: scale(1.2);
+            z-index: 5;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+
+        /* 5 Heat Intensity Levels */
+        .heat-lvl-0 { background-color: #f1f5f9; color: transparent; }
+        .heat-lvl-1 { background-color: #dbeafe; color: #1e40af; }
+        .heat-lvl-2 { background-color: #a7f3d0; color: #065f46; }
+        .heat-lvl-3 { background-color: #fde68a; color: #92400e; }
+        .heat-lvl-4 { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); color: #ffffff; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -836,7 +890,48 @@
                         </div>
                     </div>
                 </div>
-
+<!-- 7-DAY CUSTOMER TRAFFIC HEATMAP MATRIX -->
+<div class="card heatmap-matrix-card mb-2 flex-shrink-0 shadow-sm">
+    <div class="d-flex justify-content-between align-items-center border-bottom pb-1 mb-1">
+        <div class="d-flex align-items-center gap-1.5">
+            <span class="p-1 bg-danger bg-opacity-10 text-danger rounded-circle d-inline-flex align-items-center justify-content-center" style="width:22px; height:22px;">
+                <i class="bi bi-fire" style="font-size: 0.75rem;"></i>
+            </span>
+            <div>
+                <h6 class="fw-bold text-dark mb-0" style="font-size: 0.78rem;">7-Day Customer Traffic & Rush Hours Matrix</h6>
+                <small class="text-muted" style="font-size: 0.62rem;" id="traffic-since-text">Analyzing orders since last month 17th</small>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-1.5">
+            <span class="badge bg-danger-subtle text-danger border border-danger border-opacity-25 py-0.5 px-2" id="matrix-busiest-day-badge" style="font-size: 0.66rem;">
+                <i class="bi bi-calendar-check me-1"></i> Peak Day: -
+            </span>
+            <span class="badge bg-warning-subtle text-warning-emphasis border border-warning border-opacity-25 py-0.5 px-2" id="matrix-busiest-hour-badge" style="font-size: 0.66rem;">
+                <i class="bi bi-clock-history me-1"></i> Peak Time: -
+            </span>
+            <button class="btn btn-sm btn-outline-secondary p-0 px-1 border-0" onclick="loadWeeklyCustomerTrafficHeatmap(true)" title="Re-sync traffic">
+                <i class="bi bi-arrow-clockwise" style="font-size: 0.72rem;"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Matrix Layout (Day of Week vs 10 AM - 10 PM) -->
+    <div class="traffic-matrix-wrapper" id="weekly-heatmap-matrix">
+        <!-- Rendered instantly via JS -->
+    </div>
+    
+    <div class="d-flex justify-content-between align-items-center pt-1 mt-1 border-top" style="font-size: 0.62rem; color: #64748b;">
+        <span class="d-flex align-items-center gap-1">
+            <span>Density:</span>
+            <span class="badge heat-lvl-0 text-dark px-1 py-0" style="font-size:0.58rem; border:1px solid #cbd5e1;">0</span>
+            <span class="badge heat-lvl-1 px-1 py-0" style="font-size:0.58rem;">1-4</span>
+            <span class="badge heat-lvl-2 px-1 py-0" style="font-size:0.58rem;">5-12</span>
+            <span class="badge heat-lvl-3 px-1 py-0" style="font-size:0.58rem;">13-25</span>
+            <span class="badge heat-lvl-4 px-1 py-0" style="font-size:0.58rem;">26+ Rush</span>
+        </span>
+        <span id="matrix-total-analyzed-orders">Total 0 orders analyzed</span>
+    </div>
+</div>
                 <!-- BOTTOM EXPANDED EXECUTIVE FINANCIAL & HEALTH PANELS (FULL FILL) -->
                 <div class="row g-2 flex-grow-1" style="min-height: 0;">
                     <div class="col-lg-8 col-md-12 d-flex flex-column h-100">
@@ -2606,7 +2701,150 @@
             calculateLiveDayEndReconciliation();
         }
     }
+/* =========================================================================
+       ZERO-LAG 7-DAY HISTORICAL CUSTOMER TRAFFIC HEATMAP ENGINE
+       Analyzing from 17th of Last Month to Present
+       ========================================================================= */
+let cachedWeeklyTrafficMatrix = null;
+let trafficHistoricalStartDate = "";
 
+function calculateHistoricalTrafficStartDate() {
+    const now = new Date();
+    const prevMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 17);
+    trafficHistoricalStartDate = getLocalDateString(prevMonthDate);
+    const sinceText = document.getElementById('traffic-since-text');
+    if (sinceText) {
+        sinceText.innerText = `Analyzing order patterns from ${trafficHistoricalStartDate} to Today`;
+    }
+    return trafficHistoricalStartDate;
+}
+
+async function loadWeeklyCustomerTrafficHeatmap(forceRefresh = false) {
+    calculateHistoricalTrafficStartDate();
+    
+    if (!forceRefresh && cachedWeeklyTrafficMatrix) {
+        drawWeeklyHeatmapMatrix(cachedWeeklyTrafficMatrix);
+        return;
+    }
+    
+    try {
+        const snapshot = await rtdb.ref('sales')
+            .orderByChild('date')
+            .startAt(trafficHistoricalStartDate)
+            .endAt(todayStr)
+            .once('value');
+        
+        const salesData = snapshot.val() || {};
+        const matrix = Array.from({ length: 7 }, () => new Array(24).fill(0));
+        let totalAnalyzed = 0;
+        
+        Object.values(salesData).forEach(sale => {
+            if (sale.status !== 'Reversed' && sale.timestamp) {
+                const saleDate = new Date(sale.timestamp);
+                const dayOfWeek = saleDate.getDay();
+                const hour = saleDate.getHours();
+                
+                if (dayOfWeek >= 0 && dayOfWeek < 7 && hour >= 0 && hour < 24) {
+                    matrix[dayOfWeek][hour]++;
+                    totalAnalyzed++;
+                }
+            }
+        });
+        
+        cachedWeeklyTrafficMatrix = matrix;
+        drawWeeklyHeatmapMatrix(matrix, totalAnalyzed);
+        
+    } catch (e) {
+        console.error("Historical traffic heatmap failed:", e);
+    }
+}
+
+function drawWeeklyHeatmapMatrix(matrix, totalAnalyzed = null) {
+    const container = document.getElementById('weekly-heatmap-matrix');
+    const busiestDayBadge = document.getElementById('matrix-busiest-day-badge');
+    const busiestHourBadge = document.getElementById('matrix-busiest-hour-badge');
+    const totalOrdersText = document.getElementById('matrix-total-analyzed-orders');
+    if (!container) return;
+    
+    const startHour = 10;
+    const endHour = 22;
+    
+    const daysMap = [
+        { index: 1, name: "Mon" },
+        { index: 2, name: "Tue" },
+        { index: 3, name: "Wed" },
+        { index: 4, name: "Thu" },
+        { index: 5, name: "Fri" },
+        { index: 6, name: "Sat" },
+        { index: 0, name: "Sun" }
+    ];
+    
+    let overallMaxOrders = 0;
+    let peakDayName = "-";
+    let peakHourStr = "-";
+    let dayTotals = { Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0 };
+    
+    let html = `<div class="matrix-header-cell">Day</div>`;
+    for (let h = startHour; h < endHour; h++) {
+        const period = h >= 12 ? 'P' : 'A';
+        const displayH = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+        html += `<div class="matrix-header-cell">${displayH}${period}</div>`;
+    }
+    
+    daysMap.forEach(d => {
+        html += `<div class="matrix-day-label">${d.name}</div>`;
+        
+        for (let h = startHour; h < endHour; h++) {
+            const count = matrix[d.index][h] || 0;
+            dayTotals[d.name] += count;
+            
+            if (count > overallMaxOrders) {
+                overallMaxOrders = count;
+                peakDayName = d.name;
+                const period = h >= 12 ? 'PM' : 'AM';
+                const displayH = h > 12 ? h - 12 : h;
+                peakHourStr = `${displayH}:00 ${period}`;
+            }
+            
+            let heatClass = 'heat-lvl-0';
+            if (count > 0 && count <= 4) heatClass = 'heat-lvl-1';
+            else if (count > 4 && count <= 12) heatClass = 'heat-lvl-2';
+            else if (count > 12 && count <= 25) heatClass = 'heat-lvl-3';
+            else if (count > 25) heatClass = 'heat-lvl-4';
+            
+            const period = h >= 12 ? 'PM' : 'AM';
+            const displayH = h > 12 ? h - 12 : h;
+            const tooltip = `${d.name} @ ${displayH}:00 ${period} — ${count} Orders`;
+            
+            html += `
+                    <div class="matrix-heat-cell ${heatClass}" title="${tooltip}">
+                        ${count > 0 ? count : ''}
+                    </div>
+                `;
+        }
+    });
+    
+    container.innerHTML = html;
+    
+    let maxDayOrders = 0;
+    let highestDay = "-";
+    Object.keys(dayTotals).forEach(day => {
+        if (dayTotals[day] > maxDayOrders) {
+            maxDayOrders = dayTotals[day];
+            highestDay = day;
+        }
+    });
+    
+    if (busiestDayBadge) {
+        busiestDayBadge.innerHTML = `<i class="bi bi-fire me-1"></i> Peak Day: <strong>${highestDay}</strong> (${maxDayOrders} ord)`;
+    }
+    if (busiestHourBadge) {
+        busiestHourBadge.innerHTML = `<i class="bi bi-clock-history me-1"></i> Peak Time: <strong>${peakHourStr}</strong>`;
+    }
+    if (totalOrdersText && totalAnalyzed !== null) {
+        totalOrdersText.innerText = `Total ${totalAnalyzed} orders analyzed`;
+    }
+}
     /* AUTH STATE CHANGED */
     auth.onAuthStateChanged(async (user) => {
         const loginScreen = document.getElementById('login-screen');
@@ -3126,7 +3364,7 @@
             alert(`POS Shift Started successfully with Opening Float: Rs. ${floatVal.toFixed(2)}`);
             checkDayStartStatus(false);
             renderDashboardNotifications();
-
+loadWeeklyCustomerTrafficHeatmap();
         } catch (error) {
             console.error("Failed to start day:", error);
             alert("Error starting shift: " + error.message);
@@ -3264,37 +3502,37 @@
     }
 
     async function updateDashboardData() {
-        try {
-            const snapshot = await rtdb.ref('daily_summaries/' + todayStr).once('value');
-            const data = snapshot.val() || { sales_total: 0, expenses_total: 0, wastage_total: 0, orders_count: 0 };
-            
-            const salesTotal = parseFloat(data.sales_total || 0);
-            const expensesTotal = parseFloat(data.expenses_total || 0);
-            const wastageTotal = parseFloat(data.wastage_total || 0);
-            const ordersCount = data.orders_count || 0;
-
-            document.getElementById('dash-today-sales').innerText = `Rs. ${salesTotal.toFixed(2)}`;
-            document.getElementById('dash-today-expenses').innerText = `Rs. ${expensesTotal.toFixed(2)}`;
-            document.getElementById('dash-today-wastage').innerText = `Rs. ${wastageTotal.toFixed(2)}`;
-            document.getElementById('dash-today-orders').innerText = ordersCount;
-
-            const netPosition = salesTotal - expensesTotal;
-            const netPosEl = document.getElementById('dash-net-position-val');
-            if (netPosEl) {
-                netPosEl.innerText = `Rs. ${netPosition.toFixed(2)}`;
-                netPosEl.className = netPosition >= 0 ? "fw-bold mb-1 text-success" : "fw-bold mb-1 text-danger";
-            }
-
-            document.getElementById('dash-net-sales-summary').innerText = `Rs. ${salesTotal.toFixed(2)}`;
-            document.getElementById('dash-net-expense-summary').innerText = `Rs. ${expensesTotal.toFixed(2)}`;
-            document.getElementById('dash-net-wastage-summary').innerText = `Rs. ${wastageTotal.toFixed(2)}`;
-
-            renderDashboardNotifications();
-        } catch (error) {
-            console.error("Dashboard Loading Error: ", error);
+    try {
+        const snapshot = await rtdb.ref('daily_summaries/' + todayStr).once('value');
+        const data = snapshot.val() || { sales_total: 0, expenses_total: 0, wastage_total: 0, orders_count: 0 };
+        
+        const salesTotal = parseFloat(data.sales_total || 0);
+        const expensesTotal = parseFloat(data.expenses_total || 0);
+        const wastageTotal = parseFloat(data.wastage_total || 0);
+        const ordersCount = data.orders_count || 0;
+        
+        document.getElementById('dash-today-sales').innerText = `Rs. ${salesTotal.toFixed(2)}`;
+        document.getElementById('dash-today-expenses').innerText = `Rs. ${expensesTotal.toFixed(2)}`;
+        document.getElementById('dash-today-wastage').innerText = `Rs. ${wastageTotal.toFixed(2)}`;
+        document.getElementById('dash-today-orders').innerText = ordersCount;
+        
+        const netPosition = salesTotal - expensesTotal;
+        const netPosEl = document.getElementById('dash-net-position-val');
+        if (netPosEl) {
+            netPosEl.innerText = `Rs. ${netPosition.toFixed(2)}`;
+            netPosEl.className = netPosition >= 0 ? "fw-bold mb-1 text-success" : "fw-bold mb-1 text-danger";
         }
+        
+        document.getElementById('dash-net-sales-summary').innerText = `Rs. ${salesTotal.toFixed(2)}`;
+        document.getElementById('dash-net-expense-summary').innerText = `Rs. ${expensesTotal.toFixed(2)}`;
+        document.getElementById('dash-net-wastage-summary').innerText = `Rs. ${wastageTotal.toFixed(2)}`;
+        
+        renderDashboardNotifications();
+        loadWeeklyCustomerTrafficHeatmap();
+    } catch (error) {
+        console.error("Dashboard Loading Error: ", error);
     }
-
+}
     function renderPagination(elementId, totalPages, currentPage, callbackName) {
         const container = document.getElementById(elementId);
         container.innerHTML = '';
@@ -5378,6 +5616,11 @@
             });
 
             await rtdb.ref().update(updatesMap);
+            // Live instant update to Heatmap cache (0ms lag)
+if (cachedWeeklyTrafficMatrix) {
+    const nowTime = new Date();
+    cachedWeeklyTrafficMatrix[nowTime.getDay()][nowTime.getHours()]++;
+}
 
             document.body.classList.add('print-receipt');
             document.body.classList.remove('print-zreport');
