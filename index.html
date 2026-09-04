@@ -1296,18 +1296,26 @@
                                             </div>
                                         </div>
 
-                                        <div class="row g-2 mb-2">
-                                            <div class="col-md-6">
-                                                <label class="form-label small fw-bold text-dark mb-0">Expense Category</label>
-                                                <select class="form-select form-select-sm" id="expense-category" required>
-                                                    <option value="">Select Category</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label small fw-bold text-dark mb-0">GRN Date</label>
-                                                <input type="date" class="form-control form-control-sm" id="expense-date" required>
-                                            </div>
-                                        </div>
+                                     <div class="row g-2 mb-2">
+    <div class="col-md-4">
+        <label class="form-label small fw-bold text-dark mb-0">Expense Category</label>
+        <select class="form-select form-select-sm" id="expense-category" required>
+            <option value="">Select Category</option>
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label small fw-bold text-dark mb-0">Paid From (ගෙවූ ආකාරය)</label>
+        <select class="form-select form-select-sm fw-bold border-primary" id="grn-pay-method" required>
+            <option value="Main Cash">Main Cash / Drawer</option>
+            <option value="Petty Cash">Petty Cash Float (සුළු මුදල්)</option>
+            <option value="Credit">Credit / Payable</option>
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label small fw-bold text-dark mb-0">GRN Date</label>
+        <input type="date" class="form-control form-control-sm" id="expense-date" required>
+    </div>
+</div>
 
                                         <div class="bg-light p-2 rounded-3 mb-2 border">
                                             <div class="d-flex justify-content-between align-items-center mb-1 flex-wrap gap-1">
@@ -4159,66 +4167,108 @@ loadWeeklyCustomerTrafficHeatmap();
     }
 
     async function saveGrn(event) {
-        event.preventDefault();
-        if (grnItemsList.length === 0) {
-            alert("Please add at least one item to the GRN before submitting!");
+    event.preventDefault();
+    if (grnItemsList.length === 0) {
+        alert("Please add at least one item to the GRN before submitting!");
+        return;
+    }
+    
+    const invoiceNo = document.getElementById('grn-invoice-no').value.trim();
+    const supplier = document.getElementById('grn-supplier').value.trim();
+    const category = document.getElementById('expense-category').value;
+    const payMethod = document.getElementById('grn-pay-method').value;
+    const date = document.getElementById('expense-date').value;
+    const notes = document.getElementById('grn-notes').value.trim();
+    
+    let netTotal = 0;
+    grnItemsList.forEach(item => netTotal += item.total);
+    
+    // Petty Cash Balance පරීක්ෂාව
+    if (payMethod === 'Petty Cash' && netTotal > currentPettyCashBalance) {
+        if (!confirm(`Warning: GRN එකේ මුදල (Rs. ${netTotal.toFixed(2)}) දැනට ඇති Petty Cash ශේෂයට (Rs. ${currentPettyCashBalance.toFixed(2)}) වඩා වැඩියි. ඉදිරියට කරගෙන යනවාද?`)) {
             return;
         }
-
-        const invoiceNo = document.getElementById('grn-invoice-no').value.trim();
-        const supplier = document.getElementById('grn-supplier').value.trim();
-        const category = document.getElementById('expense-category').value;
-        const date = document.getElementById('expense-date').value;
-        const notes = document.getElementById('grn-notes').value.trim();
-
-        let netTotal = 0;
-        grnItemsList.forEach(item => netTotal += item.total);
-
-        const now = new Date();
-        const timeStr = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
-        const dateTimeFormatted = `${date} ${timeStr}`;
-
-        const grnRecord = {
-            invoiceNo, supplier, category, date, dateTime: dateTimeFormatted, totalAmount: netTotal, items: JSON.parse(JSON.stringify(grnItemsList)), notes: notes || "N/A", timestamp: firebase.database.ServerValue.TIMESTAMP
-        };
-
-        try {
-            const newRef = rtdb.ref('expenses').push();
-            const updatesMap = {};
-            updatesMap[`expenses/${newRef.key}`] = grnRecord;
-            updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(netTotal);
-
-            grnItemsList.forEach(item => {
-                if (item.materialId) {
-                    updatesMap[`raw_materials/${item.materialId}/unitCost`] = item.price;
-                    updatesMap[`raw_materials/${item.materialId}/lastUpdated`] = dateTimeFormatted;
-
-                    const matLocal = rawMaterialsMap[item.materialId] || rawMaterials.find(m => m.id === item.materialId);
-                    if (matLocal) {
-                        matLocal.unitCost = item.price;
-                        matLocal.lastUpdated = dateTimeFormatted;
-                    }
-                }
-            });
-
-            await rtdb.ref().update(updatesMap);
-
-            alert("GRN Note saved successfully & Unit Costs updated!");
-            document.getElementById('grn-form').reset();
-            document.getElementById('expense-date').value = todayStr;
-            document.getElementById('grn-item-search-input').value = '';
-            document.getElementById('grn-item-selected-id').value = '';
-            grnItemsList = [];
-            displayGrnItemsTable();
-            populateRawMaterialsDropdown();
-
-            if (isExpensesLoaded) await loadExpensesClicked(true);
-            updateDashboardData();
-        } catch (error) {
-            console.error("Error saving GRN: ", error);
-            alert("Failed to save GRN.");
-        }
     }
+    
+    const now = new Date();
+    const timeStr = String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0');
+    const dateTimeFormatted = `${date} ${timeStr}`;
+    const userStr = auth.currentUser ? (auth.currentUser.email.split('@')[0]) : 'system';
+    
+    const grnRecord = {
+        invoiceNo,
+        supplier,
+        category,
+        payMethod,
+        date,
+        dateTime: dateTimeFormatted,
+        totalAmount: netTotal,
+        items: JSON.parse(JSON.stringify(grnItemsList)),
+        notes: notes || "N/A",
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+    };
+    
+    try {
+        const newRef = rtdb.ref('expenses').push();
+        const updatesMap = {};
+        updatesMap[`expenses/${newRef.key}`] = grnRecord;
+        
+        // වියදම GRN එකෙන් එක් වරක් පමණක් එකතු වේ (Double counting සම්පූර්ණයෙන්ම වැළකේ)
+        updatesMap[`daily_summaries/${date}/expenses_total`] = firebase.database.ServerValue.increment(netTotal);
+        
+        // Petty Cash වලින් ගෙවූයේ නම් Petty Cash Balance එකෙන් මුදල අඩු කිරීම & Log සටහන් කිරීම
+        if (payMethod === 'Petty Cash') {
+            const newBalance = currentPettyCashBalance - netTotal;
+            const pcLogRef = rtdb.ref('petty_cash_logs').push();
+            updatesMap[`petty_cash_float/current_balance`] = firebase.database.ServerValue.increment(-netTotal);
+            updatesMap[`petty_cash_logs/${pcLogRef.key}`] = {
+                type: "EXPENSE_OUT",
+                amount: netTotal,
+                payee: `${supplier} (GRN #${invoiceNo})`,
+                reason: `GRN Purchase for ${category}`,
+                category: category,
+                date: date,
+                dateTime: dateTimeFormatted,
+                issuedBy: userStr,
+                balanceAfter: newBalance,
+                isGrnLinked: true,
+                grnId: newRef.key,
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            };
+        }
+        
+        grnItemsList.forEach(item => {
+            if (item.materialId) {
+                updatesMap[`raw_materials/${item.materialId}/unitCost`] = item.price;
+                updatesMap[`raw_materials/${item.materialId}/lastUpdated`] = dateTimeFormatted;
+                
+                const matLocal = rawMaterialsMap[item.materialId] || rawMaterials.find(m => m.id === item.materialId);
+                if (matLocal) {
+                    matLocal.unitCost = item.price;
+                    matLocal.lastUpdated = dateTimeFormatted;
+                }
+            }
+        });
+        
+        await rtdb.ref().update(updatesMap);
+        
+        alert(`GRN Note #${invoiceNo} සාර්ථකව සුරැකිණි! (ගෙවීම: ${payMethod})`);
+        document.getElementById('grn-form').reset();
+        document.getElementById('expense-date').value = todayStr;
+        document.getElementById('grn-item-search-input').value = '';
+        document.getElementById('grn-item-selected-id').value = '';
+        grnItemsList = [];
+        displayGrnItemsTable();
+        populateRawMaterialsDropdown();
+        
+        await loadPettyCashBalance();
+        if (isExpensesLoaded) await loadExpensesClicked(true);
+        updateDashboardData();
+    } catch (error) {
+        console.error("Error saving GRN: ", error);
+        alert("Failed to save GRN: " + error.message);
+    }
+}
 
     async function loadExpensesClicked(forceFilter = false) {
         isExpensesLoaded = true;
@@ -4338,24 +4388,32 @@ loadWeeklyCustomerTrafficHeatmap();
     }
 
     async function deleteExpense(id) {
-        const expense = expenses.find(e => e.id === id);
-        if (!expense) return;
-
-        if (confirm("Are you sure you want to delete this GRN / Expense record?")) {
-            try {
-                const totalAmt = parseFloat(expense.totalAmount || expense.amount || 0);
-                const updatesMap = {};
-                updatesMap[`expenses/${id}`] = null;
-                updatesMap[`daily_summaries/${expense.date}/expenses_total`] = firebase.database.ServerValue.increment(-totalAmt);
-
-                await rtdb.ref().update(updatesMap);
-                await loadExpensesClicked(true);
-                updateDashboardData();
-            } catch (error) {
-                console.error("Error deleting GRN expense: ", error);
+    const expense = expenses.find(e => e.id === id);
+    if (!expense) return;
+    
+    if (confirm(`Are you sure you want to delete GRN #${expense.invoiceNo || ''}?`)) {
+        try {
+            const totalAmt = parseFloat(expense.totalAmount || expense.amount || 0);
+            const updatesMap = {};
+            updatesMap[`expenses/${id}`] = null;
+            updatesMap[`daily_summaries/${expense.date}/expenses_total`] = firebase.database.ServerValue.increment(-totalAmt);
+            
+            // Petty Cash වලින් ගෙවූ GRN එකක් නම් Petty Cash එකට නැවත මුදල Refund වේ
+            if (expense.payMethod === 'Petty Cash') {
+                updatesMap[`petty_cash_float/current_balance`] = firebase.database.ServerValue.increment(totalAmt);
             }
+            
+            await rtdb.ref().update(updatesMap);
+            alert("GRN record deleted successfully!");
+            await loadPettyCashBalance();
+            await loadExpensesClicked(true);
+            updateDashboardData();
+        } catch (error) {
+            console.error("Error deleting GRN expense: ", error);
+            alert("Failed to delete GRN record.");
         }
     }
+}
 
     /* PETTY CASH SYSTEM */
     async function loadPettyCashBalance() {
@@ -4562,7 +4620,13 @@ loadWeeklyCustomerTrafficHeatmap();
     async function deletePettyCashLog(logId) {
         const log = pettyCashLogsList.find(l => l.id === logId);
         if (!log) return;
-
+        
+        // GRN මඟින් දැමූ Log එකක් Petty Cash එකෙන් Delete කිරීම වැළැක්වීම
+        if (log.isGrnLinked) {
+            alert("⚠️ මෙය GRN පද්ධතිය මඟින් ස්වයංක්‍රීයව එක්වූ වියදමකි! මෙය මකා දැමීමට අවශ්‍ය නම් 'GRN Notes History' වෙත ගොස් අදාළ GRN එක Delete කරන්න.");
+            return;
+        }
+        
         if (confirm("Are you sure you want to delete/reverse this Petty Cash log?")) {
             try {
                 const isTopUp = log.type === 'FLOAT_IN';
@@ -6364,9 +6428,10 @@ if (cachedWeeklyTrafficMatrix) {
             let totalPcVoucherOut = 0;
             let totalPcFloatIn = 0;
             pcList.forEach(p => {
-                if (p.type === 'EXPENSE_OUT') totalPcVoucherOut += parseFloat(p.amount || 0);
-                if (p.type === 'FLOAT_IN') totalPcFloatIn += parseFloat(p.amount || 0);
-            });
+    // GRN මඟින් දැමූ Petty Cash වියදම් GRN Outflow යටතේ දැනටමත් ඇති නිසා මෙහිදී skip කෙරේ (100% No Double Counting)
+    if (p.type === 'EXPENSE_OUT' && !p.isGrnLinked) totalPcVoucherOut += parseFloat(p.amount || 0);
+    if (p.type === 'FLOAT_IN') totalPcFloatIn += parseFloat(p.amount || 0);
+});
 
             const wastageList = Object.values(wastageSnap.val() || {});
             let totalWastageLoss = 0;
